@@ -21,6 +21,7 @@ if(!$cookie->validateAuthCookie()){
 	}	
 }
 /*
+testing (robert testing2)
 $datetoconvert = '2014-12-18 14:52:21';
 $user_tz = 'Asia/Singapore';//'America/Chicago';
 $server_tz = 'UTC';
