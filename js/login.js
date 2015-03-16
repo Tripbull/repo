@@ -63,9 +63,9 @@ $(document).ready(function(){
 			$('<div id="overlay"> </div>').appendTo(document.body);
 			$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=login&pwd='+$.md5($('#signInPwd').val())+'&email='+$('#signInEmail').val(),success:function(status){
 				$('#overlay').remove();
-				if(status > 0)
+				if(status > 0){
 					window.location= "index.html";	
-				else
+				}else
 					alertBox('Please try again','Invalid email or password');
 			}});
 		}	

@@ -15,7 +15,7 @@ $(document).ready(function(){
 	$( '.contentwrap').css( {"min-height":height.toFixed() + 'em'} );	
     $('.fancybox').fancybox({});
     $(".page-login").click(function () {  // show login page
-		window.location= "login.html";	
+		//window.location= "login.html";	
 	});	
 
 	$("#newpwdConfirm").keypress(function(e) {
@@ -53,7 +53,7 @@ $(document).ready(function(){
 							window.location = chargifydomain+'/h/'+enterprise12+'/subscriptions/new?first_name='+$('#fname').val()+'&last_name='+$('#lname').val()+'&reference='+data.groupId; // redirect
 						}else{
 							alertBox('success','Successfully signed up!');
-							window.location= "index.html";
+							//window.location= "index.html";
 						}
 					}});
 				}	
