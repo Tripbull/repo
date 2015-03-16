@@ -18,7 +18,7 @@ class db{
 	public $dbcon = false;
 	public $path = '';
    function __construct() {
-		if($istest){
+		if($this->istest){
 			$this->freever = 3602345;
 			$this->enterprise12 = 3602787; 
 			$this->chargifydomain = 'tripbull';
