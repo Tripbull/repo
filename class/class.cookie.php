@@ -1,7 +1,5 @@
 <?php
-
-$istrest = true;
-if ($istrest)
+if (strstr($_SERVER['REQUEST_URI'], 'app'))
 	$folde = '/app/';
 else
 	$folde = '/staging/';
