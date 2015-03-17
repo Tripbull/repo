@@ -6,10 +6,10 @@ class db{
 	private $db_user =  DB_USER;
 	private $db_pass =  DB_PASS;
 	private $db_name =	DB_NAME;
-	public $xmluser = 'bd16cl1ppL4dlfLGEyUH'; //username xml access user subscriptions to chargify.com
+	public $xmluser = ''; //username xml access user subscriptions to chargify.com
     public $xmlpwd = 'x'; //pwd xml access user subscriptions to chargify.com
-	public $aws_access_key_id ="AKIAITTJTNGQSODBXOJQ";
-	public $aws_secret_key = "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";
+	public $aws_access_key_id ="";
+	public $aws_secret_key = "";
     public $freever = '';
 	public $istest = false;
 	public $enterprise12 = ''; 
