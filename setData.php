@@ -235,7 +235,7 @@ switch($opt){
 		$mail->addBCC("support@tabluu.com"); 
 		foreach($email->emails as $val)
 			$mail->AddAddress(trim($val)); 
-		//$mail->Send();
+		$mail->Send();
 	break;	
 	case 'onLoc':
 		$placeId = $_REQUEST['key'];
