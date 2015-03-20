@@ -968,62 +968,102 @@ function getPhoto(){
 		}
 }
 
-function showCamera(IDparam){
-/*
-	$.magnificPopup.open({
-		items: {src: IDparam},
-		type: 'inline',
-		preloader: false,
-		focus: '#username',
-		modal: true
-	}); */
+var localStream = null;
 
+function videoStream(video){
+
+	var videoObj = { 'video': true },
+		errBack = function(error) {
+			console.log('Video capture error: ', error.code); 
+		};
+
+	// Put video listeners into place
+	if(navigator.getUserMedia) { // Standard
+		navigator.getUserMedia(videoObj, function(stream) {
+			video.src = stream;
+			localStream = stream;
+		}, errBack);
+	} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+		navigator.webkitGetUserMedia(videoObj, function(stream){
+			video.src = window.URL.createObjectURL(stream);
+			localStream = stream;
+		}, errBack);
+	}
+	else if(navigator.mozGetUserMedia) { // Firefox-prefixed
+		navigator.mozGetUserMedia(videoObj, function(stream){
+			video.src = window.URL.createObjectURL(stream);
+			localStream = stream;
+		}, errBack);
+	}
+
+}
+
+function showCamera(IDparam){
+
+	//testing for video snapshot
+	// get canvas element
+	var canvas = document.getElementById('canvas'),
+		context = canvas.getContext('2d'),
+		video = document.getElementById('video');
+
+	videoStream(video);
 
 	var screen =  $('#screen');
     $('.usesnap').show(); // button fo
     $('.usesnap').hide(); // button fo
-	webcam.set_swf_url('js/webcam.swf');
-	webcam.set_api_url('savecam.php');	// The upload script
-	webcam.set_quality(90);				// JPEG Photo Quality
-	webcam.set_shutter_sound(true, 'shutter.mp3');
 	var curHeight = window.innerWidth,width=0,height=0,ratio;
 	ratio = 0.68;
 	width =  curHeight * ratio;
 	height = window.innerHeight * 0.68;
-	$('.cam-frame').css({width:width});
-	screen.html(webcam.get_html($('.cam-frame').width(), height));
+
+	//set video snapshot
+	$('.snapshot').show(); // Show snapshot buttons
+
 	var shootEnabled = false;
 	$.fancybox({'scrolling':'no','closeEffect':'fade','closeClick':false,'closeBtn':false,'overlayColor': '#000','href' :'#data','overlayOpacity': 0.5}); 
 	$('.snapshot .takesnap').click(function(){
-		if(!shootEnabled) return false;
+		var snd = new Audio("shutter.mp3"); // buffers automatically when created
+		snd.play();
+		//if(!shootEnabled) return false;
 		$('.snapshot').hide(); // button for snapshot
 		$('.usesnap').show(); // button for use		
-		webcam.freeze();
+		context.drawImage(video, 0, 0, 640, 480);
+		$('#video').css({opacity:0});
+		video.pause();
+		localStream.stop();
 		return false;
 	});
 	$('.usesnap .cancelsnap').click(function(e){
 		e.preventDefault();
 		$('.snapshot').show(); // button for snapshot
 		$('.usesnap').hide(); // button for use
-		webcam.reset();
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		videoStream(video);
+		$('#video').css({opacity:1});
+		//webcam.reset();
 		return false;
 	});
 	$('.snapshot .cancelsnap').click(function(e){
 		e.preventDefault();
+		localStream.stop();
 		//$.magnificPopup.close();
 		$.fancybox.close();
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
 	});
 	$('.usesnap .use').click(function(){
-		$('.usesnap').hide();
-		webcam.upload2(placeId);
-		return false;
-	});
-	webcam.set_hook('onLoad',function(){$('.snapshot').show();shootEnabled = true;});
-	
-	webcam.set_hook('onComplete', function(src){
-		//msg = $.parseJSON(msg);
-		urlphotoshared=src;
+
+		var dataUrl = canvas.toDataURL('image/jpg');;
+
+		$.ajax({
+            type: "POST",
+            url: "savecam.php",
+        	data: {"placeId": placeId, "dataUrl" : dataUrl},
+            success: function(data) {
+                
+				urlphotoshared=data;
+				console.log(urlphotoshared);
+            }
+        });
 		//$.magnificPopup.close();
 		$.fancybox.close();
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
@@ -1036,8 +1076,9 @@ function showCamera(IDparam){
 			'overlay_close':false,
 			'buttons':  [{caption: 'okay'}]
 		});	
+
+		return false;
 	});
-	webcam.set_hook('onError',function(e){screen.html(e);}); 
     
 }
 function getUrlVar(key){
