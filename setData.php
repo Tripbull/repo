@@ -222,20 +222,11 @@ switch($opt){
 		$result = mysql_query($sql);
 		$row = mysql_fetch_object($result);
 		$email = json_decode($row->email_alert);
-		require_once 'class/class.phpmailer2.php';
-		$mail = new PHPMailer;
-		$mail->IsAmazonSES();
-		$mail->AddAmazonSESKey($connect->aws_access_key_id, $connect->aws_secret_key);                           // Enable SMTP authentication
-		$mail->CharSet	  =	"UTF-8";                      // SMTP secret 
-		$mail->From = 'support@tabluu.com';
-		$mail->FromName = 'Tabluu Support';
-		$mail->Subject = "Tabluu – Poor Rating Alert!";
-		$mail->AltBody = $body;
-		$mail->Body = $body;
-		$mail->addBCC("support@tabluu.com"); 
-		foreach($email->emails as $val)
-			$mail->AddAddress(trim($val)); 
-		$mail->Send();
+		$subject = "Tabluu - Poor Rating Alert!";
+		foreach($email->emails as $val){
+			$email = trim($val);
+			sendEmail($email,$subject,$body);
+		}
 	break;	
 	case 'onLoc':
 		$placeId = $_REQUEST['key'];
@@ -343,7 +334,7 @@ switch($opt){
 				$cookie->setCookie( $lastId );
 				$subject = 'Tabluu - New Sign up user'; 
 				$body = '<p>Customer name: '. $fname . ' ' . $lname . '</p>'.$tail; 
-				sendEmail($email,$subject,$body);
+				sendEmail($email,$subject,$body,'support@tabluu.com');
 				/*insert the new user to email list sendy*/
 				$time = time();
 				$name =$fname.' '.$lname; //optional
@@ -510,8 +501,8 @@ switch($opt){
 						if (!file_exists('images/shared/'.$id))
 							mkdir('images/shared/'.$id, 0777);
 						$profileimage = $UploadDirectory.$namejpg.'.jpg';
-						copy("https://graph.facebook.com/$userId/picture?width=400&height=400", 'images/'.$namejpg.'.jpg');	
-/*						
+						//copy("https://graph.facebook.com/$userId/picture?width=400&height=400", 'images/'.$namejpg.'.jpg');	
+		
 $headers = get_headers("https://graph.facebook.com/$userId/picture?width=400&height=400",1);
 $url = $headers['Location']; //fb user image URL
 $ch = curl_init( $url );
@@ -528,7 +519,7 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 curl_exec($ch);
 curl_close($ch);
-fclose($fp); */
+fclose($fp);
 						$bresult = mysql_query("SELECT `businessName` FROM `businessList` WHERE `id` = $id");
 						$row = mysql_fetch_object($bresult);
 						$image = new Photos();
@@ -811,7 +802,7 @@ fclose($fp); */
 	break;	
 }
 $connect->db_disconnect();
-function sendEmail($email,$subject,$body){
+function sendEmail($email,$subject,$body,$cc_email=''){
 	require_once 'class/class.phpmailer2.php';
 	include_once('class/class.main.php');
 	$connect = new db();
@@ -824,7 +815,8 @@ function sendEmail($email,$subject,$body){
 	$mail->Subject = $subject;
 	$mail->AltBody = $body;
 	$mail->Body = $body; 
-	$mail->AddAddress("support@tabluu.com");
+	if($cc_email != '')
+		$mail->AddAddress($cc_email);
 	$mail->AddAddress($email);
 	//if($rows->permission > 0)
 		//$mail->addBCC($rows->usermail);

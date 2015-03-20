@@ -262,7 +262,7 @@ switch($opt){
 						<p>As requested, we have to add '. (int)$addloc .' location(s) from your current plan.</p>
 						<p>Happy-Tabluu-ing!</p>
 						<p>Cheers,<br/>Tabluu Support</p>';
-				sendEmail($rows['email'],$subject,$body);		
+				sendEmail($rows['email'],$subject,$body,'support@tabluu.com');		
 			}else
 				$array = array('response'=>$result->response,'code'=>$result->code); 
 			echo json_encode($array); 
@@ -351,7 +351,7 @@ switch($opt){
 					<p>As requested, we have changed your Tabluu plan from '.$currentPlan.' to '.$newplan.'. This change is effective immediately.</p>
 					<p>Happy-Tabluu-ing!</p>
 					<p>Cheers,<br/>Tabluu Support</p>';
-			sendEmail($rows['email'],$subject,$body);	
+			sendEmail($rows['email'],$subject,$body,'support@tabluu.com');	
 		}else{
 			$array = array('response'=>$result->response,'code'=>$result->code); 
 			echo json_encode($array);
@@ -930,41 +930,7 @@ switch($opt){
 
 			<p>Thank you!<br/>
 			Tabluu Support</p>';
-		/*	
-		require_once 'class/class.phpmailer.php';
-		$mail = new PHPMailer;
-		$mail->IsSMTP();                                      // Set mailer to use SMTP
-		$mail->Host = 'in.mailjet.com';  // Specify main and backup server
-		$mail->SMTPAuth = true;                               // Enable SMTP authentication
-		$mail->Username = 'a870a465ad5cc9380df110e322eeb656';                            // SMTP username
-		$mail->Password = '187abdc8be867cea3ddf106100d6fa25';                           // SMTP secret 
-		$mail->SMTPSecure = 'ssl';                            // Enable encryption, 'ssl' also accepted
-		$mail->From = 'support@tabluu.com';
-		$mail->FromName = 'Tabluu Support';
-		$mail->AddAddress("support@tabluu.com");
-		$mail->AddAddress($email);
-		$mail->WordWrap = 50;                                 // Set word wrap to 50 characters
-		$mail->IsHTML(true);                                  // Set email format to HTML
-		$mail->Subject = $subject;
-		$mail->Body    = $body;
-		$mail->AltBody = $body;
-		if(!$mail->Send()) {
-		   echo 0;
-		   exit;
-		}		*/	
-		require_once 'class/class.phpmailer2.php';
-		$mail = new PHPMailer;
-		$mail->IsAmazonSES();//$connect->aws_access_key_id;
-		$mail->AddAmazonSESKey('AKIAITTJTNGQSODBXOJQ', 'o48bdVxr2u1gBvag6SyqH3acR27wpgxTEnrPWTJb');                            // Enable SMTP authentication
-		$mail->CharSet	  =	"UTF-8";                      // SMTP secret 
-		$mail->From = 'support@tabluu.com';
-		$mail->FromName = 'Tabluu Support';
-		$mail->Subject = $subject;
-		$mail->AltBody = $body;
-		$mail->Body = $body;
-		$mail->AddAddress($email); 
-		$mail->addBCC("support@tabluu.com"); 
-		$mail->Send();
+		sendEmail($email,$subject,$body);
 	break;
 	case 'getLoc':
 		$arrayPlace = array();$array=array();$i=0;
@@ -1236,45 +1202,7 @@ switch($opt){
 					<p>Thank you.</p>
 					<p>Tabluu Support</p>';
 		} 
-		/*
-		require_once 'class/class.phpmailer.php';
-		$mail = new PHPMailer;
-		$mail->IsSMTP();                                      // Set mailer to use SMTP
-		$mail->Host = 'in.mailjet.com';  // Specify main and backup server
-		$mail->SMTPAuth = true;                               // Enable SMTP authentication
-		$mail->Username = 'a870a465ad5cc9380df110e322eeb656';                            // SMTP username
-		$mail->Password = '187abdc8be867cea3ddf106100d6fa25';                           // SMTP secret 
-		$mail->SMTPSecure = 'ssl';                            // Enable encryption, 'ssl' also accepted
-		$mail->From = 'support@tabluu.com';
-		$mail->FromName = 'Tabluu Support';
-		$mail->AddAddress("support@tabluu.com");
-		$mail->AddAddress($rows->groupmail);
-		if($rows->permission > 0)
-			$mail->AddAddress($rows->usermail);
-		$mail->WordWrap = 50;                                 // Set word wrap to 50 characters
-		$mail->IsHTML(true);                                  // Set email format to HTML
-		$mail->Subject = $subject;
-		$mail->Body    = $body;
-		$mail->AltBody = $body;
-		if(!$mail->Send()) {
-		   echo 0;
-		   exit;
-		} */
-		require_once 'class/class.phpmailer2.php';
-		$mail = new PHPMailer;
-		$mail->IsAmazonSES();
-		$mail->AddAmazonSESKey('AKIAITTJTNGQSODBXOJQ', 'o48bdVxr2u1gBvag6SyqH3acR27wpgxTEnrPWTJb');                            // Enable SMTP authentication
-		$mail->CharSet	  =	"UTF-8";                      // SMTP secret 
-		$mail->From = 'support@tabluu.com';
-		$mail->FromName = 'Tabluu Support';
-		$mail->Subject = $subject;
-		$mail->AltBody = $body;
-		$mail->Body = $body; 
-		$mail->AddAddress("support@tabluu.com");
-		$mail->AddAddress($rows->groupmail);
-		//if($rows->permission > 0)
-			//$mail->addBCC($rows->usermail);
-		$mail->Send();
+		sendEmail($rows->groupmail,$subject,$body,$cc_email='support@tabluu.com');
 	break;
 	case 'logout':
 		include_once('class/class.cookie.php');
@@ -1295,7 +1223,7 @@ switch($opt){
 }
 $connect->db_disconnect();
 
-function sendEmail($email,$subject,$body){
+function sendEmail($email,$subject,$body,$cc_email=''){
 	require_once 'class/class.phpmailer2.php';
 	include_once('class/class.main.php');
 	$connect = new db();
@@ -1308,7 +1236,8 @@ function sendEmail($email,$subject,$body){
 	$mail->Subject = $subject;
 	$mail->AltBody = $body;
 	$mail->Body = $body; 
-	$mail->AddAddress("support@tabluu.com");
+	if($cc_email != '')
+		$mail->AddAddress($cc_email);
 	$mail->AddAddress($email);
 	//if($rows->permission > 0)
 		//$mail->addBCC($rows->usermail);
@@ -1316,6 +1245,7 @@ function sendEmail($email,$subject,$body){
 	$mail->Send();
 	return;
 }
+
 function getLocations($userId,$permission){
 	include_once('class/class.main.php');
 	$connect = new db();

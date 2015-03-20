@@ -89,7 +89,7 @@ $connect->db_disconnect();
 					<div class="cam-frame">
 					<div style="height:480px;">
 						<canvas id="canvas" style="position:absolute;" width="640" height="480"></canvas>
-						<video id="video" stlye="position:absolute;" width="640" height="480"></video>
+						<video id="video" stlye="position:absolute;" width="640" height="480" autoplay></video>
 					</div>
 					<!-- <div id="screen"></div> -->
 					<div class="snapshotbutton">

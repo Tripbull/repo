@@ -124,15 +124,17 @@ function alertform(){
 					$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId+'&lastId='+last_Id+'&opt=poorRating&'+$('#frmalert').serialize(),success:function(lastId){
 					$("#overlay").remove();
 					txtname='',txtphone='',txtemail='';
+						sendEmail2Client(0);
 					}});
-					if(isTakeSelfie == '' || isTakeSelfie == 2)
-						$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });
+					//if(isTakeSelfie == '' || isTakeSelfie == 2)
+						//$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });
 				}	
 			}else{	
 				showLoader();
 				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId+'&lastId='+last_Id+'&opt=poorRating&'+$('#frmalert').serialize(),success:function(lastId){
 					$("#overlay").remove();
 					txtname='',txtphone='',txtemail='';
+						sendEmail2Client(0);
 					}});	
 				if(isTakeSelfie == '' || isTakeSelfie == 2)
 					$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });	
@@ -705,7 +707,7 @@ function loginFb(){
 					preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,aveRated.toFixed(1)).replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'https://www.tabluu.com/'+customArray.nicename+'.html').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,ratecomment);
 					//preview = 'I rate '+customArray.businessName+' '+aveRated.toFixed(1)+' out of 5. '+	  ratecomment+' Go to: http://www.tabluu.com/'+nicename+'.html - Addr: '+ address +'. Tel: '+customArray.contactNo+'.';
 				}
-				var location = fbPhotoPathShare;
+				var location = 'https://www.tabluu.com/app/';
 				if(isphototakedone < 0 && takeaphoto > 0){ // take the camera? && check if the photo temporary done uploaded
 					setTimeout(function() {
 						username = response.name;
@@ -966,14 +968,11 @@ function getPhoto(){
 		}
 }
 
-function showCamera(IDparam){
+var localStream = null;
 
-	//testing for video snapshot
-	// get canvas element
-	var canvas = document.getElementById('canvas'),
-		context = canvas.getContext('2d'),
-		video = document.getElementById('video'),
-		videoObj = { 'video': true },
+function videoStream(video){
+
+	var videoObj = { 'video': true },
 		errBack = function(error) {
 			console.log('Video capture error: ', error.code); 
 		};
@@ -982,29 +981,31 @@ function showCamera(IDparam){
 	if(navigator.getUserMedia) { // Standard
 		navigator.getUserMedia(videoObj, function(stream) {
 			video.src = stream;
-			video.play();
+			localStream = stream;
 		}, errBack);
 	} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
 		navigator.webkitGetUserMedia(videoObj, function(stream){
-			video.src = window.webkitURL.createObjectURL(stream);
-			video.play();
+			video.src = window.URL.createObjectURL(stream);
+			localStream = stream;
 		}, errBack);
 	}
 	else if(navigator.mozGetUserMedia) { // Firefox-prefixed
 		navigator.mozGetUserMedia(videoObj, function(stream){
 			video.src = window.URL.createObjectURL(stream);
-			video.play();
+			localStream = stream;
 		}, errBack);
 	}
-/*
-	$.magnificPopup.open({
-		items: {src: IDparam},
-		type: 'inline',
-		preloader: false,
-		focus: '#username',
-		modal: true
-	}); */
 
+}
+function showCamera(IDparam){
+
+	//testing for video snapshot
+	// get canvas element
+	var canvas = document.getElementById('canvas'),
+		context = canvas.getContext('2d'),
+		video = document.getElementById('video');
+
+	videoStream(video);
 
 	var screen =  $('#screen');
     $('.usesnap').show(); // button fo
@@ -1027,21 +1028,23 @@ function showCamera(IDparam){
 		$('.usesnap').show(); // button for use		
 		context.drawImage(video, 0, 0, 640, 480);
 		$('#video').css({opacity:0});
-		//webcam.freeze();
+		video.pause();
+		localStream.stop();
 		return false;
 	});
 	$('.usesnap .cancelsnap').click(function(e){
 		e.preventDefault();
 		$('.snapshot').show(); // button for snapshot
 		$('.usesnap').hide(); // button for use
-
 		context.clearRect(0, 0, canvas.width, canvas.height);
+		videoStream(video);
 		$('#video').css({opacity:1});
 		//webcam.reset();
 		return false;
 	});
 	$('.snapshot .cancelsnap').click(function(e){
 		e.preventDefault();
+		localStream.stop();
 		//$.magnificPopup.close();
 		$.fancybox.close();
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
@@ -1057,8 +1060,6 @@ function showCamera(IDparam){
             success: function(data) {
                 
 				urlphotoshared=data;
-
-
 				console.log(urlphotoshared);
             }
         });
@@ -1079,6 +1080,90 @@ function showCamera(IDparam){
 	});
     
 }
+function showCamera(IDparam){
+
+	//testing for video snapshot
+	// get canvas element
+	var canvas = document.getElementById('canvas'),
+		context = canvas.getContext('2d'),
+		video = document.getElementById('video');
+
+	videoStream(video);
+
+	var screen =  $('#screen');
+    $('.usesnap').show(); // button fo
+    $('.usesnap').hide(); // button fo
+	var curHeight = window.innerWidth,width=0,height=0,ratio;
+	ratio = 0.68;
+	width =  curHeight * ratio;
+	height = window.innerHeight * 0.68;
+
+	//set video snapshot
+	$('.snapshot').show(); // Show snapshot buttons
+
+	var shootEnabled = false;
+	$.fancybox({'scrolling':'no','closeEffect':'fade','closeClick':false,'closeBtn':false,'overlayColor': '#000','href' :'#data','overlayOpacity': 0.5}); 
+	$('.snapshot .takesnap').click(function(){
+		var snd = new Audio("shutter.mp3"); // buffers automatically when created
+		snd.play();
+		//if(!shootEnabled) return false;
+		$('.snapshot').hide(); // button for snapshot
+		$('.usesnap').show(); // button for use		
+		context.drawImage(video, 0, 0, 640, 480);
+		$('#video').css({opacity:0});
+		video.pause();
+		localStream.stop();
+		return false;
+	});
+	$('.usesnap .cancelsnap').click(function(e){
+		e.preventDefault();
+		$('.snapshot').show(); // button for snapshot
+		$('.usesnap').hide(); // button for use
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		videoStream(video);
+		$('#video').css({opacity:1});
+		//webcam.reset();
+		return false;
+	});
+	$('.snapshot .cancelsnap').click(function(e){
+		e.preventDefault();
+		localStream.stop();
+		//$.magnificPopup.close();
+		$.fancybox.close();
+		closeselfie=1;clearInterval(timeInverval);refresh_handler();
+	});
+	$('.usesnap .use').click(function(){
+
+		var dataUrl = canvas.toDataURL('image/jpg');;
+
+		$.ajax({
+            type: "POST",
+            url: "savecam.php",
+        	data: {"placeId": placeId, "dataUrl" : dataUrl},
+            success: function(data) {
+                
+				urlphotoshared=data;
+				console.log(urlphotoshared);
+            }
+        });
+		//$.magnificPopup.close();
+		$.fancybox.close();
+		closeselfie=1;clearInterval(timeInverval);refresh_handler();
+		//hideLoader();
+		$.box_Dialog('If the option to share on Facebook is chosen later, this photo will be used.', {
+			'type':     'question',
+			'title':    '<span class="color-white">photo captured<span>',
+			'center_buttons': true,
+			'show_close_button':false,
+			'overlay_close':false,
+			'buttons':  [{caption: 'okay'}]
+		});	
+
+		return false;
+	});
+    
+}
+
 function getUrlVar(key){
 	var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
 	return result && unescape(result[1]) || ""; 
