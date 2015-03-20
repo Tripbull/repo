@@ -124,15 +124,17 @@ function alertform(){
 					$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId+'&lastId='+last_Id+'&opt=poorRating&'+$('#frmalert').serialize(),success:function(lastId){
 					$("#overlay").remove();
 					txtname='',txtphone='',txtemail='';
+						sendEmail2Client(0);
 					}});
-					if(isTakeSelfie == '' || isTakeSelfie == 2)
-						$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });
+					//if(isTakeSelfie == '' || isTakeSelfie == 2)
+						//$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });
 				}	
 			}else{	
 				showLoader();
 				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId+'&lastId='+last_Id+'&opt=poorRating&'+$('#frmalert').serialize(),success:function(lastId){
 					$("#overlay").remove();
 					txtname='',txtphone='',txtemail='';
+						sendEmail2Client(0);
 					}});	
 				if(isTakeSelfie == '' || isTakeSelfie == 2)
 					$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });	
@@ -705,7 +707,7 @@ function loginFb(){
 					preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,aveRated.toFixed(1)).replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'https://www.tabluu.com/'+customArray.nicename+'.html').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,ratecomment);
 					//preview = 'I rate '+customArray.businessName+' '+aveRated.toFixed(1)+' out of 5. '+	  ratecomment+' Go to: http://www.tabluu.com/'+nicename+'.html - Addr: '+ address +'. Tel: '+customArray.contactNo+'.';
 				}
-				var location = fbPhotoPathShare;
+				var location = 'https://www.tabluu.com/app/';
 				if(isphototakedone < 0 && takeaphoto > 0){ // take the camera? && check if the photo temporary done uploaded
 					setTimeout(function() {
 						username = response.name;
