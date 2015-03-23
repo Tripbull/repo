@@ -59,7 +59,14 @@ function sendEmail2Client(cases){
 	$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId+'&opt=sendEmail2Client&cases='+cases+'&name='+username,success:function(lastId){
 		setTimeout(function() {
 			hideLoader();
+				if(isTakeSelfie == 0 || isTakeSelfie == 1 || isTakeSelfie == 'e'){
 				window.location = domainpath+nicename+'.html';
+			}
+			else
+			{
+				setdefault();
+				$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });
+			}
 		}, 300);	
 	}}); 
 }
