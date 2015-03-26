@@ -708,12 +708,24 @@ function loginFb(){
 				var nicename = customArray.nicename;
 				var preview = '';
 				if(customArray.fbpost != ""){
-					preview = String(customArray.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,aveRated.toFixed(1)).replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'https://www.tabluu.com/'+customArray.nicename+'.html').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,ratecomment);
+					preview = String(customArray.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,aveRated.toFixed(1)).replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'https://www.tabluu.com/'+customArray.nicename+'.html').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo);
+						var t = String(customArray.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'5').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'https://www.tabluu.com/'+customArray.nicename+'.html').replace(/<address>/,address);
 				}else{
 					var defaultstr = '<comment>. <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.';
-					preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,aveRated.toFixed(1)).replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'https://www.tabluu.com/'+customArray.nicename+'.html').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,ratecomment);
+					preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,aveRated.toFixed(1)).replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'https://www.tabluu.com/'+customArray.nicename+'.html').replace(/<address>/,address);
 					//preview = 'I rate '+customArray.businessName+' '+aveRated.toFixed(1)+' out of 5. '+	  ratecomment+' Go to: http://www.tabluu.com/'+nicename+'.html - Addr: '+ address +'. Tel: '+customArray.contactNo+'.';
 				}
+				if($.trim(ratecomment) === ''){
+					preview = String(preview).replace('<comment>. ','');
+					preview = String(preview).replace(/<comment>/,'');
+				}else
+					preview = String(preview).replace(/<comment>/,ratecomment);
+					
+				if($.trim(customArray.contactNo) === ''){
+					preview = String(preview).replace(', <tel>','');
+					preview = String(preview).replace(/<tel>/,'');
+				}else
+					preview = String(preview).replace(/<tel>/,customArray.contactNo);	
 				var location = 'https://www.tabluu.com/app/';
 				if(isphototakedone < 0 && takeaphoto > 0){ // take the camera? && check if the photo temporary done uploaded
 					setTimeout(function() {

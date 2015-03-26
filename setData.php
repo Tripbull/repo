@@ -334,7 +334,7 @@ switch($opt){
 				$cookie->setCookie( $lastId );
 				$subject = 'Tabluu - New Sign up user'; 
 				$body = '<p>Customer name: '. $fname . ' ' . $lname . '</p>'.$tail; 
-				sendEmail($email,$subject,$body,'support@tabluu.com');
+				sendEmail('support@tabluu.com',$subject,$body);
 				/*insert the new user to email list sendy*/
 				$time = time();
 				$name =$fname.' '.$lname; //optional

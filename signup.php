@@ -3,7 +3,7 @@ session_start();
 $ur_session = rand(0, 15);
 $_SESSION['session']=$ur_session;
 $fname='';$lname='';$email='';$lastid='';
-	
+$_SESSION['typeofaccnt']='a';	
 if(isset($_REQUEST['cust_id'])){
 	include_once('class/class.main.php');
 	$connector = new fucn();
