@@ -17,7 +17,7 @@ $(document).ready(function() {
 	function scrollToTopCheck() {
 		if ($(window).scrollTop() > 500) $("#ScrollToTop").show();
 		else $("#ScrollToTop").hide();
-		if($(window).scrollTop() >= $(document).height() - $(window).height()) {
+		if(($(window).scrollTop()+1) >= ($(document).height() - $(window).height())) {
 			if(window.innerWidth > 600){
 				if(isResult < 1){
 					$( "#overlay" ).show();
