@@ -13,7 +13,7 @@ var questionDefault = ['How would you rate our staff based on how welcoming and 
 var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619;
 var istest = false,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
 
-function alertBox(title,message){robert
+function alertBox(title,message){ // testing
 	clearTimeout(resizeTimeout);
 	resizeTimeout = setTimeout(function(){ 
 	$.box_Dialog(decodequote(message), {
