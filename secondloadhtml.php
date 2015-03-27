@@ -57,7 +57,9 @@ $hadTable = $connect->tableIsExist('businessplace_'.$placeId);
 if($hadTable){
 	$timezone = mysql_fetch_object(mysql_query("SELECT u.timezone FROM businessList as l LEFT JOIN businessUserGroup AS u ON u.gId = l.userGroupId WHERE l.id = $placeId LIMIT 1"));
 	$timezone = $timezone->timezone;
-	$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
+	// DUPLICATE FIX
+	$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
+	//$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
 	if( mysql_num_rows($resultFeature)){
 		while($rowrate = mysql_fetch_object($resultFeature)){
 			include('reviewshtml.php');
