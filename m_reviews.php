@@ -71,12 +71,16 @@ if($hadTable){
 			echo 0;	
 	}else{
 		
-		$result = mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb'") or die(mysql_error());
+		//$result = mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb'") or die(mysql_error());
+		// DUPLICATE FIX
+		$result =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date") or die(mysql_error());
 		if(mysql_num_rows($result) > 0){
 			$offset = ($offset > 0 ? $offset-1 : $offset); 
 		}
 			
-		$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId WHERE source = 'fb' AND feature=0 ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
+		//$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId WHERE source = 'fb' AND feature=0 ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
+		// DUPLICATE FIX
+		$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
 		if( mysql_num_rows($resultFeature)){
 			while($rowrate = mysql_fetch_object($resultFeature)){
 				include('m_reviewshtml.php');
