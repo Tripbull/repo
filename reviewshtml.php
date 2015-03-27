@@ -82,7 +82,7 @@
 			$server_tz = 'UTC';
 			$date = new DateTime($datetoconvert, new DateTimeZone($server_tz) );
 			$date->setTimeZone(new DateTimeZone($user_tz));						
-			echo $date->format('d M Y H:i') ?> hrs.
+			echo $date->format('d M Y, h:ia') ?>.
 			<?php
 				if(count($ratingTextTemp) == 1){
 					$rating1 = $rowrate->rated1;				
