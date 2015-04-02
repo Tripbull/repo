@@ -11,7 +11,7 @@ class db{
 	public $aws_access_key_id = AWS_KEY_ID;
 	public $aws_secret_key = AWS_KEY;
     public $freever = '';
-	public $istest = false;
+	public $istest = true;
 	public $enterprise12 = ''; 
 	public $basicID=3356305; public $proID=3356306; public $proplusID =3356316;
     public $chargifydomain = '';

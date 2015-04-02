@@ -1,4 +1,4 @@
-var curClick=0,locId=0,frmpagemanage=0,setupclickmenu=0,defaultSetup=0,noPhoto = 'images/template/no-photo.gif',loadingPhoto = 'images/template/no-photo-tran.gif',isprofileupdated=0,reviewQuestion=[],feedbackArray=[],featureArray=[],inviteEmailvisited=0;
+var curClick=0,locId=0,frmpagemanage=0,setupclickmenu=0,defaultSetup=0,noPhoto = 'images/template/no-photo.gif',loadingPhoto = 'images/template/no-photo-tran.gif',isprofileupdated=0,reviewQuestion=[],feedbackArray=[],featureArray=[],inviteEmailvisited=0,isAdminCreatedLocation=0;
 var locArray=[],userArray=[],customArray=[],viewOnce=0,geocoder,lat=0,lng=0,domainFile="http://www.tabluu.com";chargifydomain = 'https://tabluu.chargify.com';
 var locDefault = '',placeId=0,placename='',keyId=0,loader='',activeLocLength=1,isfocus=0,t=0,comp_id_old=0;
 var online ='images/template/active.png',onlineBg='images/template/activeOnline.png',offline ='images/template/inactive.png',offlineBg='images/template/activeOffline.png',imagesArray=[],txtdescription='',txtimg='',product_plan_array=[],component_array=[],transac=[],activity_array=[],issetup = 0;
@@ -8,7 +8,7 @@ var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 
 var com_basicID=26331,com_basic12 = 39047,com_basic24 = 39048,com_proID=26332,com_pro12 = 39050,com_pro24 = 39051,com_enterprise=26333,com_enterprise12 =39053,com_enterprise24 =39054,newentryloc = 0; 
 //compoentprice
 com_basicID_price=9.90,com_basic12_price = 99.00,com_basic24_price = 178.20,com_proID_price=29.90,com_pro12_price = 299.00,com_pro24_price = 538.20,com_enterprise_price=59.90,com_enterprise12_price =599.00,com_enterprise24_price =1078.20;
-var istest=false,domainpath='',pathfolder='';
+var istest=true,domainpath='',pathfolder='';
 var creditsFree=0,creditsBasic = 2000, creditsPro = 5000, creditsEnterprise = 10000,creditsPrise = 6000;
 var newplaceId,profilewizardsetup=0,uicwizardsetup=0,questionwizardsetup=0,emailwizardsetup=0,resizeTimeout;
 var state_Array = ['unpaid','canceled'];
@@ -26,7 +26,7 @@ $(document).ready(function(){
 		//test component chargify ids
 		com_basicID=27367,com_basic12 = 69598,com_basic24 = 69599,com_proID=27368,com_pro12 = 69600,com_pro24 = 69601,com_enterprise=69597,com_enterprise12 =69602,com_enterprise24 =69603;
 		chargifydomain = 'https://tripbull.chargify.com';
-		domainpath = '';pathfolder = 'https://www.tabluu.com/app/';
+		domainpath = '';pathfolder = 'https://www.tabluu.com/staging/';
 	}else{
 		domainpath = 'https://www.tabluu.com/';
 		chargifydomain = 'https://tabluu.chargify.com';
@@ -150,6 +150,9 @@ $(document).ready(function(){
 						wizardforloction();
 				}
 			}
+		}else{
+			if(isAdminCreatedLocation > 0)
+				wizardforloction();
 		}
 	}
 	
@@ -466,6 +469,8 @@ $(document).ready(function(){
 			if( parseInt(curActive) >= parseInt(activeLocLength) )
 				subs = 1;
 			setData({opt:'setLoc',userId:userArray.id,name:name,subs:subs});
+			if(userArray.permission == 1)
+				isAdminCreatedLocation = 1;
 		}
 	}
 	$( window ).resize(function() { // when window resize
@@ -3665,7 +3670,7 @@ $(document).on('pageshow','#plan', function () {
 	}else
 		initiazePlan();
    function initiazePlan(){
-		var plan='',txtPlan='';$('#lblExpired').show();$('.ifcancel').show(),$('.addlocation').show();$('.btncancelplan').hide();$('#lblcostLoc').hide();$('#lblTotal').hide();$('#lblperLoc').show();$('.btnreactivate').hide();
+		var plan='',txtPlan='';$('#lblExpired').show();$('.ifcancel').show(),$('.addlocation').hide();$('.btncancelplan').hide();$('#lblcostLoc').hide();$('#lblTotal').hide();$('#lblperLoc').show();$('.btnreactivate').hide();$('#submit-planremove').hide();
 		var state = userArray.state,currentPlan='';
 		state= state.substr(0, 1).toUpperCase() + state.substr(1);
 		$('#lblStatus').html('Status: '+state);
@@ -3684,14 +3689,16 @@ $(document).on('pageshow','#plan', function () {
 			}	
 			$('#lblExpired').html('Expiration date (plan & locations): '+userArray.expiration);
 			currPlaceAvail = parseInt(userArray.addLoc) + 1;
-			$('#submit-planremove').show();
-			if(currPlaceAvail < 2)
-				$('#submit-planremove').hide();
 			$('#lblTotalSubs').html('Total # of locations: '+ currPlaceAvail);
 			$('#label7').html('Free: 1');
 			$('#label8').html('Subscribed: '+ userArray.addLoc);
-			if(userArray.productId != 0 && userArray.productId != everFree)
+			if(userArray.subscription_id != 0){
 				$('.btncancelplan').show();
+				$('.addlocation').show();
+				if(currPlaceAvail > 1)
+					$('#submit-planremove').show();
+			}
+			
 		}else{
 			$('.btnreactivate').show();
 			$('.ifcancel').hide();
@@ -3950,6 +3957,7 @@ $(document).on('pageshow','#plan', function () {
 			var ids = id.split('_');
 			if(userArray.permission < 2){
 				if(userArray.subscription_id == 0){
+					showLoader();
 					window.location = chargifydomain+'/h/'+ids[0]+'/subscriptions/new?first_name='+userArray.fname+'&last_name='+userArray.fname+'&reference='+userArray.userGroupId; // redirect
 				}else{
 					if(parseFloat(ids[1]) > parseFloat(currentPlanprice))
@@ -4278,12 +4286,12 @@ $(document).on('pageshow','#admin', function () {
 			$('<div id="overlay"></div>').appendTo(document.body);
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'id='+userArray.id+'&opt=updatepwd&fname='+$('#txtfname1').val()+'&lname='+$('#txtlname1').val()+'&email='+$('#txtaddress').val()+'&pwd='+$.md5($('#newpwd').val()),success:function(lastId){
 				$('#overlay').remove();
+				userArray.email = $('#txtaddress').val();
 				alertBox('updated','Password updated');
 			}});
 			
 		}
 	});
-	
 	$('#submit-invite').click(function(){ // add users
 		var totalUsers = listuser;
 		var numUsers=0;   
@@ -4759,7 +4767,14 @@ $(document).on('pageshow','#onspot', function () {
 	$('#onspot .ui-content').css({"background-color":'#E6E7E8'})
 	$( "#onspot .left-header" ).html('Tablet "On the Spot" Feedback');
 	$( "#onspot .right-header" ).html( placename );
-	onspotbackMenu(curClick);
+	showLoader();
+	var placeId = locId.split('|');
+	$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+placeId[0]+'&opt=getFeedbackUser',success:function(result){
+		hideLoader();
+		customArray =  $.parseJSON(result);
+		onspotbackMenu(curClick);	
+	}});
+	
 });	
 
 //==================================================== Collect Feedback / Reviews =============================================== 

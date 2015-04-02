@@ -259,7 +259,7 @@ switch($opt){
 				$array = array_merge(array('response'=>$rows,'code'=>$result->code));
 				$subject = 'add new location(s) request'; 
 				$body = '<p>Hi '.$rows['fname'] . ',</p>
-						<p>As requested, we have to add '. (int)$addloc .' location(s) from your current plan.</p>
+						<p>As requested, we have added '. (int)$_REQUEST['addloc'] .' location(s) to your Tabluu account.</p>
 						<p>Happy-Tabluu-ing!</p>
 						<p>Cheers,<br/>Tabluu Support</p>';
 				sendEmail($rows['email'],$subject,$body,'support@tabluu.com');		
@@ -390,7 +390,7 @@ switch($opt){
 		$sql = "SELECT p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.longitude,p.latitude, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.showmap, p.email, p.booknow, l.subscribe, g.email as gmail, d.description, o.opening, c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.printvalue,c.optsocialpost FROM businessList AS l
 		LEFT JOIN businessProfile AS p ON p.profilePlaceId = l.id
 		LEFT JOIN businessDescription AS d ON d.descPlaceId = l.id
-		LEFT JOIN businessUserGroup AS g ON g.gId = l.userGroupId
+		LEFT JOIN businessUsers AS g ON g.userGroupId = l.userGroupId AND permission = 0
 		LEFT JOIN businessOpeningHours AS o ON o.openingPlaceId = l.id
 		LEFT JOIN businessCustom AS c ON c.customPlaceId = l.id
 		WHERE l.id =  $placeId
@@ -590,7 +590,7 @@ switch($opt){
 	break;
 	case 'getrate':
 		$nice = $_REQUEST['nice'];
-		$sql = "SELECT c.customPlaceId as placeId,p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.city, p.country, p.zip, p.contactNo, p.showmap,c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,g.state,g.productId,l.subscribe,c.optsocialpost FROM businessProfile AS p
+		$sql = "SELECT c.customPlaceId as placeId,p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.city, p.country, p.zip, p.contactNo, p.showmap,c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,g.state,g.productId,g.suspend,l.subscribe,c.optsocialpost FROM businessProfile AS p
 		LEFT JOIN businessCustom AS c ON c.customPlaceId = p.profilePlaceId
 		LEFT JOIN businessList AS l ON l.id = p.profilePlaceId
 		LEFT JOIN businessUserGroup AS g ON g.gId = l.userGroupId
@@ -896,18 +896,23 @@ switch($opt){
 			echo 0;
 	break;
 	case 'login':
-		//session_start();
 		include_once('class/class.cookie.php');
 		$email = $_REQUEST['email'];
 		$pwd = $_REQUEST['pwd'];
-		$sql = "SELECT u.id FROM businessUsers as u LEFT JOIN businessUserGroup as g ON g.gId = u.userGroupId
-		WHERE u.email =  '$email' AND u.pwd = '$pwd' AND g.suspend = 0";
+		$sql = "SELECT u.id,g.suspend FROM businessUsers as u LEFT JOIN businessUserGroup as g ON g.gId = u.userGroupId
+		WHERE u.email =  '$email' AND u.pwd = '$pwd'";
 		$result = mysql_query($sql);
+		//echo mysql_num_rows($result);
+		//die();
 		if(mysql_num_rows($result)){
 			$row = mysql_fetch_object($result);
-			$cookie = new cookie();
-			$cookie->setCookie( $row->id );
-			echo 1;	
+			if($row->suspend)
+				echo 2;
+			else{
+				$cookie = new cookie();
+				$cookie->setCookie( $row->id );
+				echo 1;
+			}
 		}else	
 			echo 0;
 	break;

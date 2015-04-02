@@ -279,6 +279,8 @@ switch($opt){
 		$sql = "UPDATE businessUsers SET fname='$fname',lname='$lname',pwd='".$pwd."',email='$email' WHERE id = $id";	
 		mysql_query($sql);
 		echo (mysql_affected_rows() ? 1 : 0);
+		//$sql = "UPDATE businessUserGroup SET fname='$fname',lname='$lname',pwd='".$pwd."',email='$email' WHERE id = $id";	
+		//mysql_query($sql);
 	break;
 	case 'signup':
 		include_once('class/class.cookie.php');
@@ -338,7 +340,8 @@ switch($opt){
 				/*insert the new user to email list sendy*/
 				$time = time();
 				$name =$fname.' '.$lname; //optional
-				mysql_query('INSERT INTO subscribers (userID, email, name, custom_fields, list, timestamp) VALUES (1, "'.$email.'", "'.$name.'", "", 2, '.$time.')');	
+				$join_date = round(time()/60)*60;
+				mysql_query('INSERT INTO subscribers (userID, email, name, custom_fields, list, timestamp, join_date) VALUES (1, "'.$email.'", "'.$name.'", "", 2, '.$time.', '.$join_date.')');
 		}
 	break;
 	case 'wizardsetupdone':

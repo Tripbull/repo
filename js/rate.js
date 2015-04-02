@@ -11,7 +11,7 @@ var counter1 = 0,counter2 = 0,counter3 = 0,counter4 = 0,counter5 = 0,counter6 = 
 var questionDefault = ['How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again'];
 //live mode chargify ids
 var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619;
-var istest = false,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
+var istest = true,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
 
 function alertBox(title,message){ // testing
 	clearTimeout(resizeTimeout);
@@ -726,7 +726,7 @@ function loginFb(){
 					preview = String(preview).replace(/<tel>/,'');
 				}else
 					preview = String(preview).replace(/<tel>/,customArray.contactNo);	
-				var location = 'https://www.tabluu.com/app/';
+				var location = 'https://www.tabluu.com/staging/';
 				if(isphototakedone < 0 && takeaphoto > 0){ // take the camera? && check if the photo temporary done uploaded
 					setTimeout(function() {
 						username = response.name;
@@ -1131,7 +1131,7 @@ $(document).on('pageinit','#rateone', function() {
 			else{
 			customArray =  $.parseJSON(result);
 			hideLoader();
-			//urlphotoshared=customArray.fbImg;
+			if(customArray.suspend == 0){ //check if the account is suspended
 			 var toberate=[],selectedItems=[];
 			 if(customArray.item2Rate != '')
 				toberate = $.parseJSON(customArray.item2Rate);
@@ -1271,7 +1271,9 @@ $(document).on('pageinit','#rateone', function() {
 			}	
 			$(".loc-login").on( 'click', function () {login()});
 			//clearconsole();
-			}
+			}else
+				alertErrorPage('account suspended',"Please contact Tabluu Support to unsuspend your account.");
+			}	
 		}});
 		$( window ).resize(function() { // when window resize
 			rate_initialize();

@@ -21,6 +21,16 @@ if(!$cookie->validateAuthCookie()){
 	}	
 }
 /*
+	$data = '<?xml version="1.0" encoding="UTF-8"?>
+        <customer>
+          <email>robert.garlope@tabluu.com</email>
+        </customer>';
+	 $url = '/customers/8077961.xml'; // downgrade/downgrade delay 
+	//$result = $connector->sendRequest($url, $format = 'xml', $method = 'PUT', $data);
+$data = $co->sendRequest($url, $format = 'xml', $method = 'PUT', $data);
+print_r($data);
+die();
+
 $datetoconvert = '2014-12-18 14:52:21';
 $user_tz = 'Asia/Singapore';//'America/Chicago';
 $server_tz = 'UTC';
