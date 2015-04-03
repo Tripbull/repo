@@ -754,7 +754,7 @@ function loginFb(){
 				  //JSON.stringify(response)
 				   if(typeof(urlphotoshared) == 'undefined' || urlphotoshared == ''){
 					  urlphotoshared=customArray.fbImg;
-					}  
+					} 
 					username = response.name;
 					var p = 'placeId='+placeId+'&rated1='+rate_1+'&rated2='+rate_2+'&rated3='+rate_3+'&rated4='+rate_4+'&rated5='+rate_5+'&rated6='+rate_6+'&rated7='+rate_7+'&aveRate='+aveRated.toFixed(1)+'&comment='+ratecomment+'&userName='+response.name+'&userId='+response.id+'&email='+response.email+'&totalFriends='+friendlist.data.length+'&photo_url='+urlphotoshared+'&case=2&param='+isTakeSelfie+'&socialopt='+customArray.optsocialpost+'&source=fb&data='; 
 					$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=ratesave&'+p,success:function(share_photo){

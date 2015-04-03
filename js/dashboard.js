@@ -46,7 +46,7 @@ $(document).ready(function(){
 			var redirect = "index.html";
 			$('.addnew-loc').hide();
 			$('.text-loc').show();
-			$('#text-6').val(' ');
+			//$('#text-6').val(' ');
         }else if(whatsetup == 3){
 			var title = 'Setup Wizard - Step 3 / 6';
 			var body = '<p>Please complete your business profile.</p>';
