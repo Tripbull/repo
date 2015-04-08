@@ -88,14 +88,19 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 <input type="hidden" name="path" id="path" value="<?php echo $path ?>" />
 <div id="loadme"></div>
 
-<?php require_once('../homerepo/browser_detection.php'); ?>
+<?php require_once('browser_detection.php'); ?>
 <a name="top"></a>
 <div class="header">
     <div class="HeaderContainer">
         <div class="d-logo"><a href="/" class="Pinme"><img alt="www.tabluu.com" src="<?=$path?>images/white-logo-tabluu-page.png" /></a></div>
     </div>		
 </div>
-
+<?php 
+   if($browser['browser'] =="IE" )
+        echo '<input type="hidden" value="50" name="blimit" id="blimit" />';
+   else
+		echo '<input type="hidden" value="15" name="blimit" id="blimit" />';
+?>
 <div class="ColumnContainer">
 <!--CONTENT STARTS HERE-->
 <div id="wrapheader">

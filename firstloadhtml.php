@@ -7,7 +7,7 @@ $placeId = $_REQUEST['placeId'];
 switch($_REQUEST['opt']){
 
 	case 'review':
-
+        $offset = $_REQUEST['offset'];
 		$sql = "SELECT c.item2Rate,c.selectedItems,c.reviewPost,c.logo FROM businessCustom AS c WHERE c.customPlaceId = $placeId LIMIT 1";
 		$result1 = mysql_query($sql) or die(mysql_error());
 		$row = mysql_fetch_object($result1);
@@ -117,12 +117,13 @@ switch($_REQUEST['opt']){
 					mysql_query("ALTER TABLE `businessplace_$placeId` ADD `feature` TINYINT NOT NULL");
 				//$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' ORDER BY date DESC LIMIT 4") or die(mysql_error());
 				// DUPLICATE FIX
-				$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT 4") or die(mysql_error());
+				//echo "SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}";
+				$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}") or die(mysql_error());
 				if(mysql_num_rows($resultFeature))
 					$result = $resultFeature;
 				else{
 					// DUPLICATE FIX
-					$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT 4") or die(mysql_error());
+					$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}") or die(mysql_error());
 					//$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' ORDER BY date DESC LIMIT 4");
 					//$rateResult = mysql_query("SELECT * FROM (SELECT * FROM  `businessplace_1353` WHERE  `source` =  'fb' ORDER BY id DESC) AS output_name GROUP BY  `userId` ORDER BY DATE DESC");
 					$result = $rateResult;

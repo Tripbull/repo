@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var isResult = 0,m_isResult=0,j=0,featureOffset=4,notfeatureOffset=0,reviewOffset=0,limit=10,m_featureOffset=1,m_notfeatureOffset=1,m_reviewOffset=2,m_limit=5,triggerload = false,path=$( "#path" ).val();
+	var isResult = 0,m_isResult=0,j=0,featureOffset=$('#blimit').val(),notfeatureOffset=0,reviewOffset=0,limit=$('#blimit').val(),m_featureOffset=1,m_notfeatureOffset=1,m_reviewOffset=2,m_limit=5,triggerload = false,path=$( "#path" ).val();
 	$( ".resizeme" ).aeImageResize({ height: 176, width: 176 });
 	//App.tabledList.init("#sysPinsList");
 	$( window ).resize(function() { // when window resize
@@ -15,6 +15,8 @@ $(document).ready(function() {
 	});
 	function hideloader(){setTimeout(function(){$( "#overlay" ).hide();},1000);}
 	function scrollToTopCheck() {
+		if ( timer ) clearTimeout(timer);
+        timer = setTimeout(function(){
 		 // fix for IE bug on tabluu page
 		$(".vdesktop .header").css('top', '0px');
 		if($(window).scrollTop() == 0)
@@ -25,6 +27,7 @@ $(document).ready(function() {
 		
 		if ($(window).scrollTop() > 500) $("#ScrollToTop").show();
 		else $("#ScrollToTop").hide();
+		 
 		if(($(window).scrollTop()+1) >= ($(document).height() - $(window).height())) {
 			if($(window).width() > 600){
 				if(isResult < 1){
@@ -37,15 +40,16 @@ $(document).ready(function() {
 									isResult = 1;
 								else{	
 									notfeatureOffset = limit + notfeatureOffset;
-									$('.firstload').append(data);
-									App.tabledList.init("#sysPinsList");
+									//$('.firstload').append(data);
+									$(data).appendTo($('.firstload'));
+									setTimeout(function(){App.tabledList.init("#sysPinsList");},500);
 								}
 								hideloader();
 							}});
 						}else{
 							featureOffset = limit + featureOffset;
 							$('.firstload').append(data);
-							App.tabledList.init("#sysPinsList");
+							setTimeout(function(){App.tabledList.init("#sysPinsList");},300);
 							hideloader();
 						}
 					}});
@@ -54,8 +58,11 @@ $(document).ready(function() {
 				m_showreviews();
 			}
 		}
+		}, 300);
 	}
+	var timer;
 	$(window).scroll(scrollToTopCheck);
+	
 	// Fancy Form
 	$(".FancyForm input[type=text], .FancyForm input[type=password], .FancyForm textarea").each(function() {
 		if ($(this).val()) $(this).addClass("NotEmpty");
@@ -66,7 +73,7 @@ $(document).ready(function() {
 
 	if($(window).width() > 600){
 		$( "#overlay" ).show();
-		$.ajax({type: "POST",url:path+"firstloadhtml.php",cache: false,data:'placeId='+$('#placeid').val()+'&opt=review',success:function(result){
+		$.ajax({type: "POST",url:path+"firstloadhtml.php",cache: false,data:'placeId='+$('#placeid').val()+'&opt=review&offset='+featureOffset,success:function(result){
 			$( "#overlay" ).hide();
 			$('.firstload').append(result);
 			App.tabledList.init("#sysPinsList");
