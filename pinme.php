@@ -88,7 +88,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 <input type="hidden" name="path" id="path" value="<?php echo $path ?>" />
 <div id="loadme"></div>
 
-<?php require_once('../homerepo/browser_detection.php'); ?>
+<?php require_once('../browser_detection.php'); ?>
 <a name="top"></a>
 <div class="header">
     <div class="HeaderContainer">
