@@ -19,7 +19,7 @@ $textline = json_decode($row->printvalue);
 $connect->db_disconnect();
 $size = 120;
 if($_REQUEST['s'] > 0){
-	$firstline1 = (!empty($textline) ? $textline->firstline1 : 'We Value Your Feedback');
+	$firstline1 = (!empty($textline) ? $textline->firstline1 : 'Your Selfie &amp; Feedback Here!');
 	$link = 'http://www.tabluu.com/'.$row->nicename.'=1';
 	$shortlink = 'tabluu.com/'.$row->nicename.'=1';
 }else{

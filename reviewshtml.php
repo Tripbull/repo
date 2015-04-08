@@ -17,8 +17,8 @@
 			$fbname = mb_convert_case($rowrate->userName,MB_CASE_TITLE, "UTF-8");
 	}else
 		$fbsrc =  $path."images/profileDefault.png";
-	if(file_exists($fbsrc))
-		$imgrotate->rotateImages($fbsrc);
+	//if(file_exists($fbsrc))
+		//$imgrotate->rotateImages($fbsrc);
 	if($rowrate->hideimg > 0 && $rowrate->hideimg != null)
 		$fbsrc =  $path."images/profileDefault.png";
 ?>

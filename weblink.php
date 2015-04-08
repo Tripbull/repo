@@ -25,7 +25,7 @@
 						<div class="left-content fl">
 							<div class="left-header">QR Code and Mini Web Link Labels</div>			
 							<ul class="weblink-left-menu" data-role="listview">
-								<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">Ask for a Selfie / Photo<span class="listview-arrow-default listview-arrow-active"></span></a></li>
+								<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">Your Selfie &amp; Feedback Here! / Photo<span class="listview-arrow-default listview-arrow-active"></span></a></li>
 								<li><a href="#">Don't ask for a Selfie / Photo<span class="listview-arrow-default"></span></a></li>
 							</ul>							
 						</div>
@@ -35,13 +35,13 @@
 								<p>Label Title…</p>
 								<form id="frmprintselfie" action="#" method="post" enctype="multipart/form-data" >
 								<div class="clear" style="padding-top:0.5em"></div>
-								<input type="text" name="selfie-1" id="selfie-1" value="We Value Your Feedback" placeholder="We Value Your Feedback"" >
+								<input type="text" name="selfie-1" id="selfie-1" value="Your Selfie &amp; Feedback Here!" placeholder="Your Selfie &amp; Feedback Here!"" >
 								<div class="clear" style="padding-top:0.5em"></div>	
 								</form>
 								<p>Preview:</p>
 								<div class="clear" style="padding-top:0.5em"></div>	
 								<div class="QRFrame">
-								  <p class="title title-1">We Value Your Feedback</p>
+								  <p class="title title-1">Your Selfie &amp; Feedback Here!</p>
 								  <div class="QRimage"></div>
 								  <p class="shortlink">tabluu.com/hop8e5t=1</p>
 								  <div class="qrframelogo"></div>  

@@ -77,7 +77,7 @@ $(document).ready(function(){
 				'overlay_close':false,
 				'buttons':  [{caption: 'okay',callback:function(){
 					$( ":mobile-pagecontainer" ).pagecontainer( "change",redirect,{});
-					setTimeout(function(){$('#text-6').focus();},300);
+					//setTimeout(function(){$('#text-6').focus();},300);
 				}}]
 			});	
 		//}
@@ -199,8 +199,8 @@ $(document).ready(function(){
 						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');
 					else if(customArray.fbImg == '' && customArray.optsocialpost < 1)
 						alertBox('setup incomplete','Go to Setup > Customers\' Social Media Posts > Default Image for Facebook Posts ');
-					else if(j < 2)
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
+					//else if(j < 2)
+					//	alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
 					else if(customArray.nicename == "")
 						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page > Create Your Tabluu Page');
 					else if(customArray.subscribe < 1)
@@ -242,8 +242,8 @@ $(document).ready(function(){
 						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');
 					else if($.trim(customArray.fbImg) == '' && customArray.optsocialpost < 1)
 						alertBox('setup incomplete','Go to Setup > Customers\' Social Media Posts > What to Post to Social Media? ');
-					else if(j < 2)
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
+					//else if(j < 2)
+						//alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
 					else if(customArray.nicename == "")
 						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page > Create Your Tabluu Page');
 					else if(customArray.subscribe < 1)
@@ -1117,8 +1117,8 @@ $(document).ready(function(){
 						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
 					else if(customArray.fbImg == '' && customArray.optsocialpost < 1)
 						alertBox('setup incomplete','Go to Setup > Customers\' Social Media Posts > Default Image for Facebook Posts ');
-					else if(j < 2)
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
+					//else if(j < 2)
+						//alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
 					else if(customArray.nicename == "")
 						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
 					else if(customArray.subscribe < 1)
@@ -1489,7 +1489,8 @@ $(document).on("pagebeforechange", function (e, data) {
 			j++;
 		if(customArray.webImg8 != '')
 			j++;
-		if(customArray.city != '' && j > 2){
+		//if(customArray.city != '' && j > 2){
+		if(customArray.city != ''){
 			var addli='';
 			if(customArray.nicename == "")
 				addli = '<li ><a href="#" id="create-page" data-prefetch="true">Create Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
@@ -2056,7 +2057,8 @@ $(document).on("pagebeforechange", function (e, data) {
 			j++;
 		if(customArray.webImg8 != '')
 			j++;
-		if(customArray.city != '' && j > 1){
+		//if(customArray.city != '' && j > 1){
+		if(customArray.city != ''){
 			var addli='';
 			//addli = '<li ><a href="#" id="create-page2" data-transition="flip" >Create Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
 			if(customArray.nicename == "")

@@ -899,7 +899,7 @@ switch($opt){
 		include_once('class/class.cookie.php');
 		$email = $_REQUEST['email'];
 		$pwd = $_REQUEST['pwd'];
-		$sql = "SELECT u.id,g.suspend FROM businessUsers as u LEFT JOIN businessUserGroup as g ON g.gId = u.userGroupId
+		$sql = "SELECT u.id,g.suspend,g.type,g.subscription_id FROM businessUsers as u LEFT JOIN businessUserGroup as g ON g.gId = u.userGroupId
 		WHERE u.email =  '$email' AND u.pwd = '$pwd'";
 		$result = mysql_query($sql);
 		//echo mysql_num_rows($result);
@@ -909,9 +909,13 @@ switch($opt){
 			if($row->suspend)
 				echo 2;
 			else{
-				$cookie = new cookie();
-				$cookie->setCookie( $row->id );
-				echo 1;
+				if($row->type > 1 && $row->subscription_id == 0){
+					echo 0;
+				}else{
+					$cookie = new cookie();
+					$cookie->setCookie( $row->id );
+					echo 1;
+				}
 			}
 		}else	
 			echo 0;

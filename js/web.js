@@ -18,7 +18,7 @@ $(document).ready(function() {
 		if ($(window).scrollTop() > 500) $("#ScrollToTop").show();
 		else $("#ScrollToTop").hide();
 		if(($(window).scrollTop()+1) >= ($(document).height() - $(window).height())) {
-			if(window.innerWidth > 600){
+			if($(window).width() > 600){
 				if(isResult < 1){
 					$( "#overlay" ).show();
 					$.ajax({type: "POST",url:path+"secondloadhtml.php",cache: false,data:'placeId='+$('#placeid').val()+'&offset='+featureOffset+'&limit='+limit,success:function(data){
@@ -55,7 +55,8 @@ $(document).ready(function() {
 		if ($(this).val()) $(this).addClass("NotEmpty");
 		else  $(this).removeClass("NotEmpty");
 	});
-	if(window.innerWidth > 600){
+
+	if($(window).width() > 600){
 		$( "#overlay" ).show();
 		$.ajax({type: "POST",url:path+"firstloadhtml.php",cache: false,data:'placeId='+$('#placeid').val()+'&opt=review',success:function(result){
 			$( "#overlay" ).hide();
