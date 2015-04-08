@@ -15,6 +15,14 @@ $(document).ready(function() {
 	});
 	function hideloader(){setTimeout(function(){$( "#overlay" ).hide();},1000);}
 	function scrollToTopCheck() {
+		 // fix for IE bug on tabluu page
+		$(".vdesktop .header").css('top', '0px');
+		if($(window).scrollTop() == 0)
+		{
+			browserMessage();
+		}
+		// end of fix for IE bug on tabluu page
+		
 		if ($(window).scrollTop() > 500) $("#ScrollToTop").show();
 		else $("#ScrollToTop").hide();
 		if(($(window).scrollTop()+1) >= ($(document).height() - $(window).height())) {
