@@ -89,6 +89,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 <div id="loadme"></div>
 
 <?php require_once('browser_detection.php'); ?>
+
 <a name="top"></a>
 <div class="header">
     <div class="HeaderContainer">
