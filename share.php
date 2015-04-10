@@ -24,7 +24,7 @@ $_SESSION['session']=$ur_session;
 				</div>
 				<div class="wrap-logo">
 					<div class="clear" style="padding:2px" ></div>
-					<img src="images/template/7Ins_default.png" class="take-logo" />
+					<img src="images/white-logo-tabluu-page.png" class="take-logo" />
 				</div>
 				<div style="width:100%;max-width:200px;margin:0 auto;"><p class="share_privacy"></p></div>
 				<div class="takebutton">

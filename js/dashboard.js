@@ -2692,7 +2692,16 @@ $(document).on("pagebeforechange", function (e, data) {
 		});	
 		$('#uic .star').click(function(){goHome();});
 	})
-    
+    function uicAlertBox(title,message,id){
+		$.box_Dialog(decodequote(message), {
+			'type':     'question',
+			'title':    '<span class="color-white">'+decodequote(title)+'<span>',
+			'center_buttons': true,
+			'show_close_button':false,
+			'overlay_close':false,
+			'buttons':  [{caption: 'okay',callback:function(){setTimeout(function(){$(id).focus();},300);}}]
+		});
+	}
 	$(document).on('pageshow','#uic', function () { // UIC script start here
 		googleAnalytic();
 	   $('input[type="text"]').textinput({ preventFocusZoom: true });
@@ -2782,7 +2791,9 @@ $(document).on("pagebeforechange", function (e, data) {
 			if(typeof(messArray.surveyselfieT) != 'undefined')
 				$('#txtbox20').val(decodequote(messArray.surveyselfieT));
 			if(typeof(messArray.surveyselfieB) != 'undefined')
-				$('#txtbox21').val(decodequote(messArray.surveyselfieB));		
+				$('#txtbox21').val(decodequote(messArray.surveyselfieB));
+			if(typeof(messArray.shareB) != 'undefined')
+				$('#txtbox22').val(decodequote(messArray.shareB));	
 			setmessageBox();
 		}else
 			$('.follow-loc').html('Follow '+customArray.businessName+'?');
@@ -2812,6 +2823,10 @@ $(document).on("pagebeforechange", function (e, data) {
 			$('#txtoption3').val((boxArray.option[2] != '' ? decodequote(boxArray.option[2]) : 'reset'));	
 			$('#txtpass1').val((boxArray.pass[0] != '' ? decodequote(boxArray.pass[0]) : 'cancel'));
 			$('#txtpass2').val((boxArray.pass[1] != '' ? decodequote(boxArray.pass[1]) : 'submit'));
+			$('#btncam1').val((typeof(boxArray.cambtnoption) != 'undefined' ? decodequote(boxArray.cambtnoption[0]) : 'cancel'));
+			$('#btncam2').val((typeof(boxArray.cambtnoption) != 'undefined' ? decodequote(boxArray.cambtnoption[1]) : 'snap'));
+			$('#btncam3').val((typeof(boxArray.cambtnoption) != 'undefined' ? decodequote(boxArray.cambtnoption[2]) : 'discard'));
+			$('#btncam4').val((typeof(boxArray.cambtnoption) != 'undefined' ? decodequote(boxArray.cambtnoption[3]) : 'use'));
 			$('#txtleave1').val((typeof(boxArray.badEmail) != 'undefined' ? decodequote(boxArray.badEmail[0]) : 'no'));
 			$('#txtleave2').val((typeof(boxArray.badEmail) != 'undefined' ? decodequote(boxArray.badEmail[1]) : 'yes'));
 			$('#txtallow1').val((typeof(boxArray.allow) != 'undefined' ? decodequote(boxArray.allow[0]) : 'cancel'));
@@ -2879,35 +2894,38 @@ $(document).on("pagebeforechange", function (e, data) {
 				alertBox('successful','Update completed.');
 			}});	
 		});	
+		
 		$('#submit-box').click(function(e){
 			e.preventDefault();
 			var found = true,lessthan = '<',greaterthan='>';
 			if($('#txtbox11').val().search(/<brand>/i) == '-1'){
 				found = false;
-				alertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt;" is used or entered correctly.');
+				uicAlertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt;" is used or entered correctly.','#txtbox11');
 				$('#txtbox11').focus();
 			}else if($('#txtbox12').val().search(/<brand>/i) == '-1'){
 				found = false;
-				alertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt" and "&lt;privacy_policy_link&gt" are used or entered correctly.');
+				uicAlertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt" and "&lt;privacy_policy_link&gt" are used or entered correctly.','#txtbox12');
 				$('#txtbox12').focus();
 			}else if($('#txtbox12').val().search('<privacy_policy_link>') == '-1'){
 				found = false;
-				alertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt" and "&lt;privacy_policy_link&gt" are used or entered correctly.');
+				uicAlertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt" and "&lt;privacy_policy_link&gt" are used or entered correctly.','#txtbox12');
 				$('#txtbox12').focus();
 			}else if($('#txtbox17').val().search('<privacy_policy_link>') == '-1'){
 				found = false;
-				alertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt" and "&lt;privacy_policy_link&gt" are used or entered correctly.');
+				uicAlertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt" and "&lt;privacy_policy_link&gt" are used or entered correctly.','#txtbox17');
 				$('#txtbox17').focus()
 			}else if($('#txtbox17').val().search(/<brand>/i) == '-1'){
 				found = false;
-				alertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt" and "&lt;privacy_policy_link&gt" are used or entered correctly.');
-				$('#txtbox17').focus()
+				uicAlertBox('incorrect entry / entries','Please ensure that "&lt;brand&gt" and "&lt;privacy_policy_link&gt" are used or entered correctly.','#txtbox17');
+			}else if($('#txtbox22').val().search('<privacy_policy_link>') == '-1'){
+				found = false;
+				uicAlertBox('incorrect entry / entries','Please ensure that "&lt;privacy_policy_link&gt" are used or entered correctly.','#txtbox22');
 			}
 			if(found){
 				showLoader();	
 				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=setcustom&case=7&'+$('#frmUIC3').serialize(),success:function(lastId){
 					customArray.messageBox = 
-					JSON.stringify({"comment":$('#txtbox1').val(),"logoutT":$('#txtbox9').val(),"logoutB":$('#txtbox10').val(),"average":$('#txtbox2').val(),"followT":$('#txtbox11').val(),"followB":$('#txtbox12').val(),"badEmailT":$('#txtbox13').val(),"badEmailB":$('#txtbox14').val(),"detailsEmailT":$('#txtbox15').val(),"detailsEmailB":$('#txtbox16').val(),"allow":$('#txtbox17').val(),"share":$('#txtbox3').val(),"thank":$('#txtbox4').val(),"nxt":$('#txtbox5').val(),"option":$('#txtbox6').val(),"pass":$('#txtbox7').val(),"takePhoto":$('#txtbox8').val(),"takeselfieB":$('#txtbox18').val(),"takeselfieT":$('#txtbox19').val(),"surveyselfieT":$('#txtbox20').val(),"surveyselfieB":$('#txtbox21').val()});
+					JSON.stringify({"comment":$('#txtbox1').val(),"logoutT":$('#txtbox9').val(),"logoutB":$('#txtbox10').val(),"average":$('#txtbox2').val(),"followT":$('#txtbox11').val(),"followB":$('#txtbox12').val(),"badEmailT":$('#txtbox13').val(),"badEmailB":$('#txtbox14').val(),"detailsEmailT":$('#txtbox15').val(),"detailsEmailB":$('#txtbox16').val(),"allow":$('#txtbox17').val(),"share":$('#txtbox3').val(),"thank":$('#txtbox4').val(),"nxt":$('#txtbox5').val(),"option":$('#txtbox6').val(),"pass":$('#txtbox7').val(),"takePhoto":$('#txtbox8').val(),"takeselfieB":$('#txtbox18').val(),"takeselfieT":$('#txtbox19').val(),"surveyselfieT":$('#txtbox20').val(),"surveyselfieB":$('#txtbox21').val(),"shareB":$('#txtbox22').val()});
 					hideLoader();
 					setmessageBox();
 					alertBox('successful','Update completed.');
@@ -2919,7 +2937,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			showLoader();
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=setcustom&case=6&'+$('#frmUIC2').serialize(),success:function(lastId){
 				customArray.button =
-				JSON.stringify({"btntake":[$('#btnTakeSelfie').val(),$('#btnTakeSelfie2').val()],"btnfeedback":[$('#btnfeedbackSelfie').val(),$('#btnfeedbackSelfie2').val()],"share":[$('#txtshare1').val(),$('#txtshare2').val()],"comment":[$('#txtrecommend1').val(),$('#txtrecommend2').val()],"leave":[$('#txtleave1').val(),$('#txtleave2').val()],"allow":[$('#txtallow1').val(),$('#txtallow2').val()],"logout":[$('#txt-logout').val()],"follow":[$('#follow-no').val(),$('#follow-yes').val()],"nxt":[$('#txtnxt').val()],"photo":[$('#txtphoto1').val(),$('#txtphoto2').val()],"option":[$('#txtoption1').val(),$('#txtoption2').val(),$('#txtoption3').val()],"pass":[$('#txtpass1').val(),$('#txtpass2').val()]});
+				JSON.stringify({"btntake":[$('#btnTakeSelfie').val(),$('#btnTakeSelfie2').val()],"btnfeedback":[$('#btnfeedbackSelfie').val(),$('#btnfeedbackSelfie2').val()],"share":[$('#txtshare1').val(),$('#txtshare2').val()],"comment":[$('#txtrecommend1').val(),$('#txtrecommend2').val()],"leave":[$('#txtleave1').val(),$('#txtleave2').val()],"allow":[$('#txtallow1').val(),$('#txtallow2').val()],"logout":[$('#txt-logout').val()],"follow":[$('#follow-no').val(),$('#follow-yes').val()],"nxt":[$('#txtnxt').val()],"photo":[$('#txtphoto1').val(),$('#txtphoto2').val()],"option":[$('#txtoption1').val(),$('#txtoption2').val(),$('#txtoption3').val()],"pass":[$('#txtpass1').val(),$('#txtpass2').val()],"cambtnoption":[$('#btncam1').val(),$('#btncam2').val(),$('#btncam3').val(),$('#btncam4').val()]});
 				hideLoader();
 				alertBox('successful','Update completed.');
 			}});	

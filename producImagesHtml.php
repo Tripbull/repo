@@ -5,6 +5,6 @@
 			<a href="login.html" class="Button Button11 WhiteButton comment"><strong>Comment</strong><span></span></a>
 		</div> !-->
 	<p class="description sysPinDescr"><?php echo $imagesArray[$j]['title'] ?></p>
-	<img class="pinImage" src="<?php echo $src; ?>" alt="<?php echo $imagesArray[$j]['title'] ?>" />
+	<div style="text-align:center;"><img class="pinImage" src="<?php echo $src; ?>" alt="<?php echo $imagesArray[$j]['title'] ?>" /></div>
 	<p class="RateCount" style="padding-top:5px;"><?php echo $imagesArray[$j]['desc']; ?></p>
 </div>

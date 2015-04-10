@@ -29,7 +29,7 @@
 			<a href="login.html" class="Button Button11 WhiteButton comment"><strong>Comment</strong><span></span></a>
 		</div>-->
 		<p class="description sysPinDescr fblink"><a href="https://www.facebook.com/<?php echo $rowrate->userId ?>" target="_blank"><?php echo $fbname; ?></a></p>
-		<img class="pinImage" src="<?php echo $fbsrc; ?>" alt="Selfie"/>
+		<div style="text-align:center;"><img class="pinImage" src="<?php echo $fbsrc; ?>" alt="Selfie"/></div>
 		<?php
 				$ave = explode(".",$rowrate->aveRate);
 				$style='';

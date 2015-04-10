@@ -54,7 +54,10 @@ $ratingTextTemp = array();
 $offset = $_REQUEST['offset'];
 $limit = $_REQUEST['limit'];
 $hadTable = $connect->tableIsExist('businessplace_'.$placeId);
+$timezone ='';
 if($hadTable){
+    $timezone = mysql_fetch_object(mysql_query("SELECT u.timezone FROM businessList as l LEFT JOIN businessUserGroup AS u ON u.gId = l.userGroupId WHERE l.id = $placeId LIMIT 1"));
+	$timezone = $timezone->timezone;
 	$addhidefield = mysql_query("SHOW COLUMNS FROM `businessplace_$placeId` LIKE 'hideimg'") or die(mysql_error());
 	if(mysql_num_rows($addhidefield) < 1)
 		mysql_query("ALTER TABLE `businessplace_$placeId` ADD `hideimg` TINYINT NOT NULL") or die(mysql_error());

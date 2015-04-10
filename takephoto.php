@@ -34,10 +34,33 @@ $_SESSION['session']=$ur_session;
 					<p class="txt-16"> powered by:</p>
 				</div>
 				<div class="clear">
-					<img src="images/template/logo_orig.png" class="take-logo" alt="" width="131" height="49" />
+					<img src="images/white-logo-tabluu-page.png" class="take-logo" alt="" width="131" height="49" />
 				</div>
 			</div>
 		</div><!-- /content -->
+		<div class="hide">
+				<div id="data">
+					<div class="cam-frame">
+					<div style="height:480px;">
+						<canvas id="canvas" style="position:absolute;width:100%" width="640" height="480"></canvas>
+						<video id="video" stlye="position:absolute;width:100%" width="640" height="480" autoplay></video>
+					</div>
+					<!-- <div id="screen"></div> -->
+					<div class="snapshotbutton">
+						<div class="snapshot hide">
+							<a href="#" data-rel="back" class="cancelsnap">cancel</a>
+							<div class="btnseparator"></div>
+							<a href="#" data-rel="back" class="takesnap">snap</a>
+						</div>
+						<div class="usesnap hide">
+							<a href="#" data-rel="back" class="cancelsnap">discard</a>
+							<div class="btnseparator"></div>
+							<a href="#" data-rel="back" class="use">use</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			</div>
 		<input type="hidden" id="placeId" name="placeId" value="<?php echo $_REQUEST['p']?>" />
 	</div>
 </div>	

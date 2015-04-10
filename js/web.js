@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var isResult = 0,m_isResult=0,j=0,featureOffset=$('#blimit').val(),notfeatureOffset=0,reviewOffset=0,limit=$('#blimit').val(),m_featureOffset=1,m_notfeatureOffset=1,m_reviewOffset=2,m_limit=5,triggerload = false,path=$( "#path" ).val();
+	var isResult = 0,m_isResult=0,j=0,featureOffset=$('#blimit').val(),notfeatureOffset=0,reviewOffset=0,limit=10,m_featureOffset=1,m_notfeatureOffset=1,m_reviewOffset=2,m_limit=5,triggerload = false,path=$( "#path" ).val();
 	$( ".resizeme" ).aeImageResize({ height: 176, width: 176 });
 	//App.tabledList.init("#sysPinsList");
 	$( window ).resize(function() { // when window resize
@@ -13,6 +13,7 @@ $(document).ready(function() {
 
 		return false;
 	});
+	
 	function hideloader(){setTimeout(function(){$( "#overlay" ).hide();},1000);}
 	function scrollToTopCheck() {
 		if ( timer ) clearTimeout(timer);
@@ -34,22 +35,26 @@ $(document).ready(function() {
 					$( "#overlay" ).show();
 					$.ajax({type: "POST",url:path+"secondloadhtml.php",cache: false,data:'placeId='+$('#placeid').val()+'&offset='+featureOffset+'&limit='+limit,success:function(data){
 						if(data == 0 && isResult < 1){
+						   
 							$.ajax({type: "POST",url:path+"thirdloadhtml.php",cache: false,data:'placeId='+$('#placeid').val()+'&offset='+notfeatureOffset+'&limit='+limit,success:function(data){
-								
 								if(data == 0)
 									isResult = 1;
 								else{	
 									notfeatureOffset = limit + notfeatureOffset;
 									//$('.firstload').append(data);
 									$(data).appendTo($('.firstload'));
-									setTimeout(function(){App.tabledList.init("#sysPinsList");},500);
+									App.tabledList.init("#sysPinsList");
+									//$(data).appendTo($('.firstload'));
+									//setTimeout(function(){App.tabledList.init("#sysPinsList");},500);
+									$("#sysPinsList").masonry('reload');
 								}
 								hideloader();
 							}});
 						}else{
 							featureOffset = limit + featureOffset;
 							$('.firstload').append(data);
-							setTimeout(function(){App.tabledList.init("#sysPinsList");},300);
+							App.tabledList.init("#sysPinsList");
+							$("#sysPinsList").masonry('reload');
 							hideloader();
 						}
 					}});
@@ -77,6 +82,7 @@ $(document).ready(function() {
 			$( "#overlay" ).hide();
 			$('.firstload').append(result);
 			App.tabledList.init("#sysPinsList");
+			//$("#sysPinsList").masonry('reload');
 		}});
 	}
 	$.ajax({type: "POST",url:path+"firstloadhtml.php",cache: false,data:'placeId='+$('#placeid').val()+'&opt=contactus',success:function(result){

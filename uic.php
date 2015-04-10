@@ -103,6 +103,22 @@ $noPhoto = 'images/template/no-photo.gif';
 										</div>
 									</div>
 									<div class="clear" style="padding-top:0.5em"></div>
+									<p>&lt;Camera Buttons&gt;</p>
+									<div class="clear cambtnoption" style="padding-top:1em;width:31em;">
+										<div class="fl w60">
+											<input type="text" name="btncam1" id="btncam1" value="cancel" placeholder="cancel">
+										</div>
+										<div style="padding-left:1em" class="fl w60">
+											<input type="text" name="btncam2" id="btncam2" value="snap" placeholder="snap">
+										</div>
+										<div style="padding-left:1em" class="fl w60">
+											<input type="text" name="btncam3" id="btncam3" value="discard" placeholder="discard">
+										</div>
+										<div class="fr w60">
+											<input type="text" name="btncam4" id="btncam4" value="use" placeholder="use">
+										</div>
+									</div>
+									<div class="clear" style="padding-top:0.5em"></div>
 									<p class="btnfeedbackSelfie">Take a photo?</p>
 									<div class="clear" style="padding-top:1em;width:15em;">
 										<div class="fl w60">
@@ -226,6 +242,7 @@ $noPhoto = 'images/template/no-photo.gif';
 									<input type="text" data-clear-btn="true" name="txtbox9" id="txtbox9" value="Auto logout" placeholder="Auto logout">
 									<input type="text" data-clear-btn="true" name="txtbox10" id="txtbox10" value="You'll be logged out of Facebook after sharing." placeholder="You'll be logged out of Facebook after sharing.">
 									<input type="text" data-clear-btn="true" name="txtbox3" id="txtbox3" value="Recommend &amp; share?" placeholder="Recommend &amp; share?">
+									<input type="text" data-clear-btn="true" name="txtbox22" id="txtbox22" value="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link>." placeholder="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link>.">
 									<input type="text" data-clear-btn="true" name="txtbox11" id="txtbox11" value="Follow <brand>?" placeholder="Follow <brand>?">
 									<input type="text" data-clear-btn="true" name="txtbox12" id="txtbox12" value="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to send you promotions & updates." placeholder="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to send you promotions & updates">
 									<input type="text" data-clear-btn="true" name="txtbox13" id="txtbox13" value="We're sorry for your poor experience!" placeholder="We're sorry for your poor experience!">

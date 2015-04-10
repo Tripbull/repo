@@ -72,14 +72,19 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 <link href="<?=$path?>css/face/main.css" media="screen" rel="stylesheet" type="text/css" />
 <!--[if IE 7]> <link href="<?=$path?>css/face/ie.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
 <!--[if IE 8]> <link href="<?=$path?>css/face/ie.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+
 <link href="<?=$path?>js/source/jquery.fancybox.css?v=2.1.5" media="screen" rel="stylesheet" type="text/css" />
+
 <script type="text/javascript" src="<?=$path?>js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript" src="<?=$path?>js/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 <script type="text/javascript" src="<?=$path?>js/jquery.masonry.min.js"></script>
+
 <script type="text/javascript" src="<?=$path?>js/jquery.ae.image.resize.min.js"></script>
 <script type="text/javascript" src="<?=$path?>js/app.js"></script>
 <script type="text/javascript" src="<?=$path?>js/web.js"></script>
 <script src="//load.sumome.com/" data-sumo-site-id="9e98d0a1ee03ad7942ebac5144759f147aafe068a407e46486c26b9a207c4300" async="async"></script>
+<script type="text/javascript" src="<?=$path?>js/css3-mediaqueries.js"></script>
+
 </head>
 <body>
 <div id="overlay" class="hide"></div>
@@ -98,7 +103,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 </div>
 <?php 
    if($browser['browser'] =="IE" )
-        echo '<input type="hidden" value="50" name="blimit" id="blimit" />';
+        echo '<input type="hidden" value="15" name="blimit" id="blimit" />';
    else
 		echo '<input type="hidden" value="15" name="blimit" id="blimit" />';
 ?>
@@ -301,7 +306,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 		</div>    
 			<div class="MerchantWrapper">
 				 <div class="MerchantHead">
-					  <div style="padding:10px 0;">
+					  <div style="padding:10px 0;width:176px:height:176px;">
 					  <img class="resizeme" src="<?php echo ($logo != '' ? ($logo->dLogo == "images/desktop_default.png" ? 'images/default-logo.png' : $path.$logo->dLogo) : $path.'images/default-logo.png') ?>" alt="Merchant Logo" align="center" />
 					  </div>
 					  <div class="clear btitle">

@@ -30,7 +30,7 @@ for($j=0; $j< count($imagesArray); $j++){
 		<p class="PinnerName" style="font-weight:bold;"><?php echo $imagesArray[$j]['title'] ?></p>
 	</div>
 
-	<div class="PinImg">
+	<div class="PinImg" style="text-align:center;">
 		<img class="pinImage" src="<?php echo $src; ?>" alt="<?php echo $imagesArray[$j]['title'] ?>" />
 	</div>
 	<p class="RateCount" style="padding-top:5px;"><?php echo $imagesArray[$j]['desc']; ?></p>

@@ -1,12 +1,12 @@
-var placeId = '',blankstar = 'images/template/blankstar.png',colorstar = 'images/template/colorstar.png';
+var placeId = '',blankstar = 'images/template/blankstar.png',colorstar = 'images/template/colorstar.png',fromtakephotopage=1;//fromtakephotopage 1 if from rateone else 2 from takephoto page
 var customArray = [],item2Rate=[],ratedObj= [],nicename,isTakeSelfie='',alertaverate=0,last_Id='',lastidbusiness='';
 var count=0,sharedphoto=0,isphototakedone=0,takeaphoto=0,urlphotoshared,businessname='',txtname='',txtphone='',txtemail='';
 var defaultPostReview = {posted:1,percent:3.0},ratecomment='',timeInverval='',closeselfie=0,username='';
 var defaultrating = {vpoor:'Very poor',poor:'Poor',fair:'Average',good:'Good',excellent:'Excellent'};
-var defaultButtonText2 = {logout:['okay'],follow:['no','yes'],badEmail:['no','yes'],allow:['cancel','submit'],btntake:['no','yes'],btnfeedback:['no','yes']};
-var defaultButtonText = {logout:['okay'],follow:['no','yes'],comment:['skip','submit'],share:['no','yes'],nxt:['okay'],photo:['no','yes'],option:['cancel','login','reset'],pass:['cancel','submit'],badEmail:['no','yes'],allow:['cancel','submit']};
-var defaultTextMessage2 = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Follow <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'Don\'t be shy! And say &quot;yeah!&quot; for the camera.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!'};
-var defaultTextMessage = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Follow <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',takePhoto:'Take a new photo?',average:'Your average rating:',thank:'Thank you!',nxt:'Next reviewer, please.',option:'Choose an option…',pass:'Enter the password…',comment:'Please share your experience...',share:'Recommend &amp; share?',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'Don\'t be shy! And say &quot;yeah!&quot; for the camera.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!'},resizeTimeout;
+var defaultButtonText2 = {logout:['okay'],follow:['no','yes'],badEmail:['no','yes'],allow:['cancel','submit'],btntake:['no','yes'],btnfeedback:['no','yes'],cambtnoption:['cancel','snap','discard','use']};
+var defaultButtonText = {logout:['okay'],follow:['no','yes'],comment:['skip','submit'],share:['no','yes'],nxt:['okay'],photo:['no','yes'],option:['cancel','login','reset'],pass:['cancel','submit'],badEmail:['no','yes'],allow:['cancel','submit'],cambtnoption:['cancel','snap','discard','use']};
+var defaultTextMessage2 = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Follow <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'Don\'t be shy! And say &quot;yeah!&quot; for the camera.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Press the &quot;yes&quot; button to agree with Tabluu\'s <privacy_policy_link>.'};
+var defaultTextMessage = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Follow <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',takePhoto:'Take a new photo?',average:'Your average rating:',thank:'Thank you!',nxt:'Next reviewer, please.',option:'Choose an option…',pass:'Enter the password…',comment:'Please share your experience...',share:'Recommend &amp; share?',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'Don\'t be shy! And say &quot;yeah!&quot; for the camera.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Press the &quot;yes&quot; button to agree with Tabluu\'s <privacy_policy_link>.'},resizeTimeout;
 var counter1 = 0,counter2 = 0,counter3 = 0,counter4 = 0,counter5 = 0,counter6 = 0,counter7 = 0,countertake=0,countershare=0;
 var questionDefault = ['How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again'];
 //live mode chargify ids
@@ -433,6 +433,7 @@ $(document).on('pageinit','#sharephoto', function() {
 	$('#sharephoto .take-no').html(defaultButtonText.share[0]);
 	$('#sharephoto .take-yes').html(defaultButtonText.share[1]);
 	$('#sharephoto .titleheader').html(decodequote(defaultTextMessage.share));
+	fromtakephotopage = 1;
 	//if(countershare < 1){
 		sharephoto();
 		$( window ).resize(function() { // when window resize
@@ -448,7 +449,7 @@ $(document).on('pageinit','#sharephoto', function() {
 			loginFb();
 			e.preventDefault();
 		});
-		$('.share_privacy').html(decodequote('Press the "yes" button to agree with Tabluu\'s <privacy_policy_link>.'));
+		$('.share_privacy').html(decodequote((typeof(defaultTextMessage.shareB) != 'undefined' ? defaultTextMessage.shareB : defaultTextMessage2.shareB)));
 		$.box_Dialog((typeof(defaultTextMessage.logoutB) != 'undefined' ? decodequote(defaultTextMessage.logoutB) : decodequote(defaultTextMessage2.logoutB)), {
 			'type':     'question',
 			'title':    '<span class="color-white">'+(typeof(defaultTextMessage.logoutT) != 'undefined' ? decodequote(defaultTextMessage.logoutT) : decodequote(defaultTextMessage2.logoutT))+'<span>',
@@ -507,6 +508,7 @@ $(document).on('pageinit','#takephoto', function() {
 	$('#takephoto .take-yes').html(defaultButtonText.photo[1]);
 	$('#takephoto .titleheader').html(decodequote(defaultTextMessage.takePhoto));
 	$('#photoId').val(customArray.placeId);
+	fromtakephotopage = 2;
 	//if(countertake < 1){
 		pagephoto();	
 		$( window ).resize(function() { // when window resize
@@ -520,7 +522,8 @@ $(document).on('pageinit','#takephoto', function() {
 		});
 		$('#upload').click(function(e){}); // when upload button change fb	photo
 		$('#takephoto .take-yes').click(function(e){ 
-			$('#filephoto').click();
+			//$('#filephoto').click();
+			showCamera('#camera-modal');
 			e.preventDefault();
 		});
 		$('#frmtakephoto').on('change',function(e){ // save fb photo
@@ -854,6 +857,7 @@ $(document).ready(function(){
 		domainpath = 'https://www.tabluu.com/';
 		fbPhotoPathShare= 'https://www.tabluu.com/app/';
 	}
+
 });
 
 $(document).on('pagehide','#sharephoto', function() {$(this).remove();});
@@ -870,6 +874,13 @@ $(document).on( "pagebeforechange", function( e, data ) {
 });
 function showLoader(){loader = jQuery('<div id="overlay"> </div>');loader.appendTo(document.body);}
 function hideLoader(){$( "#overlay" ).remove();}
+
+function changetextcamerabutton(){
+	$('.snapshot .cancelsnap').text((typeof(defaultButtonText.cambtnoption) != 'undefined' ? decodequote(defaultButtonText.cambtnoption[0]) : decodequote(defaultButtonText2.cambtnoption[0])));
+		$('.snapshot .takesnap').text((typeof(defaultButtonText.cambtnoption) != 'undefined' ? decodequote(defaultButtonText.cambtnoption[1]) : decodequote(defaultButtonText2.cambtnoption[1])));
+		$('.usesnap .cancelsnap').text((typeof(defaultButtonText.cambtnoption) != 'undefined' ? decodequote(defaultButtonText.cambtnoption[2]) : decodequote(defaultButtonText2.cambtnoption[2])));
+		$('.usesnap .use').text((typeof(defaultButtonText.cambtnoption) != 'undefined' ? decodequote(defaultButtonText.cambtnoption[3]) : decodequote(defaultButtonText2.cambtnoption[3])));
+}
 
 function login(){
 	$.box_Dialog('Login OR select "reset" to take a new photo', {
@@ -1017,9 +1028,8 @@ function videoStream(video){
 
 }
 function showCamera(IDparam){
-
-	//testing for video snapshot
-	// get canvas element
+  
+	//note: whatpage if 1 from rateone else 2 from takephoto
 	var canvas = document.getElementById('canvas'),
 		context = canvas.getContext('2d'),
 		video = document.getElementById('video');
@@ -1066,10 +1076,13 @@ function showCamera(IDparam){
 		localStream.stop();
 		//$.magnificPopup.close();
 		$.fancybox.close();
+		if(fromtakephotopage == 2){
+			setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });}, 100);
+		}	
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
 	});
 	$('.usesnap .use').click(function(){
-
+    
 		var dataUrl = canvas.toDataURL('image/jpg');;
 
 		$.ajax({
@@ -1077,9 +1090,8 @@ function showCamera(IDparam){
             url: "savecam.php",
         	data: {"placeId": placeId, "dataUrl" : dataUrl},
             success: function(data) {
-                
 				urlphotoshared=data;
-				console.log(urlphotoshared);
+				//console.log(urlphotoshared);
             }
         });
 		//$.magnificPopup.close();
@@ -1092,7 +1104,12 @@ function showCamera(IDparam){
 			'center_buttons': true,
 			'show_close_button':false,
 			'overlay_close':false,
-			'buttons':  [{caption: 'okay'}]
+			'buttons':  [{caption: 'okay',callback:function(){
+				if(fromtakephotopage == 2){
+					$.fancybox.close();
+					setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '') });}, 200);
+				}	
+			}}]
 		});	
 
 		return false;
@@ -1196,8 +1213,9 @@ $(document).on('pageinit','#rateone', function() {
 					rate_initialize();
 					if($.inArray(getUrlVar('s'),['0','1','2','3','4','5','e',''] ) == -1){
 						alertErrorPage('Unauthorized',"Please contact Tabluu support");
-					}else{	
-						if(getUrlVar('s') != '' && (getUrlVar('s') == 1 || getUrlVar('s') == 'e')){
+					}else{
+						changetextcamerabutton();
+						if(getUrlVar('s') != '' && (getUrlVar('s') == 1 || getUrlVar('s') == 'e') && fromtakephotopage == 1){
 							$.box_Dialog((typeof(defaultTextMessage.takeselfieB) != 'undefined' ? decodequote(defaultTextMessage.takeselfieB) : decodequote(defaultTextMessage2.takeselfieB)), {
 								'type':     'question',
 								'title':    '<span class="color-white">'+(typeof(defaultTextMessage.takeselfieT) != 'undefined' ? decodequote(defaultTextMessage.takeselfieT) : decodequote(defaultTextMessage2.takeselfieT))+' <img src="emoticons/smile.png" width="20" height="20" /><span>',
@@ -1212,7 +1230,7 @@ $(document).on('pageinit','#rateone', function() {
 									}},{caption: (typeof(defaultButtonText.btntake) != 'undefined' ? decodequote(defaultButtonText.btntake[0]) : decodequote(defaultButtonText2.btntake[0]))}]
 							});
 						}
-						if(getUrlVar('s') != '' && (getUrlVar('s') == 2)){	
+						if(getUrlVar('s') != '' && (getUrlVar('s') == 2) && fromtakephotopage == 1){	
 							if(customArray.productId != proID && customArray.productId != pro12 && customArray.productId != pro24 && customArray.productId != enterprise12 && customArray.productId != enterprise24 && customArray.productId != enterprise)
 								alertErrorPage('no access','Please upgrade to pro plan & above to access this feature');
 							else{
@@ -1231,7 +1249,8 @@ $(document).on('pageinit','#rateone', function() {
 								});
 							}
 						}
-						if(getUrlVar('s') != '' && getUrlVar('s') == 5){
+				
+						if(getUrlVar('s') != '' && getUrlVar('s') == 5 && fromtakephotopage == 1){
 								$.box_Dialog((typeof(defaultTextMessage.surveyselfieB) != 'undefined' ? decodequote(defaultTextMessage.surveyselfieB) : decodequote(defaultTextMessage2.surveyselfieB)), {
 									'type':     'question',
 									'title':    '<span class="color-white">'+(typeof(defaultTextMessage.surveyselfieT) != 'undefined' ? decodequote(defaultTextMessage.surveyselfieT) : decodequote(defaultTextMessage2.surveyselfieT))+' <img src="emoticons/smile.png" width="20" height="20" /><span>',

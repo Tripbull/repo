@@ -292,7 +292,7 @@ h3.subtitle-2{color:#00aeed;font-size:29px;padding:10px 0 20px;}
 #widget .wrap-widget .staricon{width:auto;float:right;}
 #widget .wrap-widget .p-rating{color: #8e8e8e;font-size: 13px;text-align: left;margin-top: 7px}
 #widget .wrap-widget .my-rating{color: #8e8e8e;font-size: 13px;width:100px;float:left;margin-top:5px;}
-#widget .wrap-widget .pinImage {border-radius: 3px;width: 100%;max-width:250px}	
+#widget .wrap-widget .pinImage {border-radius: 3px;width: 100%;max-width:200px}	
 .text-center{text-align:center;}
 #widget .wrap-widget p {line-height: 1.35em;margin: 0 0 0.8em;}
 #widget .wrap-widget p.comment{color:#777;font-weight: bold;text-align:left;font-size:13px}
@@ -355,7 +355,7 @@ p.ratetxt{margin: 0 auto;width:70%;}
 	border:1px solid #ccc;
 	color: #fff;
     padding: 10px 15px 10px 15px;
-	background-color:#00AEEF;
+	background-color:#7fBA00;
 }
 .snapshotbutton .btnseparator{
 	width:50px;display: inline-block;

@@ -31,3 +31,4 @@
 *:first-child+html .profile .ColumnContainer {top:0px;}
 *:first-child+html .FixedContainer,*:first-child+html .wrapper {top:80px;position: relative;}
 *:first-child+html .wrapper .ColumnContainer {top:0px;} 
+.MerchantWrapper{margin: 200px auto 0;border:1px solid red;}

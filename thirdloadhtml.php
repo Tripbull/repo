@@ -55,11 +55,17 @@ $offset = $_REQUEST['offset'];
 $limit = $_REQUEST['limit'];
 $hadTable = $connect->tableIsExist('businessplace_'.$placeId);
 if($hadTable){
-$result = mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb'") or die(mysql_error());
-if(mysql_num_rows($result) < 1);
-	$offset = $_REQUEST['offset'] + 4;	
+$result = mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 1") or die(mysql_error());
+//echo mysql_num_rows($result);
+if(mysql_num_rows($result) > 0)
+	$offset = $_REQUEST['offset'];
+else
+	$offset = $_REQUEST['offset'] + 15;	
+	//die();
+	//die();
 // DUPLICATE FIX
 	$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
+	
 	//$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' ORDER BY date DESC LIMIT $offset,$limit");
 	//$rateResult = mysql_query("SELECT * FROM (SELECT * FROM  `businessplace_$placeId` WHERE feature = 0 AND  `source` =  'fb' ORDER BY id DESC LIMIT $offset,$limit) AS output_name GROUP BY  `userId` ORDER BY DATE DESC");
 $timezone = mysql_fetch_object(mysql_query("SELECT u.timezone FROM businessList as l LEFT JOIN businessUserGroup AS u ON u.gId = l.userGroupId WHERE l.id = $placeId LIMIT 1"));
@@ -68,6 +74,7 @@ if( mysql_num_rows($rateResult)){
 	while($rowrate = mysql_fetch_object($rateResult)){
 		include('reviewshtml.php');
 	}
+	//echo "SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT $offset,$limit";
 }//else
 	//echo 0;
 }	

@@ -2214,7 +2214,7 @@ span.staryellow2 {background:url(../../images/small-rate-yellow.png) 0 0 !import
 #masoncontainer{width:100%;margin:0 auto;max-width:1250px;}
 .pin{max-width: 218px;float:left;margin-top: 6px;margin-bottom:7px;}
 .masonryImage{background-color:#fff;width:100%;border-radius:6px;max-width:20%;min-width:222px;padding:10px;margin-top:10px;}
-.pinImage{width:100%;max-width: 216px;border-radius:3px;}
+.pinImage{width:100%;max-width: 200px;border-radius:3px;}
 .masonryImage .title {color: #333;font-size: 15px;line-height: 15px;padding: 2px 0;font-weight: bold;padding:7px 0;}
 .masonryImage .rating {padding:0;font-size: 12px;overflow: hidden;position: relative;text-align: left;width: 99%;}
 .masonryImage p {padding:0;margin:0;}
@@ -2227,9 +2227,10 @@ span.staryellow2 {background:url(../../images/small-rate-yellow.png) 0 0 !import
 .vmobile{display:none;}
 .vdesktop{display:block;}
 /* mobile css */
-@media (max-width: 37.5em){ 
+@media screen and (max-width: 600px){ 
 	.vdesktop{display:none;}
 	.vmobile{display:block;}
+	.resizeme{height:176px;width:176px;}
 	.main_wrapper{min-height:240px;text-align:center;}
 	.grey_hr{background-color:#f0f0f0;border-bottom:1px solid #bfbfbf;border-top:1px solid #bfbfbf;height:11px;width:100%}
 	.hidden{display:none}
@@ -2266,7 +2267,7 @@ span.staryellow2 {background:url(../../images/small-rate-yellow.png) 0 0 !import
 	#m_productImages .pin,#m_reviews .pin{background-color: #fff;border: 1px solid #bfbfbf;border-radius: 5px;margin: 5px auto 0;padding: 10px;width: 90%;float:none;max-width:700px;position:relative;text-align:center;}
 	.pin .PinImg{margin-bottom:6px;/*background-color:#D9D9D9;*/position:relative}
 	.pin div.PinImg img{display:block;height:auto;margin:0 auto;max-width:auto}
-	.pinImage{width:100%;max-width: 250px;border-radius:3px;}
+	.pinImage{width:100%;max-width: 200px;border-radius:3px;}
 	.pin .PinDesc{margin-bottom:15px}
 	.pin .PinButtons{margin-bottom:15px}
 	.pin .PinSource{color:#9a9a9a;text-align:right;margin-bottom:10px}
