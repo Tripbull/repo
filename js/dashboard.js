@@ -77,7 +77,7 @@ $(document).ready(function(){
 				'overlay_close':false,
 				'buttons':  [{caption: 'okay',callback:function(){
 					$( ":mobile-pagecontainer" ).pagecontainer( "change",redirect,{});
-					//setTimeout(function(){$('#text-6').focus();},300);
+					setTimeout(function(){$('#text-6').focus();},300);
 				}}]
 			});	
 		//}

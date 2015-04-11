@@ -2230,7 +2230,6 @@ span.staryellow2 {background:url(../../images/small-rate-yellow.png) 0 0 !import
 @media screen and (max-width: 600px){ 
 	.vdesktop{display:none;}
 	.vmobile{display:block;}
-	.resizeme{height:176px;width:176px;}
 	.main_wrapper{min-height:240px;text-align:center;}
 	.grey_hr{background-color:#f0f0f0;border-bottom:1px solid #bfbfbf;border-top:1px solid #bfbfbf;height:11px;width:100%}
 	.hidden{display:none}
