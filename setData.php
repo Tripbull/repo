@@ -120,7 +120,7 @@ switch($opt){
 	break;
 	case 'print': // update format facebook post link
 		$placeId = $_REQUEST['placeId'];
-		$selfie = array2json(array('firstline1'=>mysql_real_escape_string(encodequote($_REQUEST['selfie-1'])),'firstline2'=>mysql_real_escape_string(encodequote($_REQUEST['outselfie-1']))));
+		$selfie = array2json(array('firstline1'=>mysql_real_escape_string(encodequote($_REQUEST['selfie-1'])),'firstline2'=>mysql_real_escape_string(encodequote($_REQUEST['outselfie-1'])),'selfiex1'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex1'])),'selfiex2'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex2'])),'selfiex3'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex3']))));
 		$sql = "UPDATE businessCustom SET printvalue='".$selfie."' WHERE customPlaceId = $placeId";	
 		mysql_query($sql) or die(mysql_error());
 

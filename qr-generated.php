@@ -20,10 +20,12 @@ else if($_REQUEST['size'] == 4)
 else if($_REQUEST['size'] == 5)
 	$size = 500;
 
-if($_REQUEST['s'] > 0)
+if($_REQUEST['s'] == 1)
 	$link = 'http://www.tabluu.com/'.$_REQUEST['p'].'=1';
-else	
+else if($_REQUEST['s'] == 0)	
 	$link = 'http://www.tabluu.com/'.$_REQUEST['p'].'=0';
+else if($_REQUEST['s'] == 3)
+	$link = 'http://www.tabluu.com/'.$_REQUEST['p'].'=6';
 ?>
 <!DOCTYPE html>
 <html> 

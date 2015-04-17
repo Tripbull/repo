@@ -10,7 +10,7 @@ var com_basicID=26331,com_basic12 = 39047,com_basic24 = 39048,com_proID=26332,co
 com_basicID_price=9.90,com_basic12_price = 99.00,com_basic24_price = 178.20,com_proID_price=29.90,com_pro12_price = 299.00,com_pro24_price = 538.20,com_enterprise_price=59.90,com_enterprise12_price =599.00,com_enterprise24_price =1078.20;
 var istest=true,domainpath='',pathfolder='';
 var creditsFree=0,creditsBasic = 2000, creditsPro = 5000, creditsEnterprise = 10000,creditsPrise = 6000;
-var newplaceId,profilewizardsetup=0,uicwizardsetup=0,questionwizardsetup=0,emailwizardsetup=0,resizeTimeout;
+var newplaceId,profilewizardsetup=0,profilewizardwebImg = 0,uicwizardsetup=0,questionwizardsetup=0,emailwizardsetup=0,resizeTimeout,isdonewizard=0;
 var state_Array = ['unpaid','canceled'];
 
 $(document).bind('mobileinit', function(){
@@ -37,35 +37,45 @@ $(document).ready(function(){
 	function wizardAlert(whatsetup){
 		//showLoader();
 		if(whatsetup == 1){
-			var title = 'Setup Wizard - Step 1 / 6';
+			var title = 'Setup Wizard - Step 1 / 7';
 			var body = '<p>Please set your correct time zone.</p>';
 			var redirect = "settings.html";	
         }else if(whatsetup == 2){
-			var title = 'Setup Wizard - Step 2 / 6';
+			var title = 'Setup Wizard - Step 2 / 7';
 			var body = '<p>Please add a new location / business.</p>';
 			var redirect = "index.html";
 			$('.addnew-loc').hide();
 			$('.text-loc').show();
 			//$('#text-6').val(' ');
         }else if(whatsetup == 3){
-			var title = 'Setup Wizard - Step 3 / 6';
+			var title = 'Setup Wizard - Step 3 / 7';
 			var body = '<p>Please complete your business profile.</p>';
 			var redirect = "profile.html";
         }else if(whatsetup == 4){
-			var title = 'Setup Wizard - Step 4 / 6';
+			var title = 'Setup Wizard - Step 4 / 7';
 			var body = '<p style="text-align:left;">Please choose the questions you will like to ask your customers.</p>'
 						+ '<p style="text-align:left;padding-bottom: 7px">Don\'t forget to flick the switch "On"</p>';
 			var redirect = "setup.html";
 		}else if(whatsetup == 5){
 			curClick = 0;
-			var title = 'Setup Wizard - Step 5 / 6';
+			var title = 'Setup Wizard - Step 5 / 7';
 			var body = '<p style="text-align:left;">Please upload a logo for your business.</p>';
 			var redirect = "uic.html";
         }else if(whatsetup == 6){
-			var title = 'Setup Wizard - Step 6 / 6';
-			var body = '<p>Congratulations! The basic setup is now completed. Please refer to Tabluu\'s blog posts for more information on customizaton. </p><p>To start collecting feedback / reviews, please send out 20 email invitations now!</p>';
+			curClick = 0;
+			var title = 'Setup Wizard - Step 6 / 7';
+			var body = '<p style="text-align:left;">Please upload at least one image of your business, product or service.</p>'
+						+'<p>Use upload the best image first as it will be used as a backup image in case your customer does not take a selfie or a photo.</p>';
+			var redirect = "profile.html";
+			curClick = 4;
+        }else if(whatsetup == 7){
+			var title = 'Setup Wizard - Step 7 / 7';
+			var body = '<p>Get your customers to give you<br/>"X" Selfies now!</p>'
+			           + '<p><b>Print 20 "Post Your "X" Selfie" Message & display at...</b></p>'
+					   + '<p>dinning tables,waiting areas, lobbies, pool side tables, hotel rooms, function rooms... & all other <b>"chilling out" spots</b> of your business.</p>'
 			curClick = 2;
-			var redirect = "feedback.html";
+			var redirect = "weblink.html";
+			isdonewizard = 1;
 			//$( ":mobile-pagecontainer" ).pagecontainer( "change",redirect,{transition: "flip"});
         }
 		//if(whatsetup != 6){
@@ -98,7 +108,7 @@ $(document).ready(function(){
 				}else if(customArray.settingsItem == 0 && customArray.selectedItems == ''){
 					profilewizardsetup = 0;
 					questionwizardsetup = 1;
-					wizardAlert(4);customArray.fbImg
+					wizardAlert(4);
 				}else if(customArray.logo == ''){
 					uicwizardsetup = 1;questionwizardsetup=0;
 					wizardAlert(5);
@@ -128,7 +138,23 @@ $(document).ready(function(){
 						$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+keypad+'&opt=getCustom',success:function(result){
 							customArray =  $.parseJSON(result);
 							placename  = customArray.businessName;
-							hideLoader();
+							hideLoader();var j=0;
+							if(customArray.webImg != '')
+								j++;
+							if(customArray.webImg2 != '')
+								j++;
+							if(customArray.webImg3 != '')
+								j++;
+							if(customArray.webImg4 != '')
+								j++;
+							if(customArray.webImg5 != '')
+								j++;
+							if(customArray.webImg6 != '')
+								j++;
+							if(customArray.webImg7 != '')
+								j++;
+							if(customArray.webImg8 != '')
+								j++;	
 							if(customArray.nicename == ''){
 								profilewizardsetup = 1;
 								wizardAlert(3);
@@ -139,9 +165,12 @@ $(document).ready(function(){
 							}else if(customArray.logo == ''){
 								uicwizardsetup = 1;questionwizardsetup = 0;
 								wizardAlert(5);
+							}else if(j == 0){
+								profilewizardwebImg = 1;profilewizardsetup=0;
+								wizardAlert(6);
 							}else if(locArray[0].setup < 1){
 								issetup = 1;uicwizardsetup = 0;
-								wizardAlert(6);
+								wizardAlert(7);
 							}
 					    }});
 				}else{
@@ -863,7 +892,7 @@ $(document).ready(function(){
 								'center_buttons': true,
 								'show_close_button':false,
 								'overlay_close':false,
-								'buttons': [{caption:'Ok', callback:function(){ setTimeout(function(){wizardsetup();}, 300); }}]
+								'buttons': [{caption:'okay', callback:function(){ setTimeout(function(){wizardsetup();}, 300); }}]
 								});
 							}, 300);
 						}});
@@ -877,7 +906,7 @@ $(document).ready(function(){
 					'center_buttons': true,
 					'show_close_button':false,
 					'overlay_close':false,
-					'buttons': [{caption:'Ok', callback:function(){ hideLoader(); }}]
+					'buttons': [{caption:'okay', callback:function(){ hideLoader(); }}]
 				});
 			}
 		});
@@ -970,27 +999,70 @@ $(document).ready(function(){
 		$('#weblink .star').click(function(){goHome();});
 		//checkboxQuestion();
 	}); 
-	function checkifcompleted(){
-			
-				
+
+	function diabledMenu(s){
+		clas = 'ui-state-disabled';
+		if(s == 1){
+			$('.weblink-left-menu li').each(function (index) {
+				if(index != 2)
+					$(this).addClass(clas);
+			});
+		}else{
+			$('.weblink-left-menu li').each(function (index) {
+				$(this).removeClass(clas);
+			});		
+		}
 	}
+	function wizardstep7(){
+		showLoader();
+		var placeId = locId.split('|');
+		window.open('http://tabluu.com/blog/tabluu/almost-there','_blank');
+		$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+placeId[0]+'&opt=getFeedbackUser',success:function(result){
+			hideLoader();
+			customArray =  $.parseJSON(result);
+			if(customArray.setup < 1){
+				newplaceId = placeId[0] +'|'+placeId[1]+'|'+1;
+				if(locArray.length == 1 && locArray[0].setup < 1)
+					locArray[0].setup = 1;
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId[0]+'&opt=wizardsetupdone',success:function(result){
+					newplaceId = placeId[0] +'|'+placeId[1]+'|'+1;
+				}});
+				//diabledMenu(1);
+				isdonewizard = 0;
+				
+				curClick = 0;
+			}else{
+				emailwizardsetup = 0;
+				//diabledMenu(0);
+			}	
+		}});
+	}
+	
 	$(document).on('pageshow','#weblink', function () {
 		var isoktoview = false;	
 		$('.star').show();
 		$('#shortlink').val('tabluu.com/'+customArray.nicename+'=1');
 		$('#shortlink2').val('tabluu.com/'+customArray.nicename+'=0');
+		$('#shortlink3').val('tabluu.com/'+customArray.nicename+'=6');
 		$('#submit-shortlink').click(function(){
 			window.open(domainpath+customArray.nicename+'=1','_blank');
 		});
 		$('#submit-shortlink2').click(function(){
-			window.open(domainpath+customArray.nicename+'=0','_blank')
+			window.open(domainpath+customArray.nicename+'=0','_blank');
+		});
+		$('#submit-shortlink3').click(function(){
+			window.open(domainpath+customArray.nicename+'=6','_blank');
 		});
 		$('#qr-generate').click(function(){
 			window.open('qr-generated.html?p='+customArray.nicename+'&s=1&size='+$("#qr-size :radio:checked").val(),'_blank');
 		});
+		$('#qr-generate3').click(function(){
+			window.open('qr-generated.html?p='+customArray.nicename+'&s=3&size='+$("#qr-size3 :radio:checked").val(),'_blank');
+		});
 		$('#qr-generate2').click(function(){
 			window.open('qr-generated.html?p='+customArray.nicename+'&s=0&size='+$("#qr-size2 :radio:checked").val(),'_blank');
 		});
+		
 		$( ".right-header" ).html( placename );
 		if($( window ).width() <= 600){
 			$( '.main-wrap .left-content' ).show();
@@ -1001,13 +1073,16 @@ $(document).ready(function(){
 		   curClick = $(this).index();
 		   if(isoktoview){
 			   qrmenuleft();
-			   $('.panel-selfie').hide();$('.panel-outselfie').hide();
+			   $('.panel-selfie').hide();$('.panel-outselfie').hide();$('.panel-selfiex').hide();
 			   if(curClick == 0){
 					$('#qr-size input[value="2"]').attr('checked',true).checkboxradio('refresh');
 					$('.panel-selfie').show();
 				}else if(curClick == 1){
 					$('#qr-size2 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
 					$('.panel-outselfie').show();
+				}else if(curClick == 2){
+					$('#qr-size3 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
+					$('.panel-selfiex').show();
 				}
 				if($( window ).width() <= 600){
 					$( '.main-wrap .left-content' ).hide();
@@ -1017,7 +1092,8 @@ $(document).ready(function(){
 			}
 		});
 		$(".panel-selfie .shortlink").html('tabluu.com/'+customArray.nicename+'=1');
-		$(".panel-outselfie .shortlink").html('tabluu.com/'+customArray.nicename+'=0');
+		$(".panel-outselfie .shortlink2").html('tabluu.com/'+customArray.nicename+'=0');
+		$(".panel-selfiex .shortlink3").html('tabluu.com/'+customArray.nicename+'=6');
 		// seflie code
 		$("#selfie-1").keypress(function(e){
 			/*
@@ -1039,31 +1115,39 @@ $(document).ready(function(){
 		  $('.panel-selfie .title-1').html($("#selfie-1").val());
 		  printSaveTxt();
 		});
-		$(".panel-selfie #submit-print4").click(function(e){
-			e.preventDefault();
-			openqrprint(4,1);
-		});
-		$(".panel-selfie #submit-print9").click(function(e){
-			e.preventDefault();
-			openqrprint(9,1);
-		});
+
 		// not selfie code here
 		$("#outselfie-1").keypress(function(){
-			/*
-			var str = $("#outselfie-1").val();
-		  	if(str.length > 34){
-				setTimeout(function(){
-					$('.panel-outselfie .title-1').html(str.substring(0,35));
-					$("#outselfie-1").val(str.substring(0,35));
-				}, 300);
-				alertBox('title too long','Your label title must have at least 34 chars.');
-			}else */
-				$('.panel-outselfie .title-1').html($("#outselfie-1").val());
+			$('.panel-outselfie .title-1').html($("#outselfie-1").val());
 		});
+		
 		$("#outselfie-1").blur(function(){
 		  $('.panel-outselfie .title-2').html($("#outselfie-1").val());
 		  printSaveTxt();
 		});
+		
+		$("#selfiex1").blur(function(){
+		  $('.panel-selfiex .gohere').html($("#selfiex1").val());
+		   printSaveTxt()
+		});
+		$("#selfiex1").keyup(function(){
+		  $('.panel-selfiex .gohere').html($("#selfiex1").val());
+		});
+		$("#selfiex2").blur(function(){
+		  $('.panel-selfiex .postx').html($("#selfiex2").val());
+		   printSaveTxt()
+		});
+		$("#selfiex2").keyup(function(){
+		  $('.panel-selfiex .postx').html($("#selfiex2").val());
+		});
+		$("#selfiex3").blur(function(){
+		  $('.panel-selfiex .pselfiex').html($("#selfiex3").val());
+		   printSaveTxt()
+		});
+		$("#selfiex3").keyup(function(){
+		  $('.panel-selfiex .pselfiex').html($("#selfiex3").val());
+		});
+		
 		$(".panel-outselfie #submit-print4").click(function(e){
 			e.preventDefault();
 			openqrprint(4,0);
@@ -1072,8 +1156,25 @@ $(document).ready(function(){
 			e.preventDefault();
 			openqrprint(9,0);
 		});
+		$(".panel-selfie #submit-print4").click(function(e){
+			e.preventDefault();
+			openqrprint(4,1);
+		});
+		$(".panel-selfie #submit-print9").click(function(e){
+			e.preventDefault();
+			openqrprint(9,1);
+		});
+		$(".panel-selfiex #submit-print4").click(function(e){
+			e.preventDefault();
+			openqrprint(4,3);
+		});
+		$(".panel-selfiex #submit-print9").click(function(e){
+			e.preventDefault();
+			openqrprint(9,3);
+		});
 		$(".QRimage").qrcode({render: 'image',fill: '#000',size: 130,text: 'tabluu.com/'+customArray.nicename+'=1'});
 		$(".QRimage2").qrcode({render: 'image',fill: '#000',size: 130,text: 'tabluu.com/'+customArray.nicename+'=0'});
+		$(".QRimage3").qrcode({render: 'image',fill: '#000',size: 50,text: 'tabluu.com/'+customArray.nicename+'=6'});
 		function openqrprint(cases,selfie){
 			places = locId.split('|');
 			if(cases == 4)
@@ -1083,7 +1184,7 @@ $(document).ready(function(){
 		}
 		function printSaveTxt(){
 			places = locId.split('|');
-			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=print&selfie-1='+encodeURIComponent(encodequote($('#selfie-1').val()))+'&outselfie-1='+encodeURIComponent(encodequote($('#outselfie-1').val())),async: false,success:function(result){}	
+			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=print&selfie-1='+encodeURIComponent(encodequote($('#selfie-1').val()))+'&outselfie-1='+encodeURIComponent(encodequote($('#outselfie-1').val()))+'&selfiex1='+encodeURIComponent(encodequote($('#selfiex1').val()))+'&selfiex2='+encodeURIComponent(encodequote($('#selfiex2').val()))+'&selfiex3='+encodeURIComponent(encodequote($('#selfiex3').val())),async: false,success:function(result){}	
 			});
 		}
 		qrmenushow(curClick);
@@ -1140,6 +1241,11 @@ $(document).ready(function(){
 						}else if(row == 1){
 							$('#qr-size2 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
 							$('.panel-outselfie').show();
+						}else if(curClick == 2){
+							$('#qr-size3 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
+							$('.panel-selfiex').show();
+							if(isdonewizard > 0)
+								wizardstep7();
 						}					
 					}
 			  }});
@@ -1943,17 +2049,17 @@ $(document).on("pagebeforechange", function (e, data) {
 		else if(customArray.category == 'Auto Sales, Rental & Repair') n=3;
 		else if(customArray.category == 'Beauty') n=4;
 		else if(customArray.category == 'Child Care') n=5;
-		else if(customArray.category === 'Health & Fitness') n=6;
-		else if(customArray.category === 'Home Services') n=7;
-		else if(customArray.category === 'Massage') n=8;
-		else if(customArray.category === 'Personal Training') n=9;
-		else if(customArray.category === 'Photography') n=10;
-		else if(customArray.category === 'Real Estate') n=11;
-		else if(customArray.category === 'Restaurant, Cafe & Food and Beverage') n=12;
-		else if(customArray.category === 'Travel') n=13;
-		else if(customArray.category === 'Wedding Planning') n=14;
-		else if(customArray.category === 'Online') n=15;
-		else if(customArray.category === 'Others') n=16;
+		else if(customArray.category == 'Health & Fitness') n=6;
+		else if(customArray.category == 'Home Services') n=7;
+		else if(customArray.category == 'Massage') n=8;
+		else if(customArray.category == 'Personal Training') n=9;
+		else if(customArray.category == 'Photography') n=10;
+		else if(customArray.category == 'Real Estate') n=11;
+		else if(customArray.category == 'Restaurant, Cafe & Food and Beverage') n=12;
+		else if(customArray.category == 'Travel') n=13;
+		else if(customArray.category == 'Wedding Planning') n=14;
+		else if(customArray.category == 'Online') n=15;
+		else if(customArray.category == 'Others') n=16;
 		var cat = $("#select-category"); //set selected
 		cat[0].selectedIndex = n;
 		cat.selectmenu("refresh");
@@ -2014,7 +2120,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			$("#overlay").remove();
 			customArray.nicename=nicename;
 			if(profilewizardsetup == 1){
-				profilewizardsetup == 0;
+				profilewizardsetup = 0;
 				setTimeout(function() {wizardsetup();},200);
 			}else{	
 			//window.open('http://www.tabluu.com/'+nicename+'.html', '_blank');
@@ -2035,9 +2141,14 @@ $(document).on("pagebeforechange", function (e, data) {
 
 	function createProfileMenu2(){
 		var j=0,clas = '';	
-		if(profilewizardsetup == 1){
+		
+		if(profilewizardsetup == 1 ){ //
+			clas = 'class="ui-state-disabled"';
+		}else if(profilewizardwebImg == 1 ){
 			clas = 'class="ui-state-disabled"';
 		}
+		if(profilewizardwebImg == 0 && profilewizardsetup == 0)
+			clas = '';
 		if(customArray.city != ''){
 			$('#txtcity').val(customArray.city);
 		}	
@@ -2060,17 +2171,20 @@ $(document).on("pagebeforechange", function (e, data) {
 		//if(customArray.city != '' && j > 1){
 		if(customArray.city != ''){
 			var addli='';
+			
 			//addli = '<li ><a href="#" id="create-page2" data-transition="flip" >Create Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
 			if(customArray.nicename == "")
 				createPage2();
 				addli = '<li '+clas+'><a href="'+domainpath+customArray.nicename+'.html" target="_blank">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>'			
+				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>'			
 		}else{
+			
 			var addli='';
 			if(customArray.nicename != "")	
 				addli = '<li '+clas+'><a href="'+domainpath+customArray.nicename+'.html" target="_blank" >Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html"  data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';			
+				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas )+'><a href="profile.html"  data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';			
 		}
+		
 			$('.profile-left-menu2').html(newli);
 			$('.profile-left-menu2').on('click', ' > li', function () {
 				if($(this).index() == 3){
@@ -2519,6 +2633,10 @@ $(document).on("pagebeforechange", function (e, data) {
 		});
 		*/
 		function showResponse2(responseText, statusText, xhr, $form)  { 
+			if(profilewizardwebImg == 1){
+				profilewizardwebImg = 0;
+				setTimeout(function() {wizardsetup();},200);
+			}	
 			if(customArray.webImg == ''){
 				$('#webthumb1').attr('src', responseText);
 				customArray.webImg = responseText;
@@ -2831,8 +2949,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			$('#txtleave2').val((typeof(boxArray.badEmail) != 'undefined' ? decodequote(boxArray.badEmail[1]) : 'yes'));
 			$('#txtallow1').val((typeof(boxArray.allow) != 'undefined' ? decodequote(boxArray.allow[0]) : 'cancel'));
 			$('#txtallow2').val((typeof(boxArray.allow) != 'undefined' ? decodequote(boxArray.allow[1]) : 'submit'));
-			$('#btnTakeSelfie').val((typeof(boxArray.btntake) != 'undefined' ? decodequote(boxArray.btntake[0]) : 'no'));
-			$('#btnTakeSelfie2').val((typeof(boxArray.btntake) != 'undefined' ? decodequote(boxArray.btntake[1]) : 'yes'));
+			$('#btnTakeSelfie').val((typeof(boxArray.btntake) != 'undefined' ? decodequote(boxArray.btntake[0]) : 'okay'));
 			$('#btnfeedbackSelfie').val((typeof(boxArray.btnfeedback) != 'undefined' ? decodequote(boxArray.btnfeedback[0]) : 'no'));
 			$('#btnfeedbackSelfie2').val((typeof(boxArray.btnfeedback) != 'undefined' ? decodequote(boxArray.btnfeedback[1]) : 'yes'));
 		}	
@@ -2937,7 +3054,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			showLoader();
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=setcustom&case=6&'+$('#frmUIC2').serialize(),success:function(lastId){
 				customArray.button =
-				JSON.stringify({"btntake":[$('#btnTakeSelfie').val(),$('#btnTakeSelfie2').val()],"btnfeedback":[$('#btnfeedbackSelfie').val(),$('#btnfeedbackSelfie2').val()],"share":[$('#txtshare1').val(),$('#txtshare2').val()],"comment":[$('#txtrecommend1').val(),$('#txtrecommend2').val()],"leave":[$('#txtleave1').val(),$('#txtleave2').val()],"allow":[$('#txtallow1').val(),$('#txtallow2').val()],"logout":[$('#txt-logout').val()],"follow":[$('#follow-no').val(),$('#follow-yes').val()],"nxt":[$('#txtnxt').val()],"photo":[$('#txtphoto1').val(),$('#txtphoto2').val()],"option":[$('#txtoption1').val(),$('#txtoption2').val(),$('#txtoption3').val()],"pass":[$('#txtpass1').val(),$('#txtpass2').val()],"cambtnoption":[$('#btncam1').val(),$('#btncam2').val(),$('#btncam3').val(),$('#btncam4').val()]});
+				JSON.stringify({"btntake":[$('#btnTakeSelfie').val()],"btnfeedback":[$('#btnfeedbackSelfie').val(),$('#btnfeedbackSelfie2').val()],"share":[$('#txtshare1').val(),$('#txtshare2').val()],"comment":[$('#txtrecommend1').val(),$('#txtrecommend2').val()],"leave":[$('#txtleave1').val(),$('#txtleave2').val()],"allow":[$('#txtallow1').val(),$('#txtallow2').val()],"logout":[$('#txt-logout').val()],"follow":[$('#follow-no').val(),$('#follow-yes').val()],"nxt":[$('#txtnxt').val()],"photo":[$('#txtphoto1').val(),$('#txtphoto2').val()],"option":[$('#txtoption1').val(),$('#txtoption2').val(),$('#txtoption3').val()],"pass":[$('#txtpass1').val(),$('#txtpass2').val()],"cambtnoption":[$('#btncam1').val(),$('#btncam2').val(),$('#btncam3').val(),$('#btncam4').val()]});
 				hideLoader();
 				alertBox('successful','Update completed.');
 			}});	
@@ -4869,6 +4986,7 @@ $(document).on('pageinit','#feedback', function () {
 		feedbackActiveMenu();	
 	});
 });
+/*
 	function diabledMenu(s){
 		clas = 'ui-state-disabled';
 		if(s == 1){
@@ -4903,7 +5021,7 @@ $(document).on('pageinit','#feedback', function () {
 			}	
 		}});
 	}
-	
+	*/
 	function showFeedbackMenu(row){
 		var placeId = locId.split('|');
 		$(".feedback-weblink").hide();$(".tellafriend").hide();$(".feedback-photo").hide();$(".survey").hide();
@@ -4954,7 +5072,7 @@ $(document).on('pageinit','#feedback', function () {
 						resizeEnabled:false
 					});
 				});
-				getEmailSent();
+				//getEmailSent();
 				var subject = "You're invited to give "+placename+" a review!";
 				$('#invitxtsubject').val(subject);
 				var nice = 'https://www.tabluu.com/'+customArray.nicename+'=e';

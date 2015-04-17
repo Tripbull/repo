@@ -47,8 +47,9 @@
 							</section>	
 							<section class="feedback-weblink hide">									
 								<ul class="feedback-right-weblink" data-role="listview">
-									<li><a href="weblink.html">Your Selfie &amp; Feedback Here! / Photo<span class="listview-arrow-default"></span></a></li>
-									<li><a href="weblink.html">Don't ask for a Selfie / Photo<span class="listview-arrow-default"></span></a></li>
+									<li><a href="weblink.html">Ask for a Selfie<span class="listview-arrow-default"></span></a></li>
+									<li><a href="weblink.html">Don’t ask for a Selfie<span class="listview-arrow-default"></span></a></li>
+									<li><a href="weblink.html">Post Your &quot;X&quot; Selfie<span class="listview-arrow-default"></span></a></li>
 								</ul>											
 							</section>
 							<section class="feedback-photo hide">	
