@@ -128,7 +128,7 @@ if(isset($_REQUEST['placeId'])){
 			$feedsource = 'Survey';
 		if((string)$row->feedsource == 'e')
 			$feedsource = 'Email invitations';
-		$label = '';
+		$label = 'nolabel';
 		if($row->labelId){
 			$resultlabel = mysql_query("SELECT label FROM businessshorturl WHERE id = {$row->labelId}");
 			if(mysql_num_rows($resultlabel)){

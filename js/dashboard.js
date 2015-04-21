@@ -71,7 +71,7 @@ $(document).ready(function(){
         }else if(whatsetup == 7){
 			var title = 'Setup Wizard - Step 7 / 7';
 			var body = '<p>Get your customers to give you<br/>"X" Selfies now!</p>'
-			           + '<p><b>Print 20 “Post your ‘X’ Selfie” messages & display them at…</b></p>'
+			           + '<p><b>Print 20 "Post your \'X\' Selfie" messages & display them at...</b></p>'
 					   + '<p>dinning tables,waiting areas, lobbies, pool side tables, hotel rooms, function rooms... & all other <b>"chilling out" spots</b> of your business.</p>'
 			curClick = 0;
 			var redirect = "weblink.html";

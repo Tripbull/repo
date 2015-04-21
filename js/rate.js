@@ -175,8 +175,9 @@ function alertEmail(){
 function alertNextUser(title,message,button){
 
 	if((isTakeSelfie == 1 || isTakeSelfie == 0) && isTakeSelfie != '' ){
-		showLoader();
-		setTimeout(function(){window.location = domainpath+nicename+'.html'},500);
+		//showLoader();
+		//setTimeout(function(){window.location = domainpath+nicename+'.html'},500);
+		alertNextUser2(title,message,button);
 	}else{
 	    if(customArray.email_alert != ''){
 			var alerts = $.parseJSON(customArray.email_alert);

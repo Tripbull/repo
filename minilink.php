@@ -8,7 +8,7 @@ $result = mysql_query("SELECT s.id,s.source,s.link,s.label,p.nicename FROM busin
 header("HTTP/1.1 301 Moved Permanently");
 if(mysql_num_rows($result)){
 	$row = mysql_fetch_object($result);
-	if(!empty(trim($row->label)))
+	if(trim($row->label) != '')
 		echo $goingto = 'rateone.html?p='. $row->nicename .'&s='.$row->source.'&label='.$row->id; //urlencode 
 	else
 		echo $goingto = 'rateone.html?p='. $row->nicename .'&s='.$row->source;
@@ -16,5 +16,5 @@ if(mysql_num_rows($result)){
 	$goingto = 'https://www.tabluu.com'; 
 $connect->db_connect();	
 header("Location: {$goingto}");
-die();
+exit();
 ?>
