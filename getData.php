@@ -372,6 +372,45 @@ switch($opt){
 		}else
 			echo 0;
 	break;
+	case 'getshorturl':
+		$placeId = $_REQUEST['placeId'];$imagesArray = array();$issetselfie = false;$issetnoselfie = false;$iscreated = array();
+		$result = mysql_query("SELECT * FROM businessshorturl WHERE placeId = {$placeId}") or die(mysql_error());
+		if(mysql_num_rows($result)){
+			while($row = mysql_fetch_object($result)){
+				array_push($iscreated,$row->source);
+			}
+			if(!in_array(1, $iscreated)){
+				$link = checkshortULR();
+				$query = mysql_query("INSERT INTO businessshorturl SET link = '{$link}',placeId = {$placeId}, source = 1, label=''");
+			}
+			if(!in_array(0, $iscreated)){
+				$link = checkshortULR();
+				$query = mysql_query("INSERT INTO businessshorturl SET link = '{$link}',placeId = {$placeId}, source = 0, label=''");
+			}
+			$result = mysql_query("SELECT * FROM businessshorturl WHERE placeId = {$placeId}") or die(mysql_error());
+			while($row = mysql_fetch_object($result)){
+				array_push($iscreated,$row->source);
+				$imagesArray['source_'.$row->source]['id'] = $row->id;
+				$imagesArray['source_'.$row->source]['link'] = $row->link;
+				$imagesArray['source_'.$row->source]['source'] = $row->source;
+				$imagesArray['source_'.$row->source]['label'] = $row->label;
+			}
+			echo json_encode($imagesArray);
+		}else{
+			$link = checkshortULR();
+			$query = mysql_query("INSERT INTO businessshorturl SET link = '{$link}',placeId = {$placeId}, source = 1, label=''");
+			$link1 = checkshortULR();
+			$query = mysql_query("INSERT INTO businessshorturl SET link = '{$link1}',placeId = {$placeId}, source = 0, label=''");
+			$imagesArray['source_1']['link'] = $link;
+			$imagesArray['source_1']['source'] =1;
+			$imagesArray['source_1']['label'] = '';
+			$imagesArray['source_0']['link'] = $link1;
+			$imagesArray['source_0']['source'] =0;
+			$imagesArray['source_0']['label'] = '';
+			echo json_encode($imagesArray);
+		}
+			
+	break;
 	case 'getCustom': 
 		$placeId = $_REQUEST['key'];
 		$result = mysql_query("SELECT id,placeId,path,title,description,name FROM businessImages AS ps WHERE placeId = $placeId LIMIT 10") or die(mysql_error());
@@ -1310,6 +1349,25 @@ function rand_string( $length ) {
 
 	return $str;
 }	
+function checkshortULR(){
+	include_once('class/class.main.php');
+	$connect = new db();
+	$connect->db_connect();
+	$con =  new fucn();
+	$link = $con->rand_string( 6 );
+	$result = mysql_query("SELECT id,source FROM businessshorturl WHERE link = '{$link}'");//check if link is existed
+	if(mysql_num_rows($result))
+		checkshortULR();
+	else
+		return $link; 
+	$connect->db_connect();	
+}
+
+function encodequote($str){
+	$str = str_replace('"','<double>',str_replace("'",'<quote>',$str));
+	$str = str_replace(",",'<comma>',$str);
+	return $str;
+}
 
 function array2json($arr) { 
    // if(function_exists('json_encode')) return json_encode($arr); //Lastest versions of PHP already has this functionality.

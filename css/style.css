@@ -286,15 +286,15 @@ p{margin-top:0.5em;}
 #tblcontainer .row  {display: table-row;}
 #tblcontainer .left, #tblcontainer .right {display: table-cell;}
 #tblcontainer .left, #tblcontainer .right {display: text-align: center;vertical-align: middle;}
-#weblink .panel-selfiex p.gohere {margin:0;padding:0;font-size:1em;color:#000;font-weight:400;width:auto;max-width:100px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin:0 auto;}
-#weblink .panel-selfiex p.link {margin:0;padding: 5px 0 0;font-size:0.8em;color:#000;font-weight:400;}
-#weblink .panel-selfiex p.postx {margin:0;padding-top:1em;font-size:1.3em;line-height: 1em;font-weight:700;color:#000;width:auto;max-width:170px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin:0 auto;}
-#weblink .panel-selfiex p.pselfiex {margin:0;padding-top:0.2em;font-size:36px;line-height: 1em;font-weight:700;color:#000;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width:auto;max-width:170px;margin:0 auto;}
-#weblink .panel-selfiex p.powered {font-size:10px;padding-bottom:3px;margin-top:0;color:#000;}
-#weblink .panel-selfie .ui-focus, .panel-outselfie .ui-focus, .panel-selfiex .ui-focus{box-shadow:none !important;}
+#weblink p.gohere {margin:0;padding:0;font-size:1em;color:#000;font-weight:400;width:auto;max-width:100px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin:0 auto;}
+#weblink p.link {margin:0;padding: 5px 0 0;font-size:0.8em;color:#000;font-weight:400;}
+#weblink p.postx {margin:0;padding-top:1em;font-size:1.3em;line-height: 1em;font-weight:700;color:#000;width:auto;max-width:170px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin:0 auto;}
+#weblink p.pselfiex {margin:0;padding-top:0.2em;font-size:36px;line-height: 1em;font-weight:700;color:#000;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width:auto;max-width:170px;margin:0 auto;}
+#weblink p.powered {font-size:10px;padding-bottom:3px;margin-top:0;color:#000;}
+#weblink .ui-focus, .panel-outselfie .ui-focus, .panel-selfiex .ui-focus{box-shadow:none !important;}
 #weblink .QRFrame .logo {margin:0 auto}
-#weblink .QRFrame {font-family:"myriad_prolight";width: 200px;height: 100%;border: 2px solid #000000;text-align: center;position:relative;float:left;margin-right:5px;margin-bottom:5px;overflow:hidden;padding-bottom:0.5em;padding-top: 0.5em;}
-#weblink .panel-selfiex .QRFrame {font-family:"Open Sans";width: 200px;height: 100%;border: 2px solid #000000;text-align: center;position:relative;float:left;margin-right:5px;margin-bottom:5px;overflow:hidden;padding:1em 0;}
+#weblink .btn-submit #submit-print4,#weblink .btn-submit #submit-print9{background-color:#7fba00;text-shadow:none;color:#fff;font-weight: normal;}
+#weblink .QRFrame {font-family:"Open Sans";width: 200px;height: 100%;border: 2px solid #000000;text-align: center;position:relative;float:left;margin-right:5px;margin-bottom:5px;overflow:hidden;padding:1em 0;}
 #weblink .QRFrame .QRimage {margin-left:auto;margin-right:auto;}
 #weblink .QRFrame .qrframelogo {width:80px;height:30px;background-image:url(../images/qrlogo9.png);background-position:center;background-repeat:no-repeat;margin-left:auto;margin-right:auto;}
 #weblink .QRFrame p.title{width: 80%;margin: 0 auto;padding: 0px 5px 13px 5px;font-size:1.5em;line-height: 1em;font-weight:bold;} 

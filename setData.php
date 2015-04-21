@@ -13,7 +13,22 @@ $connect->db_connect();
 $remove =  new fucn();
 $opt = $_REQUEST['opt'];
 $data = array();
+
 switch($opt){
+	case 'generateshorturl':
+		$placeId = $_REQUEST['placeId'];$source = $_REQUEST['source'];$label = encodequote($_REQUEST['label']);
+		$link = checkshortULR();
+		$result = mysql_query("SELECT id,source FROM businessshorturl WHERE source = '{$source}' AND placeId = {$placeId}");//check if source is existed
+		if(mysql_num_rows($result)){ // existed update it
+			$row = mysql_fetch_object($result);
+			mysql_query("UPDATE businessshorturl SET link = '{$link}', source = '{$source}', label='{$label}' WHERE id = {$row->id}");
+		}else
+			$query = mysql_query("INSERT INTO businessshorturl SET link = '{$link}',placeId = {$placeId}, source = '{$source}', label='{$label}'");
+		$imagesArray['source_'.$source]['link'] = $link;
+		$imagesArray['source_'.$source]['source'] = $source;
+		$imagesArray['source_'.$source]['label'] = $label;
+		echo json_encode($imagesArray);
+	break;
 	case 'setLoc':
 		$userId = $_REQUEST['key'];
 		$name = mysql_real_escape_string($_REQUEST['name']);
@@ -37,7 +52,7 @@ switch($opt){
 	break;
 	case 'delLoc':
 		$placeId = $_REQUEST['key'];
-		$sql = "DELETE l,p,d,h,pho,c,img FROM businessList AS l LEFT JOIN businessProfile as p ON p.profilePlaceId=l.id LEFT JOIN businessDescription as d ON d.descPlaceId = l.id LEFT JOIN businessOpeningHours as h ON h.openingPlaceId=l.id LEFT JOIN businessPhotos as pho ON pho.photoPlaceId=l.id LEFT JOIN businessCustom as c ON c.customPlaceId = l.id LEFT JOIN businessImages as img ON img.placeId = $placeId WHERE l.id = $placeId ";	
+		$sql = "DELETE l,p,d,h,pho,c,img,short FROM businessList AS l LEFT JOIN businessProfile as p ON p.profilePlaceId=l.id LEFT JOIN businessDescription as d ON d.descPlaceId = l.id LEFT JOIN businessOpeningHours as h ON h.openingPlaceId=l.id LEFT JOIN businessPhotos as pho ON pho.photoPlaceId=l.id LEFT JOIN businessCustom as c ON c.customPlaceId = l.id LEFT JOIN businessImages as img ON img.placeId = $placeId LEFT JOIN businessshorturl as short ON short.placeId = $placeId WHERE l.id = $placeId ";	
 		mysql_query($sql);
 		if(mysql_affected_rows()){
 			echo mysql_affected_rows();
@@ -120,7 +135,7 @@ switch($opt){
 	break;
 	case 'print': // update format facebook post link
 		$placeId = $_REQUEST['placeId'];
-		$selfie = array2json(array('firstline1'=>mysql_real_escape_string(encodequote($_REQUEST['selfie-1'])),'firstline2'=>mysql_real_escape_string(encodequote($_REQUEST['outselfie-1'])),'selfiex1'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex1'])),'selfiex2'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex2'])),'selfiex3'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex3']))));
+		$selfie = array2json(array('noselfie1'=>mysql_real_escape_string(encodequote($_REQUEST['noselfie1'])),'noselfie2'=>mysql_real_escape_string(encodequote($_REQUEST['noselfie2'])),'noselfie3'=>mysql_real_escape_string(encodequote($_REQUEST['noselfie3'])),'selfiex1'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex1'])),'selfiex2'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex2'])),'selfiex3'=>mysql_real_escape_string(encodequote($_REQUEST['selfiex3']))));
 		$sql = "UPDATE businessCustom SET printvalue='".$selfie."' WHERE customPlaceId = $placeId";	
 		mysql_query($sql) or die(mysql_error());
 
@@ -387,7 +402,8 @@ switch($opt){
 	break;
 	case 'nicename':
 		$placeId = $_REQUEST['placeId'];
-		$val = $_REQUEST['nicename'];
+		//$val = $_REQUEST['nicename'];
+		echo $val = checknicename();
 		$sql = "UPDATE businessProfile SET nicename='$val' WHERE profilePlaceId = $placeId";	
 		mysql_query($sql);
 		if(mysql_affected_rows()){
@@ -437,20 +453,22 @@ switch($opt){
 	case 'ratesave':
 	    switch($_REQUEST['case']){
 			case 1:
-				$rated1 = $_REQUEST['rated1'];$rated2 = $_REQUEST['rated2'];$rated3 = $_REQUEST['rated3'];$rated4 = $_REQUEST['rated4'];$rated5 = $_REQUEST['rated5'];$rated6 = $_REQUEST['rated6'];$rated7 = $_REQUEST['rated7'];$aveRated = $_REQUEST['aveRate'];$comment = $_REQUEST['comment'];$source = $_REQUEST['source'];$param = $_REQUEST['param'];
+				$rated1 = $_REQUEST['rated1'];$rated2 = $_REQUEST['rated2'];$rated3 = $_REQUEST['rated3'];$rated4 = $_REQUEST['rated4'];$rated5 = $_REQUEST['rated5'];$rated6 = $_REQUEST['rated6'];$rated7 = $_REQUEST['rated7'];$aveRated = $_REQUEST['aveRate'];$comment = $_REQUEST['comment'];$source = $_REQUEST['source'];$param = $_REQUEST['param'];$label = $_REQUEST['label'];
 				$id = $_REQUEST['placeId'];$date = date('Y-m-d H:i:s');
 				$addnewfield = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'feedsource'") or die(mysql_error());
 				if(mysql_num_rows($addnewfield) < 1)
 					mysql_query("ALTER TABLE `businessplace_$id` ADD `feedsource` VARCHAR(2) NOT NULL AFTER `source`");
-					
-				$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'"') or die(mysql_error());
+				$addnewfield1 = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'labelId'") or die(mysql_error());
+				if(mysql_num_rows($addnewfield1) < 1)
+					mysql_query("ALTER TABLE `businessplace_$id` ADD `labelId` INT NOT NULL AFTER `source`");	
+				$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 				echo $lastId = mysql_insert_id();
 			break;
 			case 2:
 				if($_REQUEST['photo_url'] != '')
 					$connect->rotateImages($_REQUEST['photo_url']);
 				$rated1 = $_REQUEST['rated1'];$rated2 = $_REQUEST['rated2'];$rated3 = $_REQUEST['rated3'];$rated4 = $_REQUEST['rated4'];$rated5 = $_REQUEST['rated5'];$rated6 = $_REQUEST['rated6'];$rated7 = $_REQUEST['rated7'];$aveRated = $_REQUEST['aveRate'];$comment = $_REQUEST['comment']; $userName = $_REQUEST['userName'];$userId = $_REQUEST['userId'];$photo_url = (trim($_REQUEST['photo_url']) != '' ? $_REQUEST['photo_url'] : 'https://www.tabluu.com/app/images/desktop_default.png');$id = $_REQUEST['placeId'];$date = date('Y-m-d H:i:s');$email = $_REQUEST['email'];$source = $_REQUEST['source'];$param = $_REQUEST['param'];
-				$data = $_REQUEST['data'];$totalFriends = $_REQUEST['totalFriends'];
+				$data = $_REQUEST['data'];$totalFriends = $_REQUEST['totalFriends'];$label = $_REQUEST['label'];
 				$addnewfield = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'feedsource'") or die(mysql_error());
 				$textimg_height = 80;$tranparent = 85;
 				if(mysql_num_rows($addnewfield) < 1)
@@ -493,7 +511,7 @@ switch($opt){
 						greyscale($sharepic);
 						imagedestroy($dest);imagedestroy($caption);
 						unlink($tempf1);unlink($p2);
-						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'"') or die(mysql_error());
+						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
@@ -557,7 +575,7 @@ fclose($fp);
 						imagedestroy($dest);imagedestroy($src);
 						unlink($p2);unlink($profileimage);
 						$photo_url='';
-						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'"') or die(mysql_error());
+						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
@@ -602,14 +620,14 @@ fclose($fp);
 						greyscale($sharepic);
 						imagedestroy($dest);imagedestroy($caption);
 						unlink($tempf1);unlink($p2);
-						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'"') or die(mysql_error());
+						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						//echo $last_Id.'_'.$lastId; 
 						//echo $photo_url;
 					}else{
-						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'"') or die(mysql_error());
+						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
@@ -873,6 +891,32 @@ function greyscale($file){
 	imagejpeg($bwimage, $file);
 	imagedestroy($source);
 	return;
+}
+function checkshortULR(){
+	include_once('class/class.main.php');
+	$connect = new db();
+	$connect->db_connect();
+	$con =  new fucn();
+	$link = $con->rand_string( 6 );
+	$result = mysql_query("SELECT id,source FROM businessshorturl WHERE link = '{$link}'");//check if link is existed
+	if(mysql_num_rows($result))
+		checkshortULR();
+	else
+		return $link; 
+	$connect->db_connect();	
+}
+function checknicename(){
+	include_once('class/class.main.php');
+	$connect = new db();
+	$connect->db_connect();
+	$con =  new fucn();
+	$link = $con->rand_string( 7 );
+	$result = mysql_query("SELECT id FROM businessProfile WHERE nicename = '{$link}'");//check if link is existed
+	if(mysql_num_rows($result))
+		checknicename();
+	else
+		return $link; 
+	$connect->db_connect();	
 }
 function array2json($arr) { 
    // if(function_exists('json_encode')) return json_encode($arr); //Lastest versions of PHP already has this functionality.

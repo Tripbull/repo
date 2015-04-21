@@ -23,7 +23,7 @@
 							<div class="left-header">Collect Feedback / Reviews</div>			
 							<ul class="feedback-left-menu" data-role="listview">
 								<li ><a href="#">Tablet "On the Spot" Feedback<span class="listview-arrow-default"></span></a></li>
-								<li ><a href="#" class="qrcode">QR Code &amp; Mini Web Link Labels<span class="listview-arrow-default"></span></a></li>
+								<li ><a href="#" class="qrcode">Messages, QR Codes &amp; Mini Links<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Send Email Invitations<span class="listview-arrow-default"></span></a></li>
 								
 								<li ><a href="#">Photo Booth (Tablet or Notebook)<span class="listview-arrow-default"></span></a></li>
@@ -49,7 +49,6 @@
 								<ul class="feedback-right-weblink" data-role="listview">
 									<li><a href="weblink.html">Ask for a Selfie<span class="listview-arrow-default"></span></a></li>
 									<li><a href="weblink.html">Don’t ask for a Selfie<span class="listview-arrow-default"></span></a></li>
-									<li><a href="weblink.html">Post Your &quot;X&quot; Selfie<span class="listview-arrow-default"></span></a></li>
 								</ul>											
 							</section>
 							<section class="feedback-photo hide">	

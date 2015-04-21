@@ -65,15 +65,15 @@ $(document).ready(function(){
 			curClick = 0;
 			var title = 'Setup Wizard - Step 6 / 7';
 			var body = '<p style="text-align:left;">Please upload at least one image of your business, product or service.</p>'
-						+'<p>Use upload the best image first as it will be used as a backup image in case your customer does not take a selfie or a photo.</p>';
+						+'<p>Upload the best image first as it will be used for posting to the social media in case your customer does not take a selfie or photo.</p>';
 			var redirect = "profile.html";
 			curClick = 4;
         }else if(whatsetup == 7){
 			var title = 'Setup Wizard - Step 7 / 7';
 			var body = '<p>Get your customers to give you<br/>"X" Selfies now!</p>'
-			           + '<p><b>Print 20 "Post Your "X" Selfie" Message & display at...</b></p>'
+			           + '<p><b>Print 20 “Post your ‘X’ Selfie” messages & display them at…</b></p>'
 					   + '<p>dinning tables,waiting areas, lobbies, pool side tables, hotel rooms, function rooms... & all other <b>"chilling out" spots</b> of your business.</p>'
-			curClick = 2;
+			curClick = 0;
 			var redirect = "weblink.html";
 			isdonewizard = 1;
 			//$( ":mobile-pagecontainer" ).pagecontainer( "change",redirect,{transition: "flip"});
@@ -998,71 +998,96 @@ $(document).ready(function(){
 		});
 		$('#weblink .star').click(function(){goHome();});
 		//checkboxQuestion();
-	}); 
-
-	function diabledMenu(s){
-		clas = 'ui-state-disabled';
-		if(s == 1){
-			$('.weblink-left-menu li').each(function (index) {
-				if(index != 2)
-					$(this).addClass(clas);
-			});
-		}else{
-			$('.weblink-left-menu li').each(function (index) {
-				$(this).removeClass(clas);
-			});		
-		}
-	}
-	function wizardstep7(){
-		showLoader();
-		var placeId = locId.split('|');
-		window.open('http://tabluu.com/blog/tabluu/almost-there','_blank');
-		$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+placeId[0]+'&opt=getFeedbackUser',success:function(result){
-			hideLoader();
-			customArray =  $.parseJSON(result);
-			if(customArray.setup < 1){
-				newplaceId = placeId[0] +'|'+placeId[1]+'|'+1;
-				if(locArray.length == 1 && locArray[0].setup < 1)
-					locArray[0].setup = 1;
-				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId[0]+'&opt=wizardsetupdone',success:function(result){
-					newplaceId = placeId[0] +'|'+placeId[1]+'|'+1;
-				}});
-				//diabledMenu(1);
-				isdonewizard = 0;
-				
-				curClick = 0;
-			}else{
-				emailwizardsetup = 0;
-				//diabledMenu(0);
-			}	
-		}});
-	}
-	
-	$(document).on('pageshow','#weblink', function () {
-		var isoktoview = false;	
+		
+		var isoktoview = false,timer,arrayDataURL= [],openlink1='',openlink2='',nice1='',nice2='';
 		$('.star').show();
-		$('#shortlink').val('tabluu.com/'+customArray.nicename+'=1');
-		$('#shortlink2').val('tabluu.com/'+customArray.nicename+'=0');
-		$('#shortlink3').val('tabluu.com/'+customArray.nicename+'=6');
-		$('#submit-shortlink').click(function(){
-			window.open(domainpath+customArray.nicename+'=1','_blank');
-		});
+		$(".panel-outselfie #shortlink2").val('tabluu.com/'+customArray.nicename+'=0');
+		$(".panel-selfiex #shortlink3").val('tabluu.com/'+customArray.nicename+'=1');
+		$(".panel-outselfie .link").html('tabluu.com/'+customArray.nicename+'=0');
+		$(".panel-selfiex .link").html('tabluu.com/'+customArray.nicename+'=1');
+        $(".QRimage3").qrcode({render: 'image',fill: '#000',size: 50,text: 'tabluu.com/'+customArray.nicename+'=1'});
+		$(".QRimage2").qrcode({render: 'image',fill: '#000',size: 50,text: 'tabluu.com/'+customArray.nicename+'=0'});		
+		openlink1 = domainpath+customArray.nicename+'=0';
+		openlink2 = domainpath+customArray.nicename+'=1';
+		nice1 = customArray.nicename;nice2 = customArray.nicename;
 		$('#submit-shortlink2').click(function(){
-			window.open(domainpath+customArray.nicename+'=0','_blank');
+			window.open(openlink1,'_blank');
 		});
 		$('#submit-shortlink3').click(function(){
-			window.open(domainpath+customArray.nicename+'=6','_blank');
-		});
-		$('#qr-generate').click(function(){
-			window.open('qr-generated.html?p='+customArray.nicename+'&s=1&size='+$("#qr-size :radio:checked").val(),'_blank');
+			window.open(openlink2,'_blank');
 		});
 		$('#qr-generate3').click(function(){
-			window.open('qr-generated.html?p='+customArray.nicename+'&s=3&size='+$("#qr-size3 :radio:checked").val(),'_blank');
+			window.open('qr-generated.html?p='+nice1+'&s=1&size='+$("#qr-size3 :radio:checked").val(),'_blank');
 		});
 		$('#qr-generate2').click(function(){
-			window.open('qr-generated.html?p='+customArray.nicename+'&s=0&size='+$("#qr-size2 :radio:checked").val(),'_blank');
+			window.open('qr-generated.html?p='+nice2+'&s=0&size='+$("#qr-size2 :radio:checked").val(),'_blank');
 		});
+		places = locId.split('|');
+		showLoader();
+		$.ajax({type: "POST",url:"getData.php",cache: false,data:'placeId='+places[0]+'&opt=getshorturl',async: true,success:function(result){
+			hideLoader();
+			arrayDataURL =  $.parseJSON(result);
+			setshorturl(2);
+		}});
+		function setshorturl(newurl){
+			if($.isPlainObject(arrayDataURL)){
+				if(typeof(arrayDataURL.source_1) != 'undefined'){
+					$('#shortlink3').val('tabluu.com/'+arrayDataURL.source_1.link);
+					$('#txtlabel1').val(decodequote(arrayDataURL.source_1.label));
+					$(".panel-selfiex .link").html('tabluu.com/'+arrayDataURL.source_1.link);
+					$(".QRimage3").html('');
+					$(".QRimage3").qrcode({render: 'image',fill: '#000',size: 50,text: 'tabluu.com/'+arrayDataURL.source_1.link});
+					openlink2 = domainpath+arrayDataURL.source_1.link; 
+					nice1 = arrayDataURL.source_1.link;
+					if(newurl < 2){
+						alertBox('A new URL is generated.','You may print out the new messages/QR Codes or share this link: <a href="https://tabluu.com/'+arrayDataURL.source_1.link+'" target="_blank">tabluu.com/'+arrayDataURL.source_1.link+'</a> now.<p>Please download the stats if you wish check your "label" data. </p>');
+					}	
+				}
+				if(typeof(arrayDataURL.source_0) != 'undefined'){
+					$('#shortlink2').val('tabluu.com/'+arrayDataURL.source_0.link);
+					$('#txtlabel2').val(decodequote(arrayDataURL.source_0.label));
+					$(".panel-outselfie .link").html('tabluu.com/'+arrayDataURL.source_0.link);
+					$(".QRimage2").html('');
+					$(".QRimage2").qrcode({render: 'image',fill: '#000',size: 50,text: 'tabluu.com/'+arrayDataURL.source_0.link});
+					openlink1 = domainpath+arrayDataURL.source_0.link; 
+					nice2 = arrayDataURL.source_0.link;
+					if(newurl < 2){
+						alertBox('A new URL is generated.','You may print out the new messages/QR Codes or share this link: <a href="https://tabluu.com/'+arrayDataURL.source_0.link+'" target="_blank">tabluu.com/'+arrayDataURL.source_0.link+'</a> now.<p>Please download the stats if you wish check your "label" data. </p>');
+					}	
+				}
+			}
+		}
 		
+		$('#submit-label1').click(function(){
+			places = locId.split('|');
+			if($.trim($('#txtlabel1').val()) != ''){
+				showLoader();
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=generateshorturl&label='+encodeURIComponent(encodequote($('#txtlabel1').val()))+'&source=1',async: true,success:function(result){
+					hideLoader();
+					arrayDataURL =  $.parseJSON(result);
+					setshorturl(1);
+				}});
+			}else{
+				uicAlertBox('incomplete','Please enter label','#txtlabel1');
+			}
+		});
+		$('#submit-label2').click(function(){
+			places = locId.split('|');
+			if ( timer ) clearTimeout(timer);
+			timer = setTimeout(function(){
+				if($.trim($('#txtlabel2').val()) != ''){
+					showLoader();
+					$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=generateshorturl&label='+encodeURIComponent(encodequote($('#txtlabel2').val()))+'&source=0',async: true,success:function(result){
+						hideLoader();
+						//alertBox('complete','New generated url');
+						arrayDataURL =  $.parseJSON(result);
+						setshorturl(1);
+					}});
+				}else{
+					uicAlertBox('incomplete','Please enter label','#txtlabel2');
+				}
+			}, 300);
+		});
 		$( ".right-header" ).html( placename );
 		if($( window ).width() <= 600){
 			$( '.main-wrap .left-content' ).show();
@@ -1075,8 +1100,8 @@ $(document).ready(function(){
 			   qrmenuleft();
 			   $('.panel-selfie').hide();$('.panel-outselfie').hide();$('.panel-selfiex').hide();
 			   if(curClick == 0){
-					$('#qr-size input[value="2"]').attr('checked',true).checkboxradio('refresh');
-					$('.panel-selfie').show();
+					$('#qr-size3 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
+					$('.panel-selfiex').show();
 				}else if(curClick == 1){
 					$('#qr-size2 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
 					$('.panel-outselfie').show();
@@ -1091,63 +1116,53 @@ $(document).ready(function(){
 				}
 			}
 		});
-		$(".panel-selfie .shortlink").html('tabluu.com/'+customArray.nicename+'=1');
-		$(".panel-outselfie .shortlink2").html('tabluu.com/'+customArray.nicename+'=0');
-		$(".panel-selfiex .shortlink3").html('tabluu.com/'+customArray.nicename+'=6');
-		// seflie code
-		$("#selfie-1").keypress(function(e){
-			/*
-			if(e.which != 0 && e.which != 8){
-				var str = $("#selfie-1").val();
-				if(str.length > 34){
-					setTimeout(function(){
-						$('.panel-selfie .title-1').html(str.substring(0,35));
-						$("#selfie-1").val(str.substring(0,35));
-					}, 300);
-					if()
-					alertBox('title too long','Your label title must have at least 34 chars.');
-				}else 
-					$('.panel-selfie .title-1').html($("#selfie-1").val());
-			}else*/
-				$('.panel-selfie .title-1').html($("#selfie-1").val());
-		});
-		$("#selfie-1").blur(function(){
-		  $('.panel-selfie .title-1').html($("#selfie-1").val());
-		  printSaveTxt();
-		});
+		//$(".panel-selfie .shortlink").html('tabluu.com/'+customArray.nicename+'=1');
 
-		// not selfie code here
-		$("#outselfie-1").keypress(function(){
-			$('.panel-outselfie .title-1').html($("#outselfie-1").val());
-		});
 		
-		$("#outselfie-1").blur(function(){
-		  $('.panel-outselfie .title-2').html($("#outselfie-1").val());
-		  printSaveTxt();
+		//no selfie input box code
+		$("#noselfie1").blur(function(){
+		  $('.panel-outselfie .gohere').html($("#noselfie1").val());
+		   printSaveTxt();
 		});
-		
+		$("#noselfie1").keyup(function(){
+		  $('.panel-outselfie .gohere').html($("#noselfie1").val());
+		});
+		$("#noselfie2").blur(function(){
+		  $('.panel-outselfie .postx').html($("#noselfie2").val());
+		   printSaveTxt();
+		});
+		$("#noselfie2").keyup(function(){
+		  $('.panel-outselfie .postx').html($("#noselfie2").val());
+		});
+		$("#noselfie3").blur(function(){
+		  $('.panel-outselfie .pselfiex').html($("#noselfie3").val());
+		   printSaveTxt();
+		});
+		$("#noselfie3").keyup(function(){
+		  $('.panel-outselfie .pselfiex').html($("#noselfie3").val());
+		});
+		//selfie input box code
 		$("#selfiex1").blur(function(){
 		  $('.panel-selfiex .gohere').html($("#selfiex1").val());
-		   printSaveTxt()
+		   printSaveTxt();
 		});
 		$("#selfiex1").keyup(function(){
 		  $('.panel-selfiex .gohere').html($("#selfiex1").val());
 		});
 		$("#selfiex2").blur(function(){
 		  $('.panel-selfiex .postx').html($("#selfiex2").val());
-		   printSaveTxt()
+		   printSaveTxt();
 		});
 		$("#selfiex2").keyup(function(){
 		  $('.panel-selfiex .postx').html($("#selfiex2").val());
 		});
 		$("#selfiex3").blur(function(){
 		  $('.panel-selfiex .pselfiex').html($("#selfiex3").val());
-		   printSaveTxt()
+		   printSaveTxt();
 		});
 		$("#selfiex3").keyup(function(){
 		  $('.panel-selfiex .pselfiex').html($("#selfiex3").val());
 		});
-		
 		$(".panel-outselfie #submit-print4").click(function(e){
 			e.preventDefault();
 			openqrprint(4,0);
@@ -1156,6 +1171,7 @@ $(document).ready(function(){
 			e.preventDefault();
 			openqrprint(9,0);
 		});
+		/*
 		$(".panel-selfie #submit-print4").click(function(e){
 			e.preventDefault();
 			openqrprint(4,1);
@@ -1163,18 +1179,17 @@ $(document).ready(function(){
 		$(".panel-selfie #submit-print9").click(function(e){
 			e.preventDefault();
 			openqrprint(9,1);
-		});
+		}); */
 		$(".panel-selfiex #submit-print4").click(function(e){
 			e.preventDefault();
-			openqrprint(4,3);
+			openqrprint(4,1);
 		});
 		$(".panel-selfiex #submit-print9").click(function(e){
 			e.preventDefault();
-			openqrprint(9,3);
+			openqrprint(9,1);
 		});
-		$(".QRimage").qrcode({render: 'image',fill: '#000',size: 130,text: 'tabluu.com/'+customArray.nicename+'=1'});
-		$(".QRimage2").qrcode({render: 'image',fill: '#000',size: 130,text: 'tabluu.com/'+customArray.nicename+'=0'});
-		$(".QRimage3").qrcode({render: 'image',fill: '#000',size: 50,text: 'tabluu.com/'+customArray.nicename+'=6'});
+
+		//$(".QRimage3").qrcode({render: 'image',fill: '#000',size: 50,text: 'tabluu.com/'+customArray.nicename+'=6'});
 		function openqrprint(cases,selfie){
 			places = locId.split('|');
 			if(cases == 4)
@@ -1184,7 +1199,7 @@ $(document).ready(function(){
 		}
 		function printSaveTxt(){
 			places = locId.split('|');
-			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=print&selfie-1='+encodeURIComponent(encodequote($('#selfie-1').val()))+'&outselfie-1='+encodeURIComponent(encodequote($('#outselfie-1').val()))+'&selfiex1='+encodeURIComponent(encodequote($('#selfiex1').val()))+'&selfiex2='+encodeURIComponent(encodequote($('#selfiex2').val()))+'&selfiex3='+encodeURIComponent(encodequote($('#selfiex3').val())),async: false,success:function(result){}	
+			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=print&selfie-1='+'&noselfie1='+encodeURIComponent(encodequote($('#noselfie1').val()))+'&noselfie2='+encodeURIComponent(encodequote($('#noselfie2').val()))+'&noselfie3='+encodeURIComponent(encodequote($('#noselfie3').val()))+'&selfiex1='+encodeURIComponent(encodequote($('#selfiex1').val()))+'&selfiex2='+encodeURIComponent(encodequote($('#selfiex2').val()))+'&selfiex3='+encodeURIComponent(encodequote($('#selfiex3').val())),async: false,success:function(result){}	
 			});
 		}
 		qrmenushow(curClick);
@@ -1230,22 +1245,32 @@ $(document).ready(function(){
 						isoktoview = true;
 						if(customArray.printvalue != ''){
 							var printval = $.parseJSON(customArray.printvalue)
-							$('.panel-selfie .title-1').html(decodequote(printval.firstline1));
-							$('#selfie-1').val(decodequote(printval.firstline1)); 
-							$('.panel-outselfie .title-2').html(decodequote(printval.firstline2)); 
-							$('#outselfie-1').val(decodequote(printval.firstline2)); 
+							if(typeof(printval.noselfie1) != 'undefined'){
+								$("#noselfie1").val(decodequote(printval.noselfie1));
+								$("#noselfie2").val(decodequote(printval.noselfie2));
+								$("#noselfie3").val(decodequote(printval.noselfie3));
+								$('.panel-outselfie .gohere').html(decodequote(printval.noselfie1));
+								$('.panel-outselfie .postx').html(decodequote(printval.noselfie2));
+								$('.panel-outselfie .pselfiex').html(decodequote(printval.noselfie3));
+							}
+							 
+							if(typeof(printval.selfiex1) != 'undefined'){
+								$("#selfiex1").val(decodequote(printval.selfiex1));
+								$("#selfiex2").val(decodequote(printval.selfiex2));
+								$("#selfiex3").val(decodequote(printval.selfiex3));
+								$('.panel-selfiex .gohere').html(decodequote(printval.selfiex1));
+								$('.panel-selfiex .postx').html(decodequote(printval.selfiex2));
+								$('.panel-selfiex .pselfiex').html(decodequote(printval.selfiex3));
+							}
 						}
 						if(row == 0){
-							$('#qr-size input[value="2"]').attr('checked',true).checkboxradio('refresh');
-							$('.panel-selfie').show();
-						}else if(row == 1){
-							$('#qr-size2 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
-							$('.panel-outselfie').show();
-						}else if(curClick == 2){
 							$('#qr-size3 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
 							$('.panel-selfiex').show();
 							if(isdonewizard > 0)
 								wizardstep7();
+						}else if(row == 1){
+							$('#qr-size2 input[id="webb2"]').attr('checked',true).checkboxradio('refresh');
+							$('.panel-outselfie').show();
 						}					
 					}
 			  }});
@@ -1281,8 +1306,51 @@ $(document).ready(function(){
 				});				
 			}
 		}
+		
+	}); 
+
+	function diabledMenu(s){
+		clas = 'ui-state-disabled';
+		if(s == 1){
+			$('.weblink-left-menu li').each(function (index) {
+				if(index != 2)
+					$(this).addClass(clas);
+			});
+		}else{
+			$('.weblink-left-menu li').each(function (index) {
+				$(this).removeClass(clas);
+			});		
+		}
+	}
+	function wizardstep7(){
+		showLoader();
+		var placeId = locId.split('|');
+		window.open('http://tabluu.com/blog/tabluu/almost-there','_blank');
+		$.ajax({type: "POST",url:"getData.php",cache: false,async: true,data:'key='+placeId[0]+'&opt=getFeedbackUser',success:function(result){
+			hideLoader();
+			customArray =  $.parseJSON(result);
+			if(customArray.setup < 1){
+				newplaceId = placeId[0] +'|'+placeId[1]+'|'+1;
+				if(locArray.length == 1 && locArray[0].setup < 1)
+					locArray[0].setup = 1;
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId[0]+'&opt=wizardsetupdone',success:function(result){
+					newplaceId = placeId[0] +'|'+placeId[1]+'|'+1;
+				}});
+				//diabledMenu(1);
+				isdonewizard = 0;
+				
+				curClick = 0;
+			}else{
+				emailwizardsetup = 0;
+				//diabledMenu(0);
+			}	
+		}});
+	}
 	
-});
+	$(document).on('pageshow','#weblink', function () {
+		
+	
+	});
 	function codes(str){
 		return String(str).replace(',','||');
 	}
@@ -1564,9 +1632,9 @@ $(document).on("pagebeforechange", function (e, data) {
 			places = locId.split('|');
 			var nicename = rand_nicename(7);
 			$('<div id="overlay"> </div>').appendTo(document.body);
-			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=nicename&nicename='+nicename,success:function(lastId){
+			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=nicename&nicename='+nicename,success:function(link){
 				$("#overlay").remove();
-				customArray.nicename=nicename;
+				customArray.nicename=link;
 				//window.open('http://www.tabluu.com/'+nicename+'.html');
 				createProfileMenu1();
 			}});		
@@ -2116,9 +2184,9 @@ $(document).on("pagebeforechange", function (e, data) {
 		places = locId.split('|');
 		var nicename = rand_nicename(7);
 		$('<div id="overlay"> </div>').appendTo(document.body);
-		$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=nicename&nicename='+nicename,async: false,success:function(lastId){
+		$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=nicename&nicename='+nicename,async: false,success:function(link){
 			$("#overlay").remove();
-			customArray.nicename=nicename;
+			customArray.nicename=link;
 			if(profilewizardsetup == 1){
 				profilewizardsetup = 0;
 				setTimeout(function() {wizardsetup();},200);
@@ -2552,7 +2620,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			if(checkProfileBox()){
 				//$('<div id="overlay"> </div>').appendTo(document.body);
 				showLoader();
-				  geocoder = new google.maps.Geocoder();
+				  var geocoder = new google.maps.Geocoder();
 				  var address = $('#txtname').val() +' '+ $('#txtadd').val() +', '+ $('#txtcity').val() +', '+$('#txtcountry').val();
 				  geocoder.geocode( { 'address': address}, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK) {
@@ -2770,7 +2838,16 @@ $(document).on("pagebeforechange", function (e, data) {
 	   var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
 	   return Math.round(bytes / Math.pow(1024, i), 2) + '' + sizes[i];
 	}
-	
+	 function uicAlertBox(title,message,id){
+		$.box_Dialog(decodequote(message), {
+			'type':     'question',
+			'title':    '<span class="color-white">'+decodequote(title)+'<span>',
+			'center_buttons': true,
+			'show_close_button':false,
+			'overlay_close':false,
+			'buttons':  [{caption: 'okay',callback:function(){setTimeout(function(){$(id).focus();},300);}}]
+		});
+	}
 	$(document).on('pageinit','#uic', function () {
 		$('#frmlogo').find('div').removeClass('ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset');
 		$('#frmlogo').find('div').css({height:'1px'});
@@ -2810,16 +2887,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		});	
 		$('#uic .star').click(function(){goHome();});
 	})
-    function uicAlertBox(title,message,id){
-		$.box_Dialog(decodequote(message), {
-			'type':     'question',
-			'title':    '<span class="color-white">'+decodequote(title)+'<span>',
-			'center_buttons': true,
-			'show_close_button':false,
-			'overlay_close':false,
-			'buttons':  [{caption: 'okay',callback:function(){setTimeout(function(){$(id).focus();},300);}}]
-		});
-	}
+   
 	$(document).on('pageshow','#uic', function () { // UIC script start here
 		googleAnalytic();
 	   $('input[type="text"]').textinput({ preventFocusZoom: true });

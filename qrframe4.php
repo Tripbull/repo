@@ -10,21 +10,36 @@ if(!isset($_REQUEST['s']) || !isset($_REQUEST['id']))
 $connect = new db();
 $connect->db_connect();
 $placeId = $_REQUEST['id'];
-$sql = "SELECT c.printvalue,p.nicename FROM businessCustom as c LEFT JOIN businessProfile AS p ON p.profilePlaceId = c.customPlaceId
-		WHERE c.customPlaceId = $placeId";
+$sql = "SELECT c.printvalue,p.nicename,s.link FROM businessCustom as c LEFT JOIN businessProfile AS p ON p.profilePlaceId = c.customPlaceId LEFT JOIN businessshorturl AS s ON s.placeId = c.customPlaceId AND s.source = {$_REQUEST['s']} WHERE c.customPlaceId = $placeId";
 $result = mysql_query($sql) or die(mysql_error());
 $row = mysql_fetch_object($result );
 $textline = json_decode($row->printvalue);
 $connect->db_disconnect();
 $size = 217;
 if($_REQUEST['s'] == 1){
-	$firstline1 = (!empty($textline) ? $textline->firstline1 : 'Your Selfie &amp; Feedback Here!');
-	$link = 'http://www.tabluu.com/'.$row->nicename.'=1';
-	$shortlink = 'tabluu.com/'.$row->nicename.'=1';
+	$selfiex1 = (!empty($textline) ? $textline->selfiex1 : 'GO HERE:');
+	$selfiex2 = (!empty($textline) ? $textline->selfiex2 : 'POST YOUR "X"');
+	$selfiex3 = (!empty($textline) ? $textline->selfiex3 : 'SELFIE');
+	if($row->link == null){
+		$link = 'https://tabluu.com/'.$row->nicename.'=1';
+		$shortlink = 'tabluu.com/'.$row->nicename.'=1';
+	}else{
+		$link = 'https://tabluu.com/'.$row->link;
+		$shortlink = 'tabluu.com/'.$row->link;
+	}
+	$size = 80;
 }else if($_REQUEST['s'] == 0){
-	$firstline1 = (!empty($textline) ? $textline->firstline2 : 'We Value Your Feedback');
-	$link = 'http://www.tabluu.com/'.$row->nicename.'=0';
-	$shortlink = 'tabluu.com/'.$row->nicename.'=0';
+	$selfiex1 = (!empty($textline) ? $textline->noselfie1 : 'GO HERE:');
+	$selfiex2 = (!empty($textline) ? $textline->noselfie2 : 'We Value Your');
+	$selfiex3 = (!empty($textline) ? $textline->noselfie3 : 'Feedback');
+	if($row->link == null){
+		$link = 'https://tabluu.com/'.$row->nicename.'=0';
+		$shortlink = 'tabluu.com/'.$row->nicename.'=0';
+	}else{
+		$link = 'https://tabluu.com/'.$row->link;
+		$shortlink = 'tabluu.com/'.$row->link;
+	}
+	$size = 80;
 }else if($_REQUEST['s'] == 3){
 	$selfiex1 = (!empty($textline) ? $textline->selfiex1 : 'GO HERE:');
 	$selfiex2 = (!empty($textline) ? $textline->selfiex2 : 'POST YOUR "X"');
@@ -234,7 +249,7 @@ p.powered {font-family:"Open Sans";font-size:13px;padding-bottom:3px;margin-top:
 
 <body>
 <?php
-if($_REQUEST['s'] == 3){
+if($_REQUEST['s'] == 1 OR $_REQUEST['s'] == 0){
 ?>
 <div id="wrap">
 <div class="clear"></div>

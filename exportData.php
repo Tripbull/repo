@@ -3,9 +3,9 @@ include_once('class/class.main.php');
 include_once('class/PHPExcel.php');
 $objPHPExcel = new PHPExcel();
 $user_tz = '';
+$connect = new db();
+$connect->db_connect();
 if(isset($_REQUEST['groupID'])){
-	$connect = new db();
-	$connect->db_connect();
 	$groupID = $_REQUEST['groupID'];
 	$sql = "SELECT timezone FROM businessUserGroup WHERE gID =  '$groupID'";
 	$result = mysql_query($sql);
@@ -26,6 +26,9 @@ if(isset($_REQUEST['placeId'])){
 	$addnewfield = mysql_query("SHOW COLUMNS FROM `businessplace_$placeId` LIKE 'feedsource'") or die(mysql_error());
 	if(mysql_num_rows($addnewfield) < 1)
 		mysql_query("ALTER TABLE `businessplace_$placeId` ADD `feedsource` VARCHAR(2) NOT NULL AFTER `source`");
+	$addnewfield1 = mysql_query("SHOW COLUMNS FROM `businessplace_$placeId` LIKE 'labelId'") or die(mysql_error());
+	if(mysql_num_rows($addnewfield1) < 1)
+		mysql_query("ALTER TABLE `businessplace_$placeId` ADD `labelId` INT NOT NULL AFTER `source`");	
 	$questionDefault = array('How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again');
 	$custom = $controller->select('businessCustom', '*', "customPlaceId = $placeId");
 	$row = mysql_fetch_object($custom);
@@ -62,7 +65,7 @@ if(isset($_REQUEST['placeId'])){
 		}
 	}else{
 		for($i=0;$i<count($questionDefault);$i++){
-			for($j=0;$j<count($arraySelectedItem);$j++){
+			for($j=0;$j<count($arraySelectedItem);$j++){		
 				$name = explode('_',$questionDefault[$i]);
 				if($arraySelectedItem[$j] == $name[1]){
 					array_push($ratingTextTemp,$name[1]);
@@ -72,24 +75,24 @@ if(isset($_REQUEST['placeId'])){
 	}
 	$totalRate = count($ratingTextTemp); 
 	if($totalRate == 1)
-		$fields = "rated1, aveRate, comment, userName , source, feedsource, date";
+		$fields = "rated1, aveRate, comment, userName , source, labelId, feedsource, date";
 	else if($totalRate == 2)
-		$fields = "rated1, rated2, aveRate, comment, userName , source, feedsource, date";
+		$fields = "rated1, rated2, aveRate, comment, userName , source, labelId, feedsource, date";
 	else if($totalRate == 3)
-		$fields = "rated1, rated2, rated3, aveRate, comment, userName , source, feedsource, date";
+		$fields = "rated1, rated2, rated3, aveRate, comment, userName , source, labelId, feedsource, date";
 	else if($totalRate == 4)
-		$fields = "rated1, rated2, rated3, rated4, aveRate, comment, userName , source, feedsource, date";
+		$fields = "rated1, rated2, rated3, rated4, aveRate, comment, userName , source, labelId, feedsource, date";
 	else if($totalRate == 5)
-		$fields = "rated1, rated2, rated3, rated4, rated5, aveRate, comment, userName , source, feedsource, date";
+		$fields = "rated1, rated2, rated3, rated4, rated5, aveRate, comment, userName , source, labelId, feedsource, date";
 	else if($totalRate == 6)
-		$fields = "rated1, rated2, rated3, rated4, rated5, rated6, aveRate, comment, userName , source, feedsource, date";
+		$fields = "rated1, rated2, rated3, rated4, rated5, rated6, aveRate, comment, userName , source, labelId, feedsource, date";
 	else if($totalRate == 7)
-		$fields = "rated1, rated2, rated3, rated4, rated5, rated6, rated7, aveRate, comment, userName , source, feedsource, date";
+		$fields = "rated1, rated2, rated3, rated4, rated5, rated6, rated7, aveRate, comment, userName , source, labelId, feedsource, date";
 		
 	$result = $controller->exportCSV($date1,$date2,$placeId,$fields);
 	$fieldData = array();
 	
-	$ratingTextTemp = array_merge($ratingTextTemp, array('Average Rating', 'Comment', 'Name', 'Shared', 'Source', 'Date', 'Time'));
+	$ratingTextTemp = array_merge($ratingTextTemp, array('Average Rating', 'Comment', 'Name', 'Shared', 'Source', 'Label', 'Date', 'Time'));
 
 	$array_col = array("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");	
 	$r=0;$c=1;
@@ -124,21 +127,29 @@ if(isset($_REQUEST['placeId'])){
 		if((int)$row->feedsource == 5 || trim($row->feedsource) == '')	
 			$feedsource = 'Survey';
 		if((string)$row->feedsource == 'e')
-			$feedsource = 'Email invitations';		
+			$feedsource = 'Email invitations';
+		$label = '';
+		if($row->labelId){
+			$resultlabel = mysql_query("SELECT label FROM businessshorturl WHERE id = {$row->labelId}");
+			if(mysql_num_rows($resultlabel)){
+				$rowlable = mysql_fetch_object($resultlabel);
+				$label = $rowlable->label;
+			}	
+        }			
 		if($totalRate == 1)
-			$colrow = array($row->rated1,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$newdate[0],$newdate[1].' '.$newdate[2]);
+			$colrow = array($row->rated1,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$label,$newdate[0],$newdate[1].' '.$newdate[2]);
 		else if($totalRate == 2)
-			$colrow = array($row->rated1,$row->rated2,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$newdate[0],$newdate[1].' '.$newdate[2]);
+			$colrow = array($row->rated1,$row->rated2,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$label,$newdate[0],$newdate[1].' '.$newdate[2]);
 		else if($totalRate == 3)
-			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$newdate[0],$newdate[1].' '.$newdate[2]);
+			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$label,$newdate[0],$newdate[1].' '.$newdate[2]);
 		else if($totalRate == 4)
-			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->rated4,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$newdate[0],$newdate[1].' '.$newdate[2]);
+			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->rated4,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$label,$newdate[0],$newdate[1].' '.$newdate[2]);
 		else if($totalRate == 5)
-			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->rated4,$row->rated5,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$newdate[0],$newdate[1].' '.$newdate[2]);
+			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->rated4,$row->rated5,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$label,$newdate[0],$newdate[1].' '.$newdate[2]);
 		else if($totalRate == 6)
-			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->rated4,$row->rated5,$row->rated6,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$newdate[0],$newdate[1].' '.$newdate[2]);
+			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->rated4,$row->rated5,$row->rated6,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$label,$newdate[0],$newdate[1].' '.$newdate[2]);
 		else if($totalRate == 7)
-			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->rated4,$row->rated5,$row->rated6,$row->rated7,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$newdate[0],$newdate[1].' '.$newdate[2]);		
+			$colrow = array($row->rated1,$row->rated2,$row->rated3,$row->rated4,$row->rated5,$row->rated6,$row->rated7,$row->aveRate,$row->comment,$row->userName,$fbsource,$feedsource,$label,$newdate[0],$newdate[1].' '.$newdate[2]);		
 		//fputcsv($outstream, $colrow, ',', '"');  	
 	
 		foreach( $colrow as $val ){
@@ -153,6 +164,7 @@ if(isset($_REQUEST['placeId'])){
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
 		$objWriter->save('php://output');	
 }
+$connect->db_disconnect();
 function encodequote($str){
 	$str = str_replace('<double>','"',str_replace("<quote>","'",$str));
 	$str = str_replace("<comma>",',',$str);

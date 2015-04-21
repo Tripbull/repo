@@ -111,7 +111,6 @@ class fucn extends db{
 		//SELECT `rated1`, `rated2`, `aveRate`, `comment`, `userName` , `source`, `date` FROM businessplace_1285 WHERE `date` BETWEEN '2014-06-29 00:00:00' AND '2014-06-29 12:00:00' 
 		$sql = "SELECT $fields FROM businessplace_$placeId WHERE `date` BETWEEN '$date1 00:00:00' AND '$date2 23:59:59' ORDER BY id DESC";
 		$result = mysql_query($sql);
-		$this->db_disconnect();
 		return $result;
 	}
 	
