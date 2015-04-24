@@ -60,6 +60,8 @@ foreach($time_zones as $zones){
 									</select>
 								<input type="text" data-clear-btn="true" name="txtname" id="txtname" value="" placeholder="business name">
 								<label for="number-1"></label>
+								<input type="text" data-clear-btn="true" name="txtlabel" id="txtlabel" value="" placeholder="label (optional)">
+								<label for="number-1"></label>
 								<input type="text" data-clear-btn="true" name="txtadd" id="txtadd" value="" placeholder="address">
 								<label for="number-1"></label>
 								<input type="text" data-clear-btn="true" name="txtcity" id="txtcity" value="" placeholder="city">

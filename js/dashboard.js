@@ -1,6 +1,6 @@
-var curClick=0,locId=0,frmpagemanage=0,setupclickmenu=0,defaultSetup=0,noPhoto = 'images/template/no-photo.gif',loadingPhoto = 'images/template/no-photo-tran.gif',isprofileupdated=0,reviewQuestion=[],feedbackArray=[],featureArray=[],inviteEmailvisited=0,isAdminCreatedLocation=0;
+var curClick=0,locId=0,frmpagemanage=0,setupclickmenu=0,defaultSetup=0,noPhoto = 'images/template/no-photo.gif',loadingPhoto = 'images/template/no-photo-tran.gif',isprofileupdated=0,reviewQuestion=[],feedbackArray=[],featureArray=[],inviteEmailvisited=0,isAdminCreatedLocation=0,lab='';
 var locArray=[],userArray=[],customArray=[],viewOnce=0,geocoder,lat=0,lng=0,domainFile="http://www.tabluu.com";chargifydomain = 'https://tabluu.chargify.com';
-var locDefault = '',placeId=0,placename='',keyId=0,loader='',activeLocLength=1,isfocus=0,t=0,comp_id_old=0;
+var locDefault = '',placeId=0,placename='',keyId=0,loader='',activeLocLength=1,isfocus=0,t=0,comp_id_old=0,locname='',arraylabel=[];
 var online ='images/template/active.png',onlineBg='images/template/activeOnline.png',offline ='images/template/inactive.png',offlineBg='images/template/activeOffline.png',imagesArray=[],txtdescription='',txtimg='',product_plan_array=[],component_array=[],transac=[],activity_array=[],issetup = 0;
 //live mode chargify ids
 var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619;
@@ -100,8 +100,25 @@ $(document).ready(function(){
 			showLoader();
 			$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+keypad+'&opt=getCustom',success:function(result){
 				customArray =  $.parseJSON(result);
-				placename  = customArray.businessName;
-				hideLoader();
+				placename  = customArray.businessName + ($.trim(lab) != '' ? ' ('+lab+')' : '');
+				lab = '';
+				hideLoader();var j=0;
+				if(customArray.webImg != '')
+					j++;
+				if(customArray.webImg2 != '')
+					j++;
+				if(customArray.webImg3 != '')
+					j++;
+				if(customArray.webImg4 != '')
+					j++;
+				if(customArray.webImg5 != '')
+					j++;
+				if(customArray.webImg6 != '')
+					j++;
+				if(customArray.webImg7 != '')
+					j++;
+				if(customArray.webImg8 != '')
+					j++;	
 				if(customArray.nicename == ''){
 					profilewizardsetup = 1;
 					wizardAlert(3);
@@ -112,10 +129,12 @@ $(document).ready(function(){
 				}else if(customArray.logo == ''){
 					uicwizardsetup = 1;questionwizardsetup=0;
 					wizardAlert(5);
-				}else if(locOption[2] < 1){  
-					issetup = 1;uicwizardsetup = 0;
+				}else if(j == 0){
+					profilewizardwebImg = 1;profilewizardsetup=0;
 					wizardAlert(6);
-					newentryloc = 0;
+				}else if(locOption[2] < 1){
+					issetup = 1;uicwizardsetup = 0;
+					wizardAlert(7);
 				}
 			}});
 		}
@@ -137,7 +156,8 @@ $(document).ready(function(){
 						locId = locArray[0].id+'|'+locArray[0].subscribe;
 						$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+keypad+'&opt=getCustom',success:function(result){
 							customArray =  $.parseJSON(result);
-							placename  = customArray.businessName;
+							placename  = customArray.businessName + ($.trim(lab) != '' ? ' ('+lab+')' : '');
+							lab = '';
 							hideLoader();var j=0;
 							if(customArray.webImg != '')
 								j++;
@@ -415,7 +435,7 @@ $(document).ready(function(){
 		if(e.which == 13){
             var user = userArray;
 			var name = $.trim($("#text-6").val());
-            if(user.permission < 2){ 
+            if(user.permission < 2){
                 var rows = locArray.length; //get total length of location
                 if(user.productId == everFree){
                     if(rows > 0){
@@ -482,25 +502,93 @@ $(document).ready(function(){
 			defaulAlertBox('alert','invalid request',"Please contact your administrator(s) for this request");
 		}
 	});
-
+    function loclabel(){
+	clearTimeout(resizeTimeout);
+	resizeTimeout = setTimeout(function(){ 
+		setTimeout(function(){$('#loclabel').focus();},300);
+			$.box_Dialog('<input type="text" name="loclabel" id="loclabel" value="" placeholder="your label..." style="width:90%" /><p>Note: A identification label may be the street name or a nick name that helps you identify an outlet or branch of your business...</p>', {'type':'confirm','title': '<span class="color-gold">please add an identification label</span>','center_buttons': true,'show_close_button':false,'overlay_close':false,'buttons':  [{caption: 'submit', callback: function() {
+					if($("#loclabel").val() == ''){
+							clearTimeout(resizeTimeout);
+							resizeTimeout = setTimeout(function(){ 
+								$.box_Dialog('Please enter your label', {
+									'type':     'question',
+									'title':    '<span class="color-gold">incomplete<span>',
+									'center_buttons': true,
+									'show_close_button':false,
+									'overlay_close':false,
+									'buttons':  [{caption: 'okay',callback:function(){loclabel();}}]
+								});
+						}, 300);
+					}else{
+						var tabname = $("#loclabel").val(),found = true;
+						for(var i in arraylabel){
+							if(decodequote(arraylabel[i]).toLowerCase() == tabname.toLowerCase()){
+								found = false;
+							}	
+						}
+						if(found){
+							lab = $("#loclabel").val();
+							clearTimeout(resizeTimeout);
+							resizeTimeout = setTimeout(function(){ 
+							_setBusinessName2(lab);
+							},300);
+						}else{
+							clearTimeout(resizeTimeout);
+							resizeTimeout = setTimeout(function(){ 
+								$.box_Dialog('Please use another label', {
+									'type':     'question',
+									'title':    '<span class="color-gold">"'+tabname+'" is in use<span>',
+									'center_buttons': true,
+									'show_close_button':false,
+									'overlay_close':false,
+									'buttons':  [{caption: 'okay',callback:function(){loclabel()}}]
+								});
+							}, 300);
+						}
+					}
+				}},{caption: 'cancel',callback:function(){
+					clearTimeout(resizeTimeout);
+					resizeTimeout = setTimeout(function(){ 
+					_setBusinessName2('');
+					},300);
+				}}]
+			});	
+			}, 300);//to prevent the events fire twice
+	}
+	function _setBusinessName2(label){
+		var subs=0,curActive = parseInt(userArray.addLoc) + 1;
+		if( parseInt(curActive) >= parseInt(activeLocLength) )
+			subs = 1;
+		setData({opt:'setLoc',userId:userArray.id,name:locname,subs:subs,label:encodequote(label)});
+		if(userArray.permission == 1)
+			isAdminCreatedLocation = 1; 
+		$('.addnew-loc').show();
+		$('.text-loc').hide();	
+		hideLoader();
+	}
 	function _setBusinessName(name){
+		locname = name;
+		loclabel();
+		/*
 		var isfound = true;
 		$('.left-menu li a').each(function (index) {
 			var locname  = $( this ).text();
 			if(locname == name)
 				isfound = false;
 		});
-		
-		if(!isfound)	
-			defaulAlertBox('alert','invalid','Location '+name +' existed')
-		else{
+		*/
+		//if(!isfound)	
+			//defaulAlertBox('alert','invalid','Location '+name +' existed')
+		//else{
+		/*
 			var subs=0,curActive = parseInt(userArray.addLoc) + 1;
 			if( parseInt(curActive) >= parseInt(activeLocLength) )
 				subs = 1;
 			setData({opt:'setLoc',userId:userArray.id,name:name,subs:subs});
 			if(userArray.permission == 1)
-				isAdminCreatedLocation = 1;
-		}
+				isAdminCreatedLocation = 1; */
+		//}
+		
 	}
 	$( window ).resize(function() { // when window resize
 			if($( window ).width() > 600){
@@ -543,15 +631,16 @@ $(document).ready(function(){
 	function DashMenu(){
 		locDefault = '<li ><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">Help<span class="listview-arrow-default listview-arrow-active"></span></a></li><li><a href="#">User Admin<span class="listview-arrow-default"></span></a></li><li ><a href="#">Global Settings<span class="listview-arrow-default"></span></a></li><li ><a href="#">Send Emails<span class="listview-arrow-default"></span></a></li><li ><a href="#">Subscriptions<span class="listview-arrow-default"></span></a></li>';
 		if(locArray.length){ // had location already
-			activeLocLength=1;
+			activeLocLength=1;arraylabel=[];
 			for(var i in locArray){
 				var icon = online;
 				if(locArray[i].subscribe < 1)
 					icon = offline;
 				else
 					activeLocLength++;
-					
-				locDefault = locDefault + '<li><a href="#" class="'+locArray[i].id+'|'+locArray[i].subscribe+'|'+locArray[i].setup+'"><img src="'+icon+'" alt="" class="ui-li-icon ui-corner-none">'+locArray[i].name+'<span class="listview-arrow-default"></span></a></li>';
+				if($.trim(locArray[i].label) != '')
+					arraylabel.push(encodequote(locArray[i].label));	
+				locDefault = locDefault + '<li><a href="#" class="'+locArray[i].id+'|'+locArray[i].subscribe+'|'+locArray[i].setup+'"><img src="'+icon+'" alt="" class="ui-li-icon ui-corner-none">'+locArray[i].name+' '+(locArray[i].label != '' ? '('+decodequote(locArray[i].label)+')' : '')+'<span class="listview-arrow-default"></span></a></li>';
 			}	
 			$('.left-menu').html('<ul class="left-menu" data-role="listview">'+locDefault+'</ul>');
 			$(".left-menu").on ('click', ' > li', function (event){
@@ -741,7 +830,7 @@ $(document).ready(function(){
 		case 'setLoc':
 			showLoader();
 			$('#text-6').val('');
-			$.ajax({type: "POST",url:"setData.php",cache: false,data:'key='+s.userId+'&opt='+s.opt+'&groudId='+userArray.userGroupId+'&subscribe='+s.subs+'&name='+s.name,async: false,success:function(lastId){
+			$.ajax({type: "POST",url:"setData.php",cache: false,data:'key='+s.userId+'&opt='+s.opt+'&groudId='+userArray.userGroupId+'&subscribe='+s.subs+'&name='+s.name+'&label='+s.label,async: false,success:function(lastId){
 				hadError(lastId);
 				newplaceId = lastId +'|'+s.subs+'|'+0;
 				newentryloc = 1;
@@ -2111,7 +2200,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		createProfileMenu2();
 		$('#placeidweb').val(places[0]);
 		// setting up values
-		$('#webthumb1').attr('src', noPhoto);$('#webthumb2').attr('src', noPhoto);$('#webthumb3').attr('src', noPhoto);$('#webthumb4').attr('src', noPhoto);$('#webthumb5').attr('src', noPhoto);$('#webthumb6').attr('src', noPhoto);$('#webthumb7').attr('src', noPhoto);$('#webthumb8').attr('src', noPhoto);$('#txtname').val('');$('#txtadd').val('');$('#txtcity').val('');$('#txtcountry').val('');$('#txtzip').val('');$('#txtpho').val('');$('#txtfb').val('');$('#txtweb').val('');$('#txtproemail').val('');$('#txtbooknow').val('');
+		$('#webthumb1').attr('src', noPhoto);$('#webthumb2').attr('src', noPhoto);$('#webthumb3').attr('src', noPhoto);$('#webthumb4').attr('src', noPhoto);$('#webthumb5').attr('src', noPhoto);$('#webthumb6').attr('src', noPhoto);$('#webthumb7').attr('src', noPhoto);$('#webthumb8').attr('src', noPhoto);$('#txtname').val('');$('#txtadd').val('');$('#txtcity').val('');$('#txtlabel').val('');$('#txtcountry').val('');$('#txtzip').val('');$('#txtpho').val('');$('#txtfb').val('');$('#txtweb').val('');$('#txtproemail').val('');$('#txtbooknow').val('');
 		if(customArray.category === 'Accomodation') n=1;
 		else if(customArray.category == 'Arts & Entertainment') n=2;
 		else if(customArray.category == 'Auto Sales, Rental & Repair') n=3;
@@ -2156,6 +2245,8 @@ $(document).on("pagebeforechange", function (e, data) {
 			$('#txtname').val(customArray.businessName);	
 		}if(customArray.address != ''){
 			$('#txtadd').val(customArray.address);
+		}if(customArray.label != ''){
+			$('#txtlabel').val(customArray.label);	
 		}if(customArray.city != ''){
 			$('#txtcity').val(customArray.city);
 		}if(customArray.country != ''){
@@ -2573,16 +2664,26 @@ $(document).on("pagebeforechange", function (e, data) {
 			}else if(!regex.test(email)){
 				alertBox('invalid email address','Please enter a valid email address');
 				r=false;        
-			}  
+			}
+			var tabname = $('#txtlabel').val(),found = true;
+			for(var i in arraylabel){
+				if(decodequote(arraylabel[i]).toLowerCase() == tabname.toLowerCase()){
+					found = false;
+				}	
+			}
+			if(found == false){
+				alertBox('Please use another label',tabname+' is in use');
+				r=false;
+			}
 			return r;
 		}	
        		
         function saveProfile(){
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&lat='+lat+'&lng='+lng+'&opt=profile&'+$('#frmpro').serialize()+'&timezone='+$('#profile-timezone').val()+'&groupId='+userArray.userGroupId,async: false,success:function(lastId){
 				hideLoader();
-				placename = $('#txtname').val();
+				placename = $('#txtname').val() + ($.trim($('#txtlabel').val()) != '' ? ' ('+$('#txtlabel').val()+')' : '');
 				$( ".right-header" ).html( placename );	
-				customArray.businessName =$('#txtname').val();customArray.category=$('#select-category').val();customArray.address=$('#txtadd').val(); customArray.city=$('#txtcity').val(); customArray.country=$('#txtcountry').val(); customArray.zip=$('#txtzip').val(); customArray.contactNo=$('#txtpho').val(); customArray.facebookURL=$('#txtfb').val();customArray.websiteURL=$('#txtweb').val();customArray.email=$('#txtproemail').val();customArray.booknow=$('#txtbooknow').val();
+				customArray.businessName =$('#txtname').val();customArray.category=$('#select-category').val();customArray.address=$('#txtadd').val(); customArray.city=$('#txtcity').val(); customArray.country=$('#txtcountry').val(); customArray.zip=$('#txtzip').val(); customArray.txtlabel=$('#txtlabel').val(); customArray.contactNo=$('#txtpho').val(); customArray.facebookURL=$('#txtfb').val();customArray.websiteURL=$('#txtweb').val();customArray.email=$('#txtproemail').val();customArray.booknow=$('#txtbooknow').val();
 				//alertBox('update successful','Profile section has been updated');
 				$.box_Dialog('Profile section has been updated', {
 					'type':     'question',
@@ -2702,8 +2803,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		*/
 		function showResponse2(responseText, statusText, xhr, $form)  { 
 			if(profilewizardwebImg == 1){
-				profilewizardwebImg = 0;
-				setTimeout(function() {wizardsetup();},200);
+				setTimeout(function() {wizardsetup();profilewizardwebImg = 0;},200);
 			}	
 			if(customArray.webImg == ''){
 				$('#webthumb1').attr('src', responseText);

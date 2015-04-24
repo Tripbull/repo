@@ -5,8 +5,8 @@ var defaultPostReview = {posted:1,percent:3.0},ratecomment='',timeInverval='',cl
 var defaultrating = {vpoor:'Very poor',poor:'Poor',fair:'Average',good:'Good',excellent:'Excellent'};
 var defaultButtonText2 = {logout:['okay'],follow:['no','yes'],badEmail:['no','yes'],allow:['cancel','submit'],btntake:['okay'],btnfeedback:['no','yes'],cambtnoption:['cancel','snap','discard','use']};
 var defaultButtonText = {logout:['okay'],follow:['no','yes'],comment:['skip','submit'],share:['no','yes'],nxt:['okay'],photo:['no','yes'],option:['cancel','login','reset'],pass:['cancel','submit'],badEmail:['no','yes'],allow:['cancel','submit'],cambtnoption:['cancel','snap','discard','use']};
-var defaultTextMessage2 = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Follow <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'If you are shy, at least take a photo of anything interesting around you! This won\'t work unless you take a photo!',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Press the &quot;yes&quot; button to agree with Tabluu\'s <privacy_policy_link>.'};
-var defaultTextMessage = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Follow <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',takePhoto:'Take a new photo?',average:'Your average rating:',thank:'Thank you!',nxt:'Next reviewer, please.',option:'Choose an option…',pass:'Enter the password…',comment:'Please share your experience...',share:'Recommend &amp; share?',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'If you are shy, at least take a photo of anything interesting around you! This won\'t work unless you take a photo!',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Press the &quot;yes&quot; button to agree with Tabluu\'s <privacy_policy_link>.'},resizeTimeout;
+var defaultTextMessage2 = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Follow <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'If you are shy... at least take a photo of something interesting around you! This won\'t work unless you take a photo!',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Press the &quot;yes&quot; button to agree with Tabluu\'s <privacy_policy_link>.'};
+var defaultTextMessage = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Follow <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',takePhoto:'Take a new photo?',average:'Your average rating:',thank:'Thank you!',nxt:'Next reviewer, please.',option:'Choose an option…',pass:'Enter the password…',comment:'Please share your experience...',share:'Recommend &amp; share?',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'If you are shy... at least take a photo of something interesting around you! This won\'t work unless you take a photo!',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Press the &quot;yes&quot; button to agree with Tabluu\'s <privacy_policy_link>.'},resizeTimeout;
 var counter1 = 0,counter2 = 0,counter3 = 0,counter4 = 0,counter5 = 0,counter6 = 0,counter7 = 0,countertake=0,countershare=0;
 var questionDefault = ['How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again'];
 //live mode chargify ids
@@ -1038,7 +1038,7 @@ function showCamera(IDparam){
 		video = document.getElementById('video');
 
 	videoStream(video);
-
+	 $('.cam-f').show();
 	var screen =  $('#screen');
     $('.usesnap').show(); // button fo
     $('.usesnap').hide(); // button fo
@@ -1046,7 +1046,7 @@ function showCamera(IDparam){
 	ratio = 0.68;
 	width =  curHeight * ratio;
 	height = window.innerHeight * 0.68;
-
+    
 	//set video snapshot
 	$('.snapshot').show(); // Show snapshot buttons
 
@@ -1529,7 +1529,7 @@ function rate_initialize(){
         businessname = businessname.substr(0,25) + '...';
     if(customArray.ratingText != '')
 		defaultrating = $.parseJSON(customArray.ratingText);
-
+ 
 	$('.vpoor').html(decodequote(defaultrating.vpoor));
 	$('.poor').html(decodequote(defaultrating.poor));
 	$('.fair').html(decodequote(defaultrating.fair));
@@ -1537,8 +1537,10 @@ function rate_initialize(){
 	$('.exc').html(decodequote(defaultrating.excellent));
     var address = decodequote(customArray.businessName) +', '+ decodequote(customArray.address) +', '+ decodequote(customArray.city) +', '+decodequote(customArray.country);
 	$('.addressname').html(address);
-	if(bgback.bckimage != '' || typeof(bgback.bckimage) != 'undefined')
+	if(bgback.bckimage != '' || typeof(bgback.bckimage) != 'undefined'){
 		$( '.rate' ).css({'background':(bgback.bckimage != '' ? 'url('+bgback.bckimage+') 0 0 no-repeat' : '')});
+		$('.rate').css({backgroundSize: "cover"});
+	}	
 	$( '.rate' ).css({'color':(customArray.backgroundFont != '' ? customArray.backgroundFont : '#3b3a26')});
 	//alert(bgback.bckimage)
 	if(bgback.bckimage == '' || typeof(bgback.bckimage) == 'undefined')

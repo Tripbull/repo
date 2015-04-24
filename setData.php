@@ -32,9 +32,8 @@ switch($opt){
 	case 'setLoc':
 		$userId = $_REQUEST['key'];
 		$name = mysql_real_escape_string($_REQUEST['name']);
-		$gId = $_REQUEST['groudId'];
-		$subs = $_REQUEST['subscribe'];
-		$query = mysql_query("INSERT INTO businessList SET userGroupId = $gId, businessName = '$name', subscribe=$subs");
+		$gId = $_REQUEST['groudId'];$subs = $_REQUEST['subscribe'];$label = $_REQUEST['label'];
+		$query = mysql_query("INSERT INTO businessList SET userGroupId = $gId, businessName = '{$name}', subscribe={$subs},label='{$label}'");
 		if(mysql_affected_rows()){
 			 $lastId = mysql_insert_id();
 			 mysql_query("INSERT INTO businessProfile SET profilePlaceId = $lastId, businessName = '$name', showmap=1");
@@ -87,8 +86,8 @@ switch($opt){
 	break;	
 	case 'profile':
 		$placeId = $_REQUEST['placeId'];
-		$category = mysql_real_escape_string($_REQUEST['select-category']);$txtname = mysql_real_escape_string($_REQUEST['txtname']);$txtadd = mysql_real_escape_string($_REQUEST['txtadd']);$txtcity = mysql_real_escape_string($_REQUEST['txtcity']);$txtcountry = mysql_real_escape_string($_REQUEST['txtcountry']);$txtzip = mysql_real_escape_string($_REQUEST['txtzip']);$txtpho = mysql_real_escape_string($_REQUEST['txtpho']);$txtfb = mysql_real_escape_string($_REQUEST['txtfb']);$txtweb = mysql_real_escape_string($_REQUEST['txtweb']);$txtemail = mysql_real_escape_string($_REQUEST['txtproemail']);$txtbooknow = mysql_real_escape_string($_REQUEST['txtbooknow']);$lng = $_REQUEST['lng'];$lat = $_REQUEST['lat'];
-		mysql_query("UPDATE businessList SET businessName='$txtname' WHERE id = $placeId");
+		$category = mysql_real_escape_string($_REQUEST['select-category']);$txtname = mysql_real_escape_string($_REQUEST['txtname']);$txtadd = mysql_real_escape_string($_REQUEST['txtadd']);$txtcity = mysql_real_escape_string($_REQUEST['txtcity']);$txtcountry = mysql_real_escape_string($_REQUEST['txtcountry']);$txtzip = mysql_real_escape_string($_REQUEST['txtzip']);$txtpho = mysql_real_escape_string($_REQUEST['txtpho']);$txtfb = mysql_real_escape_string($_REQUEST['txtfb']);$txtweb = mysql_real_escape_string($_REQUEST['txtweb']);$txtemail = mysql_real_escape_string($_REQUEST['txtproemail']);$txtbooknow = mysql_real_escape_string($_REQUEST['txtbooknow']);$txtlabel = mysql_real_escape_string($_REQUEST['txtlabel']);$lng = $_REQUEST['lng'];$lat = $_REQUEST['lat'];
+		mysql_query("UPDATE businessList SET businessName='$txtname', label='{$txtlabel}' WHERE id = $placeId");
 		$sql = "UPDATE businessProfile SET businessName='$txtname', category='$category', address='$txtadd', city='$txtcity', country='$txtcountry', zip='$txtzip', contactNo='$txtpho', facebookURL='$txtfb', websiteURL='$txtweb', booknow='$txtbooknow', email='$txtemail', latitude=$lat, longitude=$lng WHERE profilePlaceId = $placeId";
 		mysql_query($sql);
 		if(mysql_affected_rows()){
@@ -468,11 +467,13 @@ switch($opt){
 				if($_REQUEST['photo_url'] != '')
 					$connect->rotateImages($_REQUEST['photo_url']);
 				$rated1 = $_REQUEST['rated1'];$rated2 = $_REQUEST['rated2'];$rated3 = $_REQUEST['rated3'];$rated4 = $_REQUEST['rated4'];$rated5 = $_REQUEST['rated5'];$rated6 = $_REQUEST['rated6'];$rated7 = $_REQUEST['rated7'];$aveRated = $_REQUEST['aveRate'];$comment = $_REQUEST['comment']; $userName = $_REQUEST['userName'];$userId = $_REQUEST['userId'];$photo_url = (trim($_REQUEST['photo_url']) != '' ? $_REQUEST['photo_url'] : 'https://www.tabluu.com/app/images/desktop_default.png');$id = $_REQUEST['placeId'];$date = date('Y-m-d H:i:s');$email = $_REQUEST['email'];$source = $_REQUEST['source'];$param = $_REQUEST['param'];
-				$data = $_REQUEST['data'];$totalFriends = $_REQUEST['totalFriends'];$label = $_REQUEST['label'];
+				$data = $_REQUEST['data'];$totalFriends = $_REQUEST['totalFriends'];$label = $_REQUEST['label'];$textimg_height = 80;$tranparent = 85;
 				$addnewfield = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'feedsource'") or die(mysql_error());
-				$textimg_height = 80;$tranparent = 85;
 				if(mysql_num_rows($addnewfield) < 1)
 					mysql_query("ALTER TABLE `businessplace_$id` ADD `feedsource` VARCHAR(2) NOT NULL AFTER `source`");
+				$addnewfield1 = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'labelId'") or die(mysql_error());
+				if(mysql_num_rows($addnewfield1) < 1)
+					mysql_query("ALTER TABLE `businessplace_$id` ADD `labelId` INT NOT NULL AFTER `source`");	
 				if($_REQUEST['socialopt']){ //options to post social customer photo selected
 					if(strstr($photo_url,'shared')){
 						$bresult = mysql_query("SELECT `businessName` FROM `businessList` WHERE `id` = $id");
