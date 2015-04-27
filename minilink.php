@@ -1,6 +1,6 @@
 <?php
 include_once('class/class.main.php');
-$link = $_REQUEST['link'];
+$link = strtolower($_REQUEST['link']);
 $connect = new db();
 $connect->db_connect();
 $con =  new fucn();
@@ -9,12 +9,12 @@ header("HTTP/1.1 301 Moved Permanently");
 if(mysql_num_rows($result)){
 	$row = mysql_fetch_object($result);
 	if(trim($row->label) != '')
-		echo $goingto = 'rateone.html?p='. $row->nicename .'&s='.$row->source.'&label='.$row->id; //urlencode 
+		echo $goingto = 'app/rateone.html?p='. $row->nicename .'&s='.$row->source.'&label='.$row->id; //urlencode 
 	else
-		echo $goingto = 'rateone.html?p='. $row->nicename .'&s='.$row->source;
+		echo $goingto = 'app/rateone.html?p='. $row->nicename .'&s='.$row->source;
 }else
 	$goingto = 'https://www.tabluu.com'; 
-$connect->db_connect();	
+$connect->db_connect();
 header("Location: {$goingto}");
 exit();
 ?>

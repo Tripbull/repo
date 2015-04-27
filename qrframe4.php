@@ -71,7 +71,7 @@ if($_REQUEST['s'] == 1){
 		}
 		setTimeout(updateQrCode, 100);
 		function printpage(){
-			var printButton = document.getElementById("btnprint");
+			var printButton = document.getElementById("btnprint2");
 			printButton.style.visibility = 'hidden';
 			window.print();
 			printButton.style.visibility = 'visible';

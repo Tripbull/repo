@@ -1356,7 +1356,7 @@ function checkshortULR(){
 	$connect = new db();
 	$connect->db_connect();
 	$con =  new fucn();
-	$link = $con->rand_string( 6 );
+	$link = strtolower($con->rand_string( 6 ));
 	$result = mysql_query("SELECT id,source FROM businessshorturl WHERE link = '{$link}'");//check if link is existed
 	if(mysql_num_rows($result))
 		checkshortULR();

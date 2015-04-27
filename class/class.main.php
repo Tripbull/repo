@@ -147,6 +147,16 @@ class fucn extends db{
 		return ($result);
 	}
 	
+	public function cleanurl($str,$delimiter='-') { //clear url
+
+		$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $str);
+		$clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
+		$clean = strtolower(trim($clean, '-'));
+		$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
+
+		return $clean;
+	}
+	
 	public function select($table,$field,$query){
 		$this->db_connect();
 		

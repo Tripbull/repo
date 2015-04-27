@@ -71,7 +71,7 @@ if($_REQUEST['s'] == 1){
 			$(".QRimage").qrcode(options);
 		})
 		function printpage(){
-			var printButton = document.getElementById("btnprint");
+			var printButton = document.getElementById("btnprint2");
 			printButton.style.visibility = 'hidden';
 			window.print();
 			printButton.style.visibility = 'visible';
@@ -124,7 +124,7 @@ p.shortlink {margin:0;padding:0.5em 0;font-size:14px;font-weight:bold;}
 p.gohere {font-family:"OpenSans";margin:0;padding:0;font-size:1em;color:#000;font-weight:400;width:auto;max-width:100px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin:0 auto;}
 p.link {font-family:"OpenSans";margin:0;padding: 5px 0 0;font-size:0.8em;color:#000;font-weight:400;}
 p.postx {font-family:"OpenSans";margin:0;padding-top:1em;font-size:1.3em;line-height: 1em;font-weight:700;color:#000;width:auto;max-width:170px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin:0 auto;}
-p.pselfiex {font-family:"OpenSans";margin:0;padding-top:0.2em;font-size:36px;line-height: 1em;font-weight:bold;color:#000;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width:auto;max-width:170px;margin:0 auto;}
+p.pselfiex {font-family:"OpenSans";margin:0;padding-top:0.2em;font-size:35px;line-height: 1em;font-weight:bold;color:#000;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width:auto;max-width:170px;margin:0 auto;}
 p.powered {font-family:"OpenSans";font-size:10px;padding-bottom:3px;margin-top:0;color:#000;}
 .QRFrame .logo {width:50px;height:19px;background-repeat:no-repeat;margin:0 auto}
 #btnprint2 {border: medium none;font-weight: bold;height: 30px;margin-top: 20px;width: 100%;max-width:623px;background-color:#7fba00;cursor:pointer;}

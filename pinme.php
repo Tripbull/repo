@@ -4,7 +4,7 @@ include_once('class/class.main.php');
 $connect = new db();
 $connect->db_connect();
 $imgrotate = new fucn();
-$nice = $_REQUEST['nicename'];
+$nice = strtolower($_REQUEST['nicename']);
 
 $sql = "SELECT p.profilePlaceId, p.businessName, p.category, p.longitude, p.latitude, p.address, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.showmap, p.booknow,p.email as pemail, l.subscribe, u.productId,u.state,u.email, d.description, o.opening, c.item2Rate,c.selectedItems,c.reviewPost,c.logo FROM businessProfile AS p
 LEFT JOIN businessList AS l ON l.id = p.profilePlaceId

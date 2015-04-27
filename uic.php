@@ -231,7 +231,7 @@ $noPhoto = 'images/template/no-photo.gif';
 							<section class="uic-section-box hide">
 								<form id="frmUIC3" action="#" method="post" enctype="multipart/form-data" >
 									<input type="text" data-clear-btn="true" name="txtbox19" id="txtbox19" value="Take a selfie (self photo)!" placeholder="Take a selfie (self photo)!">
-									<input type="text" data-clear-btn="true" name="txtbox18" id="txtbox18" value="If you are shy... at least take a photo of something interesting around you! This won't work unless you take a photo!" placeholder="If you are shy... at least take a photo of something interesting around you! This won't work unless you take a photo!">
+									<input type="text" data-clear-btn="true" name="txtbox18" id="txtbox18" value="If you are shy... at least take a photo of something interesting around you! This won't work unless you take a photo!" placeholder="This won't work unless you snap a photo. You can either do your awesome selfie pose or take a photo of interesting things around you.">
 									<input type="text" data-clear-btn="true" name="txtbox20" id="txtbox20" value="Take a photo?" placeholder="Take a photo?">
 									<input type="text" data-clear-btn="true" name="txtbox21" id="txtbox21" value="Ask your customers to say &quot;yeahhh!&quot; for the camera!" placeholder="Ask your customers to say &quot;yeahhh!&quot; for the camera!">
 									<input type="text" data-clear-btn="true" name="txtbox1" id="txtbox1" value="Please share your experience..." placeholder="Please share your experience...">
