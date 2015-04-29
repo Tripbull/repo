@@ -49,12 +49,12 @@ $(document).ready(function(){
 					$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=signup&fname='+$('#fname').val()+'&lname='+$('#lname').val()+'&email='+$('#email').val()+'&pwd='+$.md5($('#newpwd').val())+'&groupId='+$('#groupId').val(),success:function(result){
 						$('#overlay').remove();
 						var data =  $.parseJSON(result);
-						if(data.type > 1){
-							window.location = chargifydomain+'/h/'+enterprise12+'/subscriptions/new?first_name='+$('#fname').val()+'&last_name='+$('#lname').val()+'&reference='+data.groupId; // redirect
-						}else{
-							alertBox('success','Successfully signed up!');
+						//if(data.type > 1){
+							window.location = chargifydomain+'/h/'+data.type+'/subscriptions/new?first_name='+$('#fname').val()+'&last_name='+$('#lname').val()+'&reference='+data.groupId; // redirect
+						//}else{
+							//alertBox('success','Successfully signed up!');
 							//window.location= "index.html";
-						}
+						//}
 					}});
 				}	
 			}});

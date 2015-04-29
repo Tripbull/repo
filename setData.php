@@ -312,7 +312,32 @@ switch($opt){
 			$cookie = new cookie();
 			$cookie->setCookie( $lastId );
 		}else{
-				$date = date('Y-m-d H:i:s');
+				$date = date('Y-m-d H:i:s');$whatsignup = 'monthly basic plan';$idplan = $connect->basicID;
+				if($_SESSION['type'] == 1 && $_SESSION['plan'] == 'basic'){
+					$whatsignup = 'monthly basic plan';$idplan = $connect->basicID;
+				}else if($_SESSION['type'] == 1 && $_SESSION['plan'] == 'pro'){
+					$whatsignup = 'monthly pro plan';$idplan = $connect->proID;
+				}else if($_SESSION['type'] == 1 && $_SESSION['plan'] == 'enterprise'){
+					$whatsignup = 'monthly enterprise plan';$idplan = $connect->enterprise;
+				}else if($_SESSION['type'] == 2 && $_SESSION['plan'] == 'basic'){
+					$whatsignup = '1 yearly basic plan';$idplan = $connect->basic12;
+				}else if($_SESSION['type'] == 2 && $_SESSION['plan'] == 'pro'){
+					$whatsignup = '1 yearly pro plan';$idplan = $connect->pro12;
+				}else if($_SESSION['type'] == 2 && $_SESSION['plan'] == 'enterprise'){
+					$whatsignup = '1 yearly enterprise plan';$idplan = $connect->enterprise12;
+				}else if($_SESSION['type'] == 3 && $_SESSION['plan'] == 'basic'){
+					$whatsignup = '2 yearly basic plan';$idplan = $connect->basic24;
+				}else if($_SESSION['type'] == 3 && $_SESSION['plan'] == 'pro'){
+					$whatsignup = '2 yearly pro plan';$idplan = $connect->pro24;
+				}else if($_SESSION['type'] == 3 && $_SESSION['plan'] == 'enterprise'){
+					$whatsignup = '2 yearly enterprise plan';$idplan = $connect->enterprise24;
+				}
+					
+					$result = mysql_query("INSERT INTO businessUserGroup SET productId=". $idplan .", email='$email',state='active',addLoc=0,created='$date',type=0") or die(mysql_error());
+					$tail = '<p>He/She signed up '.$whatsignup.'</p>';
+					$groupId = mysql_insert_id();
+					echo json_encode(array('type'=>$idplan,'groupId'=>$groupId));
+				/*
 				if(isset($_SESSION['typeofaccnt']) && $_SESSION['typeofaccnt'] == 'a'){ //alpha pre launch
 					$_SESSION['typeofaccnt'] = '';
 					$next_due_date = strtotime(date('Y-m-d H:i:s').' + 12 Months');
@@ -343,12 +368,12 @@ switch($opt){
 					echo json_encode(array('type'=>0));
 					$groupId = mysql_insert_id();
 			    }
-				
+				*/
 				$sql = "INSERT INTO businessUsers SET userGroupId=$groupId,fname='$fname',lname='$lname',pwd='".$pwd."',email='$email'";
 				mysql_query($sql) or die(mysql_error());
 				$lastId = mysql_insert_id();
-				$cookie = new cookie();
-				$cookie->setCookie( $lastId );
+				//$cookie = new cookie();
+				//$cookie->setCookie( $lastId );
 				$subject = 'Tabluu - New Sign up user'; 
 				$body = '<p>Customer name: '. $fname . ' ' . $lname . '</p>'.$tail; 
 				sendEmail('support@tabluu.com',$subject,$body);

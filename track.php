@@ -1,6 +1,7 @@
 <div style="margin: 0 auto;padding-top:200px;text-align:center;"><img src="images/ajax-loader.gif" /></div>
 <?php
 session_start();
+include_once('class/class.cookie.php');
 include_once('class/class.main.php');
 $db = new db();
 $connector = new fucn ();
@@ -57,7 +58,11 @@ if(isset($_REQUEST['cust_id']) && isset($_REQUEST['subs_id']) && isset($_REQUEST
 		$date = date('Y-m-d h:i:s');
 		$gId = $_REQUEST['ref'];
 		$_SESSION['newcreated']= time();
-		$result = mysql_query("UPDATE businessUserGroup SET chargify_cust_id =$cust_id, subscription_id =$subs_id , email='$email',state='$state',addLoc=0,productId=$productId,expiration='$expiry' WHERE gId=$gId") or die(mysql_error());
+		mysql_query("UPDATE businessUserGroup SET chargify_cust_id =$cust_id, subscription_id =$subs_id , email='$email',state='$state',addLoc=0,productId=$productId,expiration='$expiry' WHERE gId=$gId");
+		$result = mysql_query("SELECT id businessUsers WHERE userGroupId=$gId AND permission = 0") or die(mysql_error());
+		$row = mysql_fetch_object($result);
+		$cookie = new cookie();
+		$cookie->setCookie( $row->id );
 		$db->db_disconnect();
 		header("Location: index.html"); 
 

@@ -30,7 +30,7 @@
 						<div class="right-content bgwhite fr">
 							<div class="right-header">Send Emails</div>
 							<section class="panel-send">
-								<p class="font-17 fl" id="total-followers">Total number of followers:</p>
+								<p class="font-17 fl" id="total-followers">Total number of fans:</p>
 								<div class="clear"></div>
 								<p class="font-17 fl" id="available">Email credits available:</p>
 								<div class="clear" style="padding-top:1.2em"></div>
@@ -41,7 +41,7 @@
 								</div>
 								
 								<div class="clear" style="padding-top:0.8em"></div>
-								<p class="font-17 fl">Send emails to followers of these businesses / locations...</p>
+								<p class="font-17 fl">Send emails to fans of these businesses / locations...</p>
 								<div class="clear" style="padding-top:0.8em"></div>
 								<fieldset id="box-send-name" data-role="controlgroup" data-iconpos="left" data-corners="false">
 								</fieldset>	

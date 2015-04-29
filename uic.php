@@ -173,7 +173,7 @@ $noPhoto = 'images/template/no-photo.gif';
 										</div>
 									</div>
 									<div class="clear" style="padding-top:0.5em"></div>
-									<p class="follow-loc">Follow <brand>?</p>
+									<p class="follow-loc">Be a fan of <brand>?</p>
 									<div class="clear" style="padding-top:1em;width:15em;">
 										<div class="fl w60">
 											<input type="text" name="follow-no" id="follow-no" value="no" placeholder="no">
@@ -240,7 +240,7 @@ $noPhoto = 'images/template/no-photo.gif';
 									<input type="text" data-clear-btn="true" name="txtbox10" id="txtbox10" value="You'll be logged out of Facebook after sharing." placeholder="You'll be logged out of Facebook after sharing.">
 									<input type="text" data-clear-btn="true" name="txtbox3" id="txtbox3" value="Recommend &amp; share?" placeholder="Recommend &amp; share?">
 									<input type="text" data-clear-btn="true" name="txtbox22" id="txtbox22" value="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link>." placeholder="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link>.">
-									<input type="text" data-clear-btn="true" name="txtbox11" id="txtbox11" value="Follow <brand>?" placeholder="Follow <brand>?">
+									<input type="text" data-clear-btn="true" name="txtbox11" id="txtbox11" value="Be a fan of <brand>?" placeholder="Be a fan of <brand>?">
 									<input type="text" data-clear-btn="true" name="txtbox12" id="txtbox12" value="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to send you promotions & updates." placeholder="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to send you promotions & updates">
 									<input type="text" data-clear-btn="true" name="txtbox13" id="txtbox13" value="We're sorry for your poor experience!" placeholder="We're sorry for your poor experience!">
 									<input type="text" data-clear-btn="true" name="txtbox14" id="txtbox14" value="Do you wish to leave your contact details so that we may get in touch with you?" placeholder="Do you wish to leave your contact details so that we may get in touch with you?">

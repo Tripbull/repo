@@ -124,7 +124,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 		?>
 		<div class="left">
 			<div style="text-align:center;"><img class="resizeme" src="<?php echo ($logo != '' ? ($logo->dLogo == "images/desktop_default.png" ? $path.'images/default-logo.png' : $path.$logo->dLogo) : $path.'images/default-logo.png') ?>" alt="Merchant Logo" align="center" />
-			<div class="follow"> <?php if($hadTable) echo $follow->followTotal;?> followers</div>
+			<div class="follow"> <?php if($hadTable) echo $follow->followTotal;?> fans</div>
 			</div>
 		</div>
 		<div class="right">

@@ -15,7 +15,7 @@ $result = mysql_query($sql) or die(mysql_error());
 $row = mysql_fetch_object($result );
 $textline = json_decode($row->printvalue);
 $connect->db_disconnect();
-$size = 217;
+$size = 217;$class='';
 if($_REQUEST['s'] == 1){
 	$selfiex1 = (!empty($textline->selfiex1) ? $textline->selfiex1 : 'GO HERE:');
 	$selfiex2 = (!empty($textline->selfiex2) ? $textline->selfiex2 : 'POST YOUR "X"');
@@ -27,11 +27,11 @@ if($_REQUEST['s'] == 1){
 		$link = 'https://tabluu.com/'.$row->link;
 		$shortlink = 'tabluu.com/'.$row->link;
 	}
-	$size = 80;
+	$size = 80;$class='pselfiex';
 }else if($_REQUEST['s'] == 0){
 	$selfiex1 = (!empty($textline->selfiex1) ? $textline->noselfie1 : 'GO HERE:');
 	$selfiex2 = (!empty($textline->selfiex2) ? $textline->noselfie2 : 'We Value Your');
-	$selfiex3 = (!empty($textline->selfiex3) ? $textline->noselfie3 : 'Feedback');
+	$selfiex3 = (!empty($textline->selfiex3) ? $textline->noselfie3 : 'FEEDBACK');
 	if($row->link == null){
 		$link = 'https://tabluu.com/'.$row->nicename.'=0';
 		$shortlink = 'tabluu.com/'.$row->nicename.'=0';
@@ -39,7 +39,7 @@ if($_REQUEST['s'] == 1){
 		$link = 'https://tabluu.com/'.$row->link;
 		$shortlink = 'tabluu.com/'.$row->link;
 	}
-	$size = 80;
+	$size = 80;$class='pselfiex2';
 }else if($_REQUEST['s'] == 3){
 	$selfiex1 = (!empty($textline) ? $textline->selfiex1 : 'GO HERE:');
 	$selfiex2 = (!empty($textline) ? $textline->selfiex2 : 'POST YOUR "X"');
@@ -127,6 +127,7 @@ p.gohere {font-family:"OpenSans";margin:0;padding:0;font-size:19px;color:#000;wi
 p.link {font-family:"OpenSans";margin:0;padding: 5px 0 0;font-size:1em;color:#000;font-weight:400;}
 p.postx {font-family:"OpenSans";margin:0;padding-top:1em;font-size:1.9em;line-height: 1em;font-weight:700;color:#000;width:auto;max-width:250px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin:0 auto;}
 p.pselfiex {font-family:"OpenSans";margin:0;padding-top:0.2em;font-size:50px;line-height: 1em;font-weight:700;color:#000;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width:auto;max-width:240px;margin:0 auto;}
+p.pselfiex2 {font-family:"OpenSans";margin:0;padding-top:0.2em;font-size:47px;line-height: 1em;font-weight:700;color:#000;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;width:auto;max-width:240px;margin:0 auto;}
 p.powered {font-family:"OpenSans";font-size:13px;padding-bottom:3px;margin-top:0;color:#000;}
 #tblcontainer .QRimage{width: 100px;height: 100px;margin-left:auto;margin-right:auto;}
 #btnprint2 {border: medium none;font-weight: bold;height: 30px;margin-top: 20px;width: 100%;max-width:615px;background-color:#7fba00;cursor:pointer;}
@@ -148,7 +149,7 @@ if($_REQUEST['s'] == 1 OR $_REQUEST['s'] == 0){
 	  <p class="gohere"><?php echo decodequote($selfiex1) ?></p>
 	  <p class="link"><?php echo $shortlink ?></p>
 	  <p class="postx"><?php echo decodequote($selfiex2) ?></p>
-	  <p class="pselfiex"><?php echo decodequote($selfiex3) ?></p>
+	  <p class="<?php echo $class ?>"><?php echo decodequote($selfiex3) ?></p>
 	   <div style="padding-top:3em"> 
 		<div id="tblcontainer">
 			<div class="row">

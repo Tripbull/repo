@@ -90,13 +90,18 @@
 								<div class="clear" style="padding-top:0.5em"></div>
 								<input type="text" name="noselfie2" id="noselfie2" value="We Value Your" placeholder="We Value Your" >
 								<div class="clear" style="padding-top:0.5em"></div>
-								<input type="text" name="noselfie3" id="noselfie3" value="Feedback" placeholder="Feedback" >
+								<input type="text" name="noselfie3" id="noselfie3" value="FEEDBACK" placeholder="FEEDBACK" >
 								<div class="clear" style="padding-top:0.5em"></div>	
 								</form>
 								<div class="clear" style="padding-top:1em"></div>
 								<p>Add a new identification label to the URL (optional):</p>
 								<div class="clear" style="padding-top:1em"></div>
 								<input type="text" name="txtlabel2" id="txtlabel2" value="" placeholder="nolabel" >
+								<div class="clear" style="padding-top:5px"></div>
+								<span class="color-grey font-12 fl">
+									<i>Examples: Room #, Table #, Touch Point #, Taxi #, Booth #, etc, etc</i>
+								</span>
+								<div class="clear"></div>
 								<div class="btn-submit">
 									<button class="ui-btn" id="submit-label2">Add Label &amp; Generate New URL</button>
 								</div>	
@@ -107,7 +112,7 @@
 								  <p class="gohere">GO HERE:</p>
 								  <p class="link">tabluu.com/hop8e5t=0</p>
 								  <p class="postx">We Value Your</p>
-								  <p class="pselfiex">Feedback</p>
+								  <p class="pselfiex2">FEEDBACK</p>
 								 <div style="padding-top:2em"> 
 									<div id="tblcontainer">
 										<div class="row">
@@ -172,6 +177,11 @@
 								<p>Add a new identification label to the URL (optional):</p>
 								<div class="clear" style="padding-top:1em"></div>
 								<input type="text" name="txtlabel1" id="txtlabel1" value="" placeholder="nolabel" >
+								<div class="clear" style="padding-top:5px"></div>
+								<span class="color-grey font-12 fl">
+									<i>Examples: Room #, Table #, Touch Point #, Taxi #, Booth #, etc, etc</i>
+								</span>
+								<div class="clear"></div>
 								<div class="btn-submit">
 									<button class="ui-btn" id="submit-label1">Add Label &amp; Generate New URL</button>
 								</div>	

@@ -1224,11 +1224,11 @@ $(document).ready(function(){
 		  $('.panel-outselfie .postx').html($("#noselfie2").val());
 		});
 		$("#noselfie3").blur(function(){
-		  $('.panel-outselfie .pselfiex').html($("#noselfie3").val());
+		  $('.panel-outselfie .pselfiex2').html($("#noselfie3").val());
 		   printSaveTxt();
 		});
 		$("#noselfie3").keyup(function(){
-		  $('.panel-outselfie .pselfiex').html($("#noselfie3").val());
+		  $('.panel-outselfie .pselfiex2').html($("#noselfie3").val());
 		});
 		//selfie input box code
 		$("#selfiex1").blur(function(){
@@ -1340,7 +1340,7 @@ $(document).ready(function(){
 								$("#noselfie3").val(decodequote(printval.noselfie3));
 								$('.panel-outselfie .gohere').html(decodequote(printval.noselfie1));
 								$('.panel-outselfie .postx').html(decodequote(printval.noselfie2));
-								$('.panel-outselfie .pselfiex').html(decodequote(printval.noselfie3));
+								$('.panel-outselfie .pselfiex2').html(decodequote(printval.noselfie3));
 							}
 							 
 							if(typeof(printval.selfiex1) != 'undefined'){
@@ -3084,7 +3084,7 @@ $(document).on("pagebeforechange", function (e, data) {
 				$('#txtbox22').val(decodequote(messArray.shareB));	
 			setmessageBox();
 		}else
-			$('.follow-loc').html('Follow '+customArray.businessName+'?');
+			$('.follow-loc').html('Be a fan of '+customArray.businessName+'?');
 		
 		if(customArray.ratingText != ''){
 			var rateArray = $.parseJSON(customArray.ratingText);
@@ -3539,7 +3539,7 @@ $(document).on('pageshow','#send-email', function () { // UIC script start here
 				}else
 					 alertBox('invalid','Please check one or more Locations');
 			}else
-				alertBox('invalid','No followers');
+				alertBox('invalid','No fans');
 		}else 
 			alertBox('no access','Please upgrade to basic plan and above to access this feature.');
 			
@@ -3600,10 +3600,10 @@ $(document).on('pageshow','#send-email', function () { // UIC script start here
 		$('#overlay').remove();
 		var folower = $.parseJSON(data);
 		var allcheckbox = '';hadFollow = folower.totalnum;
-		$('#total-followers').html('Total number of followers: '+folower.totalnum);
+		$('#total-followers').html('Total number of fans: '+folower.totalnum);
 		 for(var i in locArray){
 				var name = locArray[i].name;
-				var n = (typeof(folower[locArray[i].id]) != 'undefined' ? ' ('+folower[locArray[i].id]+' '+(folower[locArray[i].id] > 1 ? 'followers' : 'follower')+')' : '');
+				var n = (typeof(folower[locArray[i].id]) != 'undefined' ? ' ('+folower[locArray[i].id]+' '+(folower[locArray[i].id] > 1 ? 'fans' : 'fan')+')' : '');
 				var perfollow = (typeof(folower[locArray[i].id]) != 'undefined' ? folower[locArray[i].id] : '');
 				var checkbox ='<div class="ui-checkbox">'
 					+'<label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-checkbox-off ui-first-child ui-last-child" for="checkbox-'+i+'">'+name+n+'</label>'
