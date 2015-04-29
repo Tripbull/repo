@@ -20,6 +20,9 @@ $connect->db_disconnect();
     <meta name="robots" content="index, follow"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+	<!--[if lt IE 9]>
+    <script src="js/excanvas.js"></script>
+	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="css/jquery.mobile-1.4.2.min.css" />
 	<link type="text/css" rel="stylesheet" href="css/dialog.css" type="text/css">
 	<link type="text/css" rel="stylesheet" href="css/dialogcomment.css" type="text/css">
@@ -37,78 +40,85 @@ $connect->db_disconnect();
 	<script type="text/javascript" src="js/dialogcomment.js"></script>
 	<script type="text/javascript" src="js/jquery.magnific-popup.js"></script>
 	<script type="text/javascript" src="js/rate.js"></script>
+	<script type="text/javascript" src="js/exif.js"></script>
 </head>
 <body>
-
-<div id="fb-root"></div>
-<div class="rate" id="rateone" data-dom-cache="false" data-role="page" data-prefetch="false">
-	<div class="content-wrap">
-		<div role="main" class="ui-content">
-			<div class="ratewrap">
-				
-				<div class="rate-logo">
-					<img src="images/" alt="" class="loc-logo" />
-				</div>
-				<div class="rate-question">
-					<p class="ratetxt"></p>
-				</div>
-				<div class="wrap-star">
-					<div class="rate-wrapstar">
-						<div class="rate-star starRate1">
-							<img src="images/template/blankstar.png" width="" class="imgrate1" alt="" />
-							<span class="vpoor">Very Poor</span>
-						</div>
-						<div class="rate-star starRate2">
-							<img src="images/template/blankstar.png" alt="" class="imgrate2" />
-							<span class="poor">Poor</span>
-						</div>
-						<div class="rate-star starRate3">
-							<img src="images/template/blankstar.png" alt="" class="imgrate3" />
-							<span class="fair">Fair</span>
-						</div>
-						<div class="rate-star starRate4">
-							<img src="images/template/blankstar.png" alt="" class="imgrate4" />
-							<span class="good">Good</span>
-						</div>
-						<div class="rate-star starRate5">
-							<img src="images/template/blankstar.png" alt="" class="imgrate5" />
-							<span class="exc">Excellent</span>
-						</div>
-					</div>
-				</div>
-				<div class="loc-address"><p class="addressname"></p></div>
-				<div class="loc-login"><img src="images/template/logoBelowUI.png" class="ratelogo" alt="" width="103" height="30" /></div>
-			</div>	
-			<input type="hidden" id="nicename" name="nicename" value="<?php echo $_REQUEST['p']?>" />
-			<form id="frmtakeselfie" style="visibility:hidden;height:0px" action="setPhoto.php" method="post" enctype="multipart/form-data" >
-				<input type="file" name="fileselfie" style="visibility:hidden;height:0px" id="fileselfie" accept="image/*;apture=camera" />
-				<input type="hidden" value="" name="selfieId" id="selfieId" />
-			</form>
-			<div class="hide">
-				<div id="data">
-					<div class="cam-frame">
-					<div style="height:480px;">
-						<canvas id="canvas" style="position:absolute;width:100%" width="640" height="480"></canvas>
-						<video id="video" stlye="position:absolute;width:100%" width="640" height="480" autoplay></video>
-					</div>
-					<!-- <div id="screen"></div> -->
-					<div class="snapshotbutton">
-						<div class="snapshot hide">
-							<a href="#" data-rel="back" class="cancelsnap">cancel</a>
-							<div class="btnseparator"></div>
-							<a href="#" data-rel="back" class="takesnap">snap</a>
-						</div>
-						<div class="usesnap hide">
-							<a href="#" data-rel="back" class="cancelsnap">discard</a>
-							<div class="btnseparator"></div>
-							<a href="#" data-rel="back" class="use">use</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			</div>
-		</div><!-- /content -->
+	<div style="position:absolute;opacity:0;overflow:hidden;">
+		<div style="position:absolute;font-family:myriadpro;">.</div>
+		<div style="position:absolute;font-family:Lato-Light;">.</div>
+		<canvas id="canvas-image" style="position:absolute;"></canvas>
+		<canvas id="canvas-image-test" style="position:absolute;"></canvas>
+		<canvas id="canvas-resize" style="position:absolute;"></canvas>
 	</div>
-</div>
+	<div id="fb-root"></div>
+	<div class="rate" id="rateone" data-dom-cache="false" data-role="page" data-prefetch="false">
+		<div class="content-wrap">
+			<div role="main" class="ui-content">
+				<div class="ratewrap">
+					
+					<div class="rate-logo">
+						<img src="images/" alt="" class="loc-logo" />
+					</div>
+					<div class="rate-question">
+						<p class="ratetxt"></p>
+					</div>
+					<div class="wrap-star">
+						<div class="rate-wrapstar">
+							<div class="rate-star starRate1">
+								<img src="images/template/blankstar.png" width="" class="imgrate1" alt="" />
+								<span class="vpoor">Very Poor</span>
+							</div>
+							<div class="rate-star starRate2">
+								<img src="images/template/blankstar.png" alt="" class="imgrate2" />
+								<span class="poor">Poor</span>
+							</div>
+							<div class="rate-star starRate3">
+								<img src="images/template/blankstar.png" alt="" class="imgrate3" />
+								<span class="fair">Fair</span>
+							</div>
+							<div class="rate-star starRate4">
+								<img src="images/template/blankstar.png" alt="" class="imgrate4" />
+								<span class="good">Good</span>
+							</div>
+							<div class="rate-star starRate5">
+								<img src="images/template/blankstar.png" alt="" class="imgrate5" />
+								<span class="exc">Excellent</span>
+							</div>
+						</div>
+					</div>
+					<div class="loc-address"><p class="addressname"></p></div>
+					<div class="loc-login"><img src="images/template/logoBelowUI.png" class="ratelogo" alt="" width="103" height="30" /></div>
+				</div>	
+				<input type="hidden" id="nicename" name="nicename" value="<?php echo $_REQUEST['p']?>" />
+				<form id="frmtakeselfie" style="visibility:hidden;height:0px" action="setPhoto.php" method="post" enctype="multipart/form-data" >
+					<input type="file" name="fileselfie" style="visibility:hidden;height:0px" id="fileselfie" accept="image/*;apture=camera" />
+					<input type="hidden" value="" name="selfieId" id="selfieId" />
+				</form>
+				<div class="hide">
+					<div id="data">
+						<div class="cam-frame">
+						<div style="height:480px;">
+							<canvas id="canvas" style="position:absolute;width:100%;" width="640" height="480"></canvas>
+							<video id="video" stlye="position:absolute;width:100%;" width="640" height="480" autoplay></video>
+						</div>
+						<!-- <div id="screen"></div> -->
+						<div class="snapshotbutton">
+							<div class="snapshot hide">
+								<a href="#" data-rel="back" class="cancelsnap">cancel</a>
+								<div class="btnseparator"></div>
+								<a href="#" data-rel="back" class="takesnap">snap</a>
+							</div>
+							<div class="usesnap hide">
+								<a href="#" data-rel="back" class="cancelsnap">discard</a>
+								<div class="btnseparator"></div>
+								<a href="#" data-rel="back" class="use">use</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+			</div><!-- /content -->
+		</div>
+	</div>
 </body>
 </html>

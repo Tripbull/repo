@@ -474,6 +474,14 @@ switch($opt){
 			 sendEmail($email,$subject,$body);
 		}
 	break;
+	case 'getImgData':
+
+		$id = $_REQUEST['placeId'];
+
+		$bresult = mysql_query("SELECT `businessName`, `address`, `city`, `country`, `zip`, `contactNo` FROM `businessProfile` WHERE `profilePlaceId` = $id");
+		$row = mysql_fetch_array($bresult);
+		echo json_encode($row);
+	break;
 	case 'ratesave':
 	    switch($_REQUEST['case']){
 			case 1:
@@ -489,170 +497,48 @@ switch($opt){
 				echo $lastId = mysql_insert_id();
 			break;
 			case 2:
-				if($_REQUEST['photo_url'] != '')
-					$connect->rotateImages($_REQUEST['photo_url']);
 				$rated1 = $_REQUEST['rated1'];$rated2 = $_REQUEST['rated2'];$rated3 = $_REQUEST['rated3'];$rated4 = $_REQUEST['rated4'];$rated5 = $_REQUEST['rated5'];$rated6 = $_REQUEST['rated6'];$rated7 = $_REQUEST['rated7'];$aveRated = $_REQUEST['aveRate'];$comment = $_REQUEST['comment']; $userName = $_REQUEST['userName'];$userId = $_REQUEST['userId'];$photo_url = (trim($_REQUEST['photo_url']) != '' ? $_REQUEST['photo_url'] : 'https://www.tabluu.com/app/images/desktop_default.png');$id = $_REQUEST['placeId'];$date = date('Y-m-d H:i:s');$email = $_REQUEST['email'];$source = $_REQUEST['source'];$param = $_REQUEST['param'];
 				$data = $_REQUEST['data'];$totalFriends = $_REQUEST['totalFriends'];$label = $_REQUEST['label'];$textimg_height = 80;$tranparent = 85;
+				$tempPhoto = $_REQUEST['tempPhoto'];
 				$addnewfield = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'feedsource'") or die(mysql_error());
 				if(mysql_num_rows($addnewfield) < 1)
 					mysql_query("ALTER TABLE `businessplace_$id` ADD `feedsource` VARCHAR(2) NOT NULL AFTER `source`");
 				$addnewfield1 = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'labelId'") or die(mysql_error());
 				if(mysql_num_rows($addnewfield1) < 1)
 					mysql_query("ALTER TABLE `businessplace_$id` ADD `labelId` INT NOT NULL AFTER `source`");	
+				
 				if($_REQUEST['socialopt']){ //options to post social customer photo selected
 					if(strstr($photo_url,'shared')){
-						$bresult = mysql_query("SELECT `businessName` FROM `businessList` WHERE `id` = $id");
-						$row = mysql_fetch_object($bresult);
-						$UploadDirectory    = 'images/shared/'.$id.'/';
-						$image = new Photos();
-						$namejpg = rand(); 
-						$tempf1 = $UploadDirectory.$namejpg.'.jpg';
-						copy($photo_url,$tempf1);
-						$image->load($tempf1);
-						if($image->getWidth() >= 1000)
-						  $image->scale(40);
-						if($image->getWidth() > 500 && $image->getWidth() < 1000)
-						  $image->scale(80); 
-						$image->save($tempf1,$image->image_type);  
-						$_im = new TextToImage();
-						$_im->makeImage($image->getWidth(),$textimg_height);
-						$_im->createText('See my "selfie review"',dirname(__FILE__)."/myriad.ttf");
-						$_im->createText("\n@ ".$row->businessName,dirname(__FILE__)."/myriad.ttf");
-						$namejpg = rand();
-						$_im->saveAsJpg("jpg".$namejpg,$UploadDirectory);
-						$p1 = $tempf1;
-						$p2 = $UploadDirectory."jpg".$namejpg.'.jpg'; //caption for photo
-						if( $image->image_type == 2 ) { // jpg
-						 $dest = imagecreatefromjpeg($tempf1);
-						} elseif( $image->image_type == 1 ) { //gif
-						 $dest = imagecreatefromgif($tempf1);
-						} elseif( $image->image_type == 3 ) { //png
-						 $dest = imagecreatefrompng($tempf1);
-						}
-						$caption = imagecreatefromjpeg($p2);
-						$namejpg = rand();
-						echo $sharepic = $UploadDirectory.$namejpg.'.jpg';
-						imagecopymerge($dest, $caption, 0, $image->getHeight()-$textimg_height, 0, 0, $image->getWidth(), $textimg_height, $tranparent);
-						imagejpeg($dest,$sharepic);
-						greyscale($sharepic);
-						imagedestroy($dest);imagedestroy($caption);
-						unlink($tempf1);unlink($p2);
+						
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						//echo $last_Id.'_'.$lastId; 
-						//echo $photo_url;
-					}else{	
-						$namejpg = rand();
-						$UploadDirectory    = 'images/shared/'.$id.'/';
-						if (!file_exists('images/shared/'.$id))
-							mkdir('images/shared/'.$id, 0777);
-						$profileimage = $UploadDirectory.$namejpg.'.jpg';
-						//copy("https://graph.facebook.com/$userId/picture?width=400&height=400", 'images/'.$namejpg.'.jpg');	
-		
-$headers = get_headers("https://graph.facebook.com/$userId/picture?width=400&height=400",1);
-$url = $headers['Location']; //fb user image URL
-$ch = curl_init( $url );
-$fp = fopen( $profileimage, 'wb');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
-curl_setopt($ch, CURLOPT_FILE, $fp);
-curl_setopt($ch, CURLOPT_HEADER, 0);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-curl_exec($ch);
-curl_close($ch);
-fclose($fp);
-						$bresult = mysql_query("SELECT `businessName` FROM `businessList` WHERE `id` = $id");
-						$row = mysql_fetch_object($bresult);
-						$image = new Photos();
-						$image->load($profileimage);
-						if($image->getWidth() > 1000)
-						  $image->scale(40);
-						if($image->getWidth() > 500 && $image->getWidth() < 1000)
-						  $image->scale(80); 
-						$image->save($profileimage,$image->image_type);  
-						$_im = new TextToImage();
-						$_im->makeImage($image->getWidth(),$textimg_height);
-						$_im->createText('See my "selfie review"',dirname(__FILE__)."/myriad.ttf");
-						$_im->createText("\n@ ".$row->businessName,dirname(__FILE__)."/myriad.ttf");
-						$namejpg = rand();
-						$_im->saveAsJpg("jpg".$namejpg,$UploadDirectory);
-						$p1 = $profileimage;
-						$p2 = $UploadDirectory."jpg".$namejpg.'.jpg';
-						if( $image->image_type == 2 ) { // jpg
-						 $dest = imagecreatefromjpeg($profileimage);
-						} elseif( $image->image_type == 1 ) { //gif
-						 $dest = imagecreatefromgif($profileimage);
-						} elseif( $image->image_type == 3 ) { //png
-						 $dest = imagecreatefrompng($profileimage);
-						}
-						$src = imagecreatefromjpeg($p2);
-						$namejpg = rand();
-						echo $sharepic = $UploadDirectory.$namejpg.'.jpg';
-						imagecopymerge($dest, $src, 0, $image->getHeight()-$textimg_height, 0, 0, $image->getWidth(), $textimg_height, $tranparent);
-						imagejpeg($dest,$sharepic);
-						greyscale($sharepic);
-						imagedestroy($dest);imagedestroy($src);
-						unlink($p2);unlink($profileimage);
-						$photo_url='';
+						echo $photo_url;
+					}
+					else{	
+
+						$photo_url = '';
+
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						//echo $last_Id.'_'.$lastId;
-						//echo $photo_url;
+						echo $tempPhoto;
 					} 
 				}else{
 					if(strstr($photo_url,'shared')){
-						$bresult = mysql_query("SELECT `businessName` FROM `businessList` WHERE `id` = $id");
-						$row = mysql_fetch_object($bresult);
-						$UploadDirectory    = 'images/shared/'.$id.'/';
-						$image = new Photos();
-						$namejpg = rand(); 
-						$tempf1 = $UploadDirectory.$namejpg.'.jpg';
-						copy($photo_url,$tempf1);
-						$image->load($tempf1);
-						if($image->getWidth() >= 1000)
-						  $image->scale(40);
-						if($image->getWidth() > 500 && $image->getWidth() < 1000)
-						  $image->scale(80); 
-						$image->save($tempf1,$image->image_type);  
-						$_im = new TextToImage();
-						$_im->makeImage($image->getWidth(),$textimg_height);
-						$_im->createText('See my "selfie review"',dirname(__FILE__)."/myriad.ttf");
-						$_im->createText("\n@ ".$row->businessName,dirname(__FILE__)."/myriad.ttf");
-						$namejpg = rand();
-						$_im->saveAsJpg("jpg".$namejpg,$UploadDirectory);
-						$p1 = $tempf1;
-						$p2 = $UploadDirectory."jpg".$namejpg.'.jpg'; //caption for photo
-						if( $image->image_type == 2 ) { // jpg
-						 $dest = imagecreatefromjpeg($tempf1);
-						} elseif( $image->image_type == 1 ) { //gif
-						 $dest = imagecreatefromgif($tempf1);
-						} elseif( $image->image_type == 3 ) { //png
-						 $dest = imagecreatefrompng($tempf1);
-						}
-						$caption = imagecreatefromjpeg($p2);
-						$namejpg = rand();
-						echo $sharepic = $UploadDirectory.$namejpg.'.jpg';
-						imagecopymerge($dest, $caption, 0, $image->getHeight()-$textimg_height, 0, 0, $image->getWidth(), $textimg_height, $tranparent);
-						imagejpeg($dest,$sharepic);
-						greyscale($sharepic);
-						imagedestroy($dest);imagedestroy($caption);
-						unlink($tempf1);unlink($p2);
+						
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						//echo $last_Id.'_'.$lastId; 
-						//echo $photo_url;
+						echo $photo_url;
 					}else{
+
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
@@ -663,7 +549,6 @@ fclose($fp);
 				}
 			break;
 		}
-		
 	break;
 	case 'photoshare':
 		$rated1 = $_REQUEST['rated1'];$rated2 = $_REQUEST['rated2'];$rated3 = $_REQUEST['rated3'];$rated4 = $_REQUEST['rated4'];$rated5 = $_REQUEST['rated5'];$rated6 = $_REQUEST['rated6'];$rated7 = $_REQUEST['rated7'];$aveRated = $_REQUEST['aveRate'];$comment = $_REQUEST['comment']; $userName = $_REQUEST['userName'];$userId = $_REQUEST['userId'];$photo_url = $_REQUEST['photo_url'];$id = $_REQUEST['placeId'];$date = date('Y-m-d h:i:s');$email = $_REQUEST['email'];

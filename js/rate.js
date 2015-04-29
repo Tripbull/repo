@@ -1,5 +1,5 @@
 var placeId = '',blankstar = 'images/template/blankstar.png',colorstar = 'images/template/colorstar.png',fromtakephotopage=1;//fromtakephotopage 1 if from rateone else 2 from takephoto page
-var customArray = [],item2Rate=[],ratedObj= [],nicename,isTakeSelfie='',alertaverate=0,last_Id='',lastidbusiness='';
+var customArray = [],item2Rate=[],ratedObj= [],nicename,isTakeSelfie='',alertaverate=0,last_Id='',lastidbusiness='',photo_url='',get_img='',photo_saved=0;
 var count=0,sharedphoto=0,isphototakedone=0,takeaphoto=0,urlphotoshared,businessname='',txtname='',txtphone='',txtemail='';
 var defaultPostReview = {posted:1,percent:3.0},ratecomment='',timeInverval='',closeselfie=0,username='',hadlabel='';
 var defaultrating = {vpoor:'Very poor',poor:'Poor',fair:'Average',good:'Good',excellent:'Excellent'};
@@ -11,7 +11,7 @@ var counter1 = 0,counter2 = 0,counter3 = 0,counter4 = 0,counter5 = 0,counter6 = 
 var questionDefault = ['How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again'];
 //live mode chargify ids
 var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619;
-var istest = true,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
+var istest = false,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
 
 function alertBox(title,message){ // testing
 	clearTimeout(resizeTimeout);
@@ -395,8 +395,8 @@ function ratevalue(rate,page){
 	}	
 }
 function setdefault(){
-	ratedObj = [],ratecomment='';urlphotoshared='';
-	sharedphoto=0;isphototakedone=0;takeaphoto=0;
+	ratedObj = [],ratecomment='';urlphotoshared='';photo_url='';get_img='';
+	sharedphoto=0;isphototakedone=0;takeaphoto=0;photo_saved=0;
 	//$( ".imgrate1" ).attr('src', blankstar);$( ".imgrate2" ).attr('src', blankstar);$( ".imgrate3" ).attr('src', blankstar);$( ".imgrate4" ).attr('src', blankstar);$( ".imgrate5" ).attr('src', blankstar);
 	//rate(2);
 }
@@ -428,6 +428,8 @@ $(document).on('pageshow','#sharephoto', function() {
 	window.history.forward(1);
 })
 $(document).on('pageinit','#sharephoto', function() {
+	setRating(); // ADD RATING TEXT TO IMAGE AND SAVE
+
 	if(getUrlVar('s') != '' && getUrlVar('s') == 2){
 		clearInterval(timeInverval);
 		refresh_handler();
@@ -698,6 +700,32 @@ function loginFb(){
 	}
 	 FB.login(function(response) {
 	   if (response.authResponse) {
+	   		postFb();
+	   }else {
+			$.box_Dialog((typeof(defaultTextMessage.followB) != 'undefined' ? String(decodequote(defaultTextMessage.followB)) : String(decodequote(defaultTextMessage2.followB))), {
+				'type':     'question',
+				'title':    '<span class="color-white">'+(typeof(defaultTextMessage.followT) != 'undefined' ? String(decodequote(defaultTextMessage.followT)) : String(decodequote(defaultTextMessage2.followT)))+'<span>',
+				'center_buttons': true,
+				'show_close_button':false,
+				'overlay_close':false,
+				'buttons':  [{caption: (typeof(defaultButtonText.follow) != 'undefined' ? defaultButtonText.follow[1] : defaultButtonText2.follow[1] ),callback:function (){
+					setTimeout(function() {
+						followplace();
+					}, 300);
+			}},{caption:(typeof(defaultButtonText.follow) != 'undefined' ? defaultButtonText.follow[0] : defaultButtonText2.follow[0] ),callback:function(){setTimeout(function() {
+					saverate();
+					 alertNextUser(defaultTextMessage.thank,defaultTextMessage.nxt,defaultButtonText.nxt[0]);
+				}, 300);}}]
+			});		
+	   }
+	 },{scope: 'email,read_friendlists,publish_actions,publish_stream,user_photos'});   
+	 
+}
+
+function postFb()
+{
+	if(FB.getAuthResponse() && photo_saved == 1)
+	{
 		FB.api('/me', function(response) {
 			FB.api('/me/friends',  function(friendlist) {
 				var rate_1 =ratedObj[0];
@@ -735,75 +763,57 @@ function loginFb(){
 				if(isphototakedone < 0 && takeaphoto > 0){ // take the camera? && check if the photo temporary done uploaded
 					setTimeout(function() {
 						username = response.name;
-						var p = 'placeId='+placeId+'&rated1='+rate_1+'&rated2='+rate_2+'&rated3='+rate_3+'&rated4='+rate_4+'&rated5='+rate_5+'&rated6='+rate_6+'&rated7='+rate_7+'&aveRate='+aveRated.toFixed(1)+'&comment='+ratecomment+'&userName='+response.name+'&userId='+response.id+'&email='+response.email+'&totalFriends='+friendlist.data.length+'&photo_url='+urlphotoshared+'&case=2&param='+isTakeSelfie+'&socialopt='+customArray.optsocialpost+'&source=fb&data='; 
+						var p = 'tempPhoto='+photo_url+'&placeId='+placeId+'&rated1='+rate_1+'&rated2='+rate_2+'&rated3='+rate_3+'&rated4='+rate_4+'&rated5='+rate_5+'&rated6='+rate_6+'&rated7='+rate_7+'&aveRate='+aveRated.toFixed(1)+'&comment='+ratecomment+'&userName='+response.name+'&userId='+response.id+'&email='+response.email+'&totalFriends='+friendlist.data.length+'&photo_url='+urlphotoshared+'&case=2&param='+isTakeSelfie+'&socialopt='+customArray.optsocialpost+'&source=fb&data='; 
 						$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=ratesave&'+p,success:function(share_photo){
-							var fb='';
+								var fb='';
+								//var ids = lastId.split('_');
+								//lastidbusiness = ids[1];
+								//last_Id = ids[0];
+								if(sharedphoto > 0)
+									fb = 'fb';
+								p = p +'&source='+fb;
+								$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=photoshare&'+p,success:function(lastId){
+									setdefault();
+								}});
+								FB.api('/me/photos', 'post', {url: location+share_photo,name: preview}, function(response) {  
+									FB.logout(function(response) {
+									});
+								});
+								pressyes2();
+							}
+						});			
+					}, 500);
+				}else{ 
+				  //JSON.stringify(response)
+				   if(typeof(urlphotoshared) == 'undefined' || urlphotoshared == ''){
+						urlphotoshared=customArray.fbImg;
+					} 
+					username = response.name;
+					var p = 'tempPhoto='+photo_url+'&placeId='+placeId+'&rated1='+rate_1+'&rated2='+rate_2+'&rated3='+rate_3+'&rated4='+rate_4+'&rated5='+rate_5+'&rated6='+rate_6+'&rated7='+rate_7+'&aveRate='+aveRated.toFixed(1)+'&comment='+ratecomment+'&userName='+response.name+'&userId='+response.id+'&email='+response.email+'&totalFriends='+friendlist.data.length+'&photo_url='+urlphotoshared+'&case=2&param='+isTakeSelfie+'&label='+hadlabel+'&socialopt='+customArray.optsocialpost+'&source=fb&data='; 
+					$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=ratesave&'+p,success:function(share_photo){
 							//var ids = lastId.split('_');
 							//lastidbusiness = ids[1];
 							//last_Id = ids[0];
+							var fb='';
 							if(sharedphoto > 0)
 								fb = 'fb';
 							p = p +'&source='+fb;
 							$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=photoshare&'+p,success:function(lastId){
 								setdefault();
 							}});
+							//var address = customArray.businessName +', '+ customArray.address +', '+ customArray.city +', '+customArray.country;
+							//var nicename = customArray.nicename;
 							FB.api('/me/photos', 'post', {url: location+share_photo,name: preview}, function(response) {  
 								FB.logout(function(response) {
 								});
-							});
+							});	
 							pressyes2();
-						}});
-						; 					
-					}, 500);
-				}else{ 
-				  //JSON.stringify(response)
-				   if(typeof(urlphotoshared) == 'undefined' || urlphotoshared == ''){
-					  urlphotoshared=customArray.fbImg;
-					} 
-					username = response.name;
-					var p = 'placeId='+placeId+'&rated1='+rate_1+'&rated2='+rate_2+'&rated3='+rate_3+'&rated4='+rate_4+'&rated5='+rate_5+'&rated6='+rate_6+'&rated7='+rate_7+'&aveRate='+aveRated.toFixed(1)+'&comment='+ratecomment+'&userName='+response.name+'&userId='+response.id+'&email='+response.email+'&totalFriends='+friendlist.data.length+'&photo_url='+urlphotoshared+'&case=2&param='+isTakeSelfie+'&label='+hadlabel+'&socialopt='+customArray.optsocialpost+'&source=fb&data='; 
-					$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=ratesave&'+p,success:function(share_photo){
-						//var ids = lastId.split('_');
-						//lastidbusiness = ids[1];
-						//last_Id = ids[0];
-						var fb='';
-						if(sharedphoto > 0)
-							fb = 'fb';
-						p = p +'&source='+fb;
-						$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=photoshare&'+p,success:function(lastId){
-							setdefault();
-						}});
-						//var address = customArray.businessName +', '+ customArray.address +', '+ customArray.city +', '+customArray.country;
-						//var nicename = customArray.nicename;
-						FB.api('/me/photos', 'post', {url: location+share_photo,name: preview}, function(response) {  
-							FB.logout(function(response) {
-							});
-						});	
-						pressyes2();
-					}});
-					 
-			   }				
+						}
+					});
+				}				
 			});
-		 });
-	   }else {
-			$.box_Dialog((typeof(defaultTextMessage.followB) != 'undefined' ? String(decodequote(defaultTextMessage.followB)) : String(decodequote(defaultTextMessage2.followB))), {
-				'type':     'question',
-				'title':    '<span class="color-white">'+(typeof(defaultTextMessage.followT) != 'undefined' ? String(decodequote(defaultTextMessage.followT)) : String(decodequote(defaultTextMessage2.followT)))+'<span>',
-				'center_buttons': true,
-				'show_close_button':false,
-				'overlay_close':false,
-				'buttons':  [{caption: (typeof(defaultButtonText.follow) != 'undefined' ? defaultButtonText.follow[1] : defaultButtonText2.follow[1] ),callback:function (){
-					setTimeout(function() {
-						followplace();
-					}, 300);
-			}},{caption:(typeof(defaultButtonText.follow) != 'undefined' ? defaultButtonText.follow[0] : defaultButtonText2.follow[0] ),callback:function(){setTimeout(function() {
-					saverate();
-					 alertNextUser(defaultTextMessage.thank,defaultTextMessage.nxt,defaultButtonText.nxt[0]);
-				}, 300);}}]
-			});		
-	   }
-	 },{scope: 'email,read_friendlists,publish_actions,publish_stream,user_photos'});   
-	 
+		});
+	}
 }
 
 var logger = function()
@@ -913,15 +923,15 @@ function getSelfie(){
 		$('#fileselfie').click();
 		$('#frmtakeselfie').on('change',function(e){ // save fb photo
 			takeaphoto = 1;
-			$('#frmtakeselfie').ajaxSubmit({beforeSubmit:  beforeSubmit2,success: showResponse2,resetForm: true });
+			// $('#frmtakeselfie').ajaxSubmit({beforeSubmit:  beforeSubmit2,success: showResponse2,resetForm: true });
+			beforeSubmit2();
 			e.preventDefault();
 		});	
-		function showResponse2(responseText, statusText, xhr, $form)  { 
-			isphototakedone = 1;
-			urlphotoshared=responseText;
-		}
+		// function showResponse2(responseText, statusText, xhr, $form)  { 
+		// 	urlphotoshared=responseText;
+		// }
 		function beforeSubmit2(){
-			if (window.File){
+			if (window.File && window.FileReader){
 			   var fsize = $('#fileselfie')[0].files[0].size; //get file size
 			   var ftype = $('#fileselfie')[0].files[0].type; // get file type
 				switch(ftype){
@@ -943,6 +953,16 @@ function getSelfie(){
 							}}]
 						});	
 						
+						var reader = new FileReader();	
+						reader.onload = function(){
+	        				var img = new Image();
+		        			img.onload = function() {
+		        				resizeImage(img);
+							};
+							img.src = reader.result;
+						};
+						reader.readAsDataURL($('#fileselfie')[0].files[0]);
+						isphototakedone = 1;
 					break;
 					default: alertBox('unsupported file type','Please upload only gif, png, bmp, jpg, jpeg file types');
 					hideLoader();						
@@ -959,15 +979,15 @@ function getPhoto(){
 		$('#fileselfie').click();
 		$('#frmtakeselfie').on('change',function(e){ // save fb photo
 			takeaphoto = 1;
-			$('#frmtakeselfie').ajaxSubmit({beforeSubmit:  beforeSubmit_2,success: showResponse_2,resetForm: true });
+			// $('#frmtakeselfie').ajaxSubmit({beforeSubmit:  beforeSubmit_2,success: showResponse_2,resetForm: true });
+			beforeSubmit_2();
 			e.preventDefault();
 		});	
-		function showResponse_2(responseText, statusText, xhr, $form)  { 
-			isphototakedone = 1;
-			urlphotoshared=responseText;
-		}
+		// function showResponse_2(responseText, statusText, xhr, $form)  { 
+		// 	urlphotoshared=responseText;
+		// }
 		function beforeSubmit_2(){
-			if (window.File){
+			if (window.File && window.FileReader){
 			   var fsize = $('#fileselfie')[0].files[0].size; //get file size
 			   var ftype = $('#fileselfie')[0].files[0].type; // get file type
 				switch(ftype){
@@ -989,6 +1009,16 @@ function getPhoto(){
 							}}]
 						});	
 						
+						var reader = new FileReader();	
+						reader.onload = function(){
+							var img = new Image();
+		        			img.onload = function() {
+		        				resizeImage(img);
+							};
+							img.src = reader.result;
+						};
+						reader.readAsDataURL($('#fileselfie')[0].files[0]);
+						isphototakedone = 1;
 					break;
 					default: alertBox('unsupported file type','Please upload only gif, png, bmp, jpg, jpeg file types');
 					hideLoader();						
@@ -1085,18 +1115,18 @@ function showCamera(IDparam){
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
 	});
 	$('.usesnap .use').click(function(){
-    
-		var dataUrl = canvas.toDataURL('image/jpg');;
+   
+        get_img = canvas;
+        setCanvas('shared');
 
-		$.ajax({
-            type: "POST",
-            url: "savecam.php",
-        	data: {"placeId": placeId, "dataUrl" : dataUrl},
-            success: function(data) {
-				urlphotoshared=data;
-				//console.log(urlphotoshared);
-            }
-        });
+		// $.ajax({
+  //           type: "POST",
+  //           url: "savecam.php",
+  //       	data: {"placeId": placeId, "dataUrl" : dataUrl},
+  //           success: function(data) {
+		// 		urlphotoshared=data;
+  //           }
+  //       });
 		//$.magnificPopup.close();
 		$.fancybox.close();
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
@@ -1269,6 +1299,12 @@ $(document).on('pageinit','#rateone', function() {
 								});
 							//}
 						}
+						var img = new Image();
+	        			img.onload = function() {
+	        				get_img = img;
+        					setCanvas('profile');
+						};
+						img.src = customArray.webImg;
 					}
 					/*
 					$.magnificPopup.open({
@@ -1640,3 +1676,559 @@ function rate_initialize(){
           $( ".loc-logo" ).attr('src', logoUrl);
     }
 }
+
+
+// IMAGE PROCESSING
+var overlayHeight = 0;
+var overlayY = 0;
+var widthOffsetRating = 0;
+var widthOffset = 0;
+
+function setCanvas(img_type)
+{
+	photo_url = img_type;
+
+	var canvas = document.getElementById('canvas-image');
+	var context = canvas.getContext('2d');
+
+	context.clearRect(0, 0, canvas.width, canvas.height);
+
+	var imgAdd = new Image();
+	var imgNum = new Image();
+	var imgDate = new Image();
+	var imgLogo = new Image();
+	var width = 1000;
+	var height = 0;
+	var rel = 0;
+	var imgAddWidth = 4;
+	var imgAddHeight = 4;
+	var imgNumWidth = 4;
+	var imgNumHeight = 4;
+	var imgDateWidth = 4;
+	var imgDateHeight = 4;
+	var imgLogoWidth = 35;
+	var imgLogoHeight = 12;
+	var imgData = {};
+
+	var brandName = '';
+	var maxRating = 'out of 5';
+	var ratingText = 'Rating';
+	var address = '';
+	var number = '';
+	var date = getDate();
+	var logoText = "Powered by"
+	var logourl = "images/tabluu-logo-mono-xxsmall.png";
+
+	var brandNameFont = 11;
+	var maxRatingFont = 5;
+	var ratingTextFont = 5;
+	var addressFont = 4;
+	var detailsFont = 4;
+	var logoTextFont = 3;	
+
+	var brandNameHeight = 0;
+	var maxRatingHeight = 0;
+	var ratingTextHeight = 0;
+	var dashLineHeight = 0;
+	var addImageHeight = 0;
+	var numImageHeight = 0;
+	var dateImageHeight = 0;
+	var logoImageHeight = 0;
+	var logoTextHeight = 0;
+
+	var brandNameWidth = 0;
+	var ratingWidth = 41;
+	var maxRatingWidth = 0;
+	var ratingTextWidth = 0;
+	var addWidth = 0;
+	var numWidth = 0;
+	var dateWidth = 0;
+	var logoWidth = 0;
+	
+	var dashWidth = 1;
+	var dashInterval = 3;
+	var dashLineHeightOffset = 2;
+	var widthOffsetAdd = 2;
+	var numDateOffset = 13;
+	var totalAddWidth = 0;
+	var brandNameDenom = 2.5;
+	var brandNameNom = 0;
+
+	$.ajax({
+		type: "POST",
+		url: "setData.php",
+		data: 'opt=getImgData&placeId='+placeId,
+		success: function(data) {
+
+	      	imgData = $.parseJSON(data);
+
+			brandName = imgData.businessName;
+			address = imgData.address + ", " + imgData.city + " " + imgData.country + " " + imgData.zip;
+			number = imgData.contactNo;
+
+			width = get_img.width;
+			height = get_img.height;
+
+			if(width > 800 || height > 800)
+			{
+				rel = height / width;
+				width = 800;
+				height = width*rel;
+				if (height > 800) {
+					height = 800;
+					width = height/rel;
+				}
+			}
+
+			// SET CANVAS WIDTH AND HEIGHT
+			canvas.setAttribute('width', width);
+			canvas.setAttribute('height', height);
+
+			// OVERLAY Y AXIS AND OVERLAY HEIGHT
+			overlayY = height*0.75;
+			overlayHeight = height*0.25;
+
+			// DRAW IMAGE ON CANVAS
+			context.drawImage(get_img, 0, 0, width, height);
+			context.fillStyle = "rgba(0, 0 , 0, 0.5)";
+			context.fillRect(0, overlayY, width, overlayHeight);
+
+			// SET TEXT COLOR
+			context.fillStyle = "#FFFFFF";
+
+			// SET FONT SIZE BASED ON CANVAS WIDTH
+			brandNameFont = getSize(canvas, brandNameFont);
+			brandNameFont = setCanvasTest(imgData, width, height, brandNameFont,"brandNameFont", 0, 0);
+			maxRatingFont = getSize(canvas, maxRatingFont);
+			ratingTextFont = getSize(canvas, ratingTextFont);
+			addressFont = getSize(canvas, addressFont);
+			addressFont = setCanvasTest(imgData, width, height, addressFont,"addressFont", 0, 0);
+			detailsFont = getSize(canvas, detailsFont);
+			imgAddWidth = getSize(canvas, imgAddWidth);
+			imgAddHeight = getSize(canvas, imgAddHeight);
+			imgNumWidth = getSize(canvas, imgNumWidth);
+			imgNumHeight = getSize(canvas, imgNumHeight);
+			imgDateWidth = getSize(canvas, imgDateWidth);
+			imgDateHeight = getSize(canvas, imgDateHeight);
+			imgLogoWidth = getSize(canvas, imgLogoWidth);
+			imgLogoHeight = getSize(canvas, imgLogoHeight);
+			logoTextFont = getSize(canvas, logoTextFont);
+
+			// SET RATING WIDTH BASE ON CANVAS WIDTH
+			ratingWidth = getSize(canvas, ratingWidth);
+
+			// SET OFFSET BASED ON CANVAS WIDTH
+			widthOffset = setCanvasTest(imgData, width, height, imgAddWidth, "offset", brandNameFont, addressFont);
+			widthOffsetAdd = getSize(canvas, widthOffsetAdd);
+			numDateOffset = getSize(canvas, numDateOffset);
+			dashLineHeightOffset = getSize(canvas, dashLineHeightOffset);
+			dashWidth = getSize(canvas, dashWidth);
+			dashInterval = getSize(canvas, dashInterval);
+
+			// SET Y AXIS OF TEXT BASED ON FONTSIZE
+			brandNameNom = brandNameFont+dashWidth+dashLineHeightOffset+(imgAddHeight*1.3)+(imgNumHeight*1.7);
+
+			brandNameHeight = (((overlayHeight - brandNameNom)/brandNameDenom)+overlayY)+brandNameFont;
+			maxRatingHeight = (((overlayHeight - maxRatingFont)/2.5)+overlayY)+maxRatingFont;
+			ratingTextHeight = maxRatingHeight+ratingTextFont+(ratingTextFont*0.5);
+			dashLineHeight = brandNameHeight+dashLineHeightOffset;
+
+			// BRAND NAME
+			context.font = brandNameFont + "pt myriadpro";
+			context.fillText(brandName,widthOffset,brandNameHeight);
+			brandNameWidth =context.measureText(brandName).width;
+
+			context.setLineDash([dashWidth, dashInterval]);
+			context.beginPath();
+			context.moveTo(widthOffset,dashLineHeight);
+			context.lineTo(brandNameWidth+widthOffset, dashLineHeight);
+			context.strokeStyle = "#FFFFFF";
+			context.stroke();
+
+			imgAdd.onload = function() {
+
+				addImageHeight = brandNameHeight+imgAddHeight+(imgAddHeight*0.3);
+
+				context.drawImage(imgAdd, widthOffset, addImageHeight, imgAddWidth, imgAddHeight);
+
+				// ADDRESS
+				context.font = addressFont + "pt Lato-Light";
+				context.fillText(address,imgAddWidth+widthOffset+widthOffsetAdd,addImageHeight+detailsFont);
+				addWidth =context.measureText(address).width;
+				totalAddWidth = addWidth + imgAddWidth + widthOffsetAdd;
+
+				if(totalAddWidth > brandNameWidth)
+				{
+					widthOffsetRating = totalAddWidth+widthOffset;
+				}
+				else
+				{
+					widthOffsetRating = brandNameWidth+widthOffset;
+				}
+
+				// MAX RATING
+				context.font = maxRatingFont + "pt Lato-Light";
+				context.fillText(maxRating,widthOffsetRating+ratingWidth+widthOffset+widthOffsetAdd,maxRatingHeight);
+				maxRatingWidth =context.measureText(maxRating).width;
+
+				// RATING TEXT
+				context.font = ratingTextFont + "pt Lato-Light";
+				context.fillText(ratingText,widthOffsetRating+ratingWidth+widthOffset+widthOffsetAdd,ratingTextHeight);
+				ratingTextWidth =context.measureText(ratingText).width;
+
+				imgNum.onload = function() {
+
+					numImageHeight = addImageHeight+imgNumHeight+(imgNumHeight*0.7);
+
+					context.drawImage(imgNum, widthOffset, numImageHeight, imgNumWidth, imgNumHeight);
+
+					// NUMBER
+					context.font = detailsFont + "pt Lato-Light";
+					context.fillText(number,imgNumWidth+widthOffset+widthOffsetAdd,numImageHeight+detailsFont);
+					numWidth =context.measureText(number).width;
+
+					imgDate.onload = function() {
+
+						dateImageHeight = addImageHeight+imgDateHeight+(imgDateHeight*0.7);
+
+						context.drawImage(imgDate, widthOffset+imgNumWidth+numWidth+numDateOffset, dateImageHeight, imgDateWidth, imgDateHeight);
+
+						// DATE
+						context.font = detailsFont + "pt Lato-Light";
+						context.fillText(date,imgDateWidth+imgNumWidth+numWidth+widthOffset+widthOffsetAdd+numDateOffset,dateImageHeight+detailsFont);
+						dateWidth =context.measureText(date).width;
+
+					};
+					imgDate.src = 'images/calendar-o_ffffff_32.png';
+				};
+				imgNum.src = 'images/phone_ffffff_32.png';
+			};
+			imgAdd.src = 'images/location-arrow_ffffff_32.png';
+
+			if(width >= 300 && width <= 500)
+			{
+				logourl = "images/tabluu-logo-mono-xsmall.png";
+			}
+			else if(width > 500)
+			{
+				logourl = "images/tabluu-logo-mono-small.png";
+			}
+
+			imgLogo.onload = function() {
+
+				logoTextHeight = height*0.05;
+				
+				// POWERED BY
+				context.font = logoTextFont + "pt Lato-Light";
+				context.fillText(logoText,width*0.88,logoTextHeight);
+				logoWidth =context.measureText(logoText).width;
+
+				logoImageHeight = (height*0.04)+logoTextFont;
+
+				context.drawImage(imgLogo, width*0.84, logoImageHeight, imgLogoWidth, imgLogoHeight);
+			};
+			imgLogo.src = logourl;
+		}
+  	});
+}
+
+function setRating()
+{
+	var canvas = document.getElementById('canvas-image');
+	var context = canvas.getContext('2d');
+
+	var rate_1 =ratedObj[0];
+	var rate_2 =(typeof(ratedObj[1]) != 'undefined' ? ratedObj[1] : 0);
+	var rate_3 =(typeof(ratedObj[2]) != 'undefined' ? ratedObj[2] : 0);
+	var rate_4 =(typeof(ratedObj[3]) != 'undefined' ? ratedObj[3] : 0);
+	var rate_5 =(typeof(ratedObj[4]) != 'undefined' ? ratedObj[4] : 0);
+	var rate_6 =(typeof(ratedObj[5]) !== 'undefined' ? ratedObj[5] : 0);
+	var rate_7 =(typeof(ratedObj[6]) !== 'undefined' ? ratedObj[6] : 0);
+	var totalRated = rate_1 + rate_2 + rate_3 + rate_4 + rate_5 + rate_6 + rate_7;
+	var aveRated = totalRated / item2Rate.length ;
+
+	var rating = aveRated.toFixed(1);
+	var ratingFont = 22;
+	var ratingHeight = 0;
+	
+	ratingFont = getSize(canvas, ratingFont);
+	ratingHeight = (((overlayHeight - ratingFont)/2)+overlayY)+ratingFont;
+	context.font = ratingFont + "pt Lato-Light";
+	context.fillText(rating,widthOffsetRating+widthOffset,ratingHeight);
+
+	saveToServer(canvas);
+}
+	
+function saveToServer(canvas)
+{
+	var dataUrl = canvas.toDataURL('image/jpg', 0.1);
+
+	$.ajax({
+		type: "POST",
+		url: "saveimage.php",
+		data: {"placeId" : placeId, "dataUrl" : dataUrl},
+		success: function(data) {
+
+			if(photo_url == "profile")
+			{
+				photo_url = data;
+			}
+			else
+			{
+				urlphotoshared = data;
+			}
+			photo_saved = 1;
+			postFb();
+		}
+	});
+}
+
+function setCanvasTest(imgData, widthTest, heightTest, value, type, bfont, afont)
+{
+	var canvasTest = document.getElementById('canvas-image-test');
+	var contextTest = canvasTest.getContext('2d');
+
+	contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
+
+	var overlayHeightTest = 0;
+	var overlayYTest = 0;
+
+	var brandNameTest = imgData.businessName;
+	var aveRatedTest = 0;
+	var ratingTest = aveRatedTest.toFixed(1);
+	var maxRatingTest = "out of 5";
+	var ratingTextTest = "Rating";
+	var addressTest = imgData.address + ", " + imgData.city + " " + imgData.country + " " + imgData.zip;
+
+	var brandNameFontTest = 11;
+	var ratingFontTest = 22;
+	var maxRatingFontTest = 5;
+	var ratingTextFontTest = 5;
+	var addressFontTest = 4;
+
+	var brandNameWidthTest = 0;
+	var ratingWidthTest = 0;
+	var maxRatingWidthTest = 0;
+	var ratingTextWidthTest = 0;
+	var addressWidthTest = 0;
+	
+	var widthOffsetTest = 0;
+	var totalAddWidthTest = 0;
+	var widthOffsetAddTest = 2;
+	var totalBrandNameWidthTest = 0;
+	var totalAddressWidthTest = 0;
+
+
+	widthOffsetAddTest = getSize(canvasTest, widthOffsetAddTest);
+
+	// SET CANVAS WIDTH AND HEIGHT
+	canvasTest.setAttribute('width', widthTest);
+	canvasTest.setAttribute('height', heightTest);
+
+	// SET FONT SIZE BASED ON CANVAS WIDTH
+	if(bfont > 0)
+	{
+		brandNameFontTest = bfont;
+	}
+	else
+	{
+		brandNameFontTest = getSize(canvasTest, brandNameFontTest);
+	}
+	ratingFontTest = getSize(canvasTest, ratingFontTest);
+	maxRatingFontTest = getSize(canvasTest, maxRatingFontTest);
+	ratingTextFontTest = getSize(canvasTest, ratingTextFontTest);
+
+	if(afont > 0)
+	{
+		addressFontTest = afont;
+	}
+	else
+	{
+		addressFontTest = getSize(canvasTest, addressFontTest);
+	}
+
+	// BRAND NAME
+	contextTest.font = brandNameFontTest + "pt myriadpro";
+	contextTest.fillText(brandNameTest,0,0);
+	brandNameWidthTest = contextTest.measureText(brandNameTest).width;
+
+	// RATING
+	contextTest.font = ratingFontTest + "pt Lato-Light";
+	contextTest.fillText(ratingTest,0,0);
+	ratingWidthTest = contextTest.measureText(ratingTest).width;
+
+	// MAX RATING
+	contextTest.font = maxRatingFontTest + "pt Lato-Light";
+	contextTest.fillText(maxRatingTest,0,0);
+	maxRatingWidthTest = contextTest.measureText(maxRatingTest).width;
+
+	// RATING TEXT
+	contextTest.font = ratingTextFontTest + "pt Lato-Light";
+	contextTest.fillText(ratingTextTest,0,0);
+	ratingTextWidthTest = contextTest.measureText(ratingTextTest).width;
+
+	// ADDRESS
+	contextTest.font = addressFontTest + "pt Lato-Light";
+	contextTest.fillText(addressTest,0,0);
+	addressWidthTest =contextTest.measureText(addressTest).width;
+
+	switch(type)
+	{
+		case "offset": 
+			totalAddWidthTest = addressWidthTest + value + widthOffsetAddTest;
+
+			if(totalAddWidthTest >= brandNameWidthTest)
+			{
+				// SET X AXIS OF TEXT BASED ON FONTSIZE
+				widthOffsetTest = ((widthTest - (totalAddWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest))/3);
+			}
+			else
+			{
+				// SET X AXIS OF TEXT BASED ON FONTSIZE
+				widthOffsetTest = ((widthTest - (brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest))/3);
+			}
+			return widthOffsetTest;
+		break;
+		case "brandNameFont":
+			totalBrandNameWidthTest = brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
+
+			while(totalBrandNameWidthTest > widthTest)
+			{
+				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
+				brandNameFontTest = brandNameFontTest - 2;
+				contextTest.font = brandNameFontTest + "pt myriadpro";
+				contextTest.fillText(brandNameTest,0,0);
+				brandNameWidthTest = contextTest.measureText(brandNameTest).width;
+
+				totalBrandNameWidthTest = brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
+			}
+			return brandNameFontTest;
+		break;
+		case "addressFont":
+
+			totalAddressWidthTest = addressWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
+
+			while(totalAddressWidthTest > widthTest)
+			{
+				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
+				addressFontTest = addressFontTest - 2;
+				contextTest.font = addressFontTest + "pt Lato-Light";
+				contextTest.fillText(addressTest,0,0);
+				addressWidthTest = contextTest.measureText(addressTest).width;
+
+				totalAddressWidthTest = addressWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
+			}
+			return addressFontTest;
+		break;
+
+	}
+}
+
+function getSize(canvas, value) {
+    var ratio = value / 200;   // calc ratio
+    var size = canvas.width * ratio;   // get font size based on current width
+    return size; // set font
+}
+
+function getDate(){
+	var d = new Date();
+	var month_name = new Array(12);
+
+	month_name[0]="January";
+	month_name[1]="February";
+	month_name[2]="March";
+	month_name[3]="April";
+	month_name[4]="May";
+	month_name[5]="June";
+	month_name[6]="July";
+	month_name[7]="August";
+	month_name[8]="September";
+	month_name[9]="October";
+	month_name[10]="November";  
+	month_name[11]="December";
+
+	return d.getDate() + " " + month_name[d.getMonth()] + ", " + d.getFullYear();
+}
+
+function resizeImage(img)
+{
+	var canvasResize1 = document.getElementById('canvas-image-test');
+	var contextResize1 = canvasResize1.getContext('2d');
+
+	contextResize1.clearRect(0, 0, canvasResize1.width, canvasResize1.height);
+
+	var width = img.width;
+	var height = img.height;
+
+	if(width > 800 || height > 800)
+	{
+		rel = height / width;
+		width = 800;
+		height = width*rel;
+		if (height > 800) {
+			height = 800;
+			width = height/rel;
+		}
+	}
+
+	// SET CANVAS WIDTH AND HEIGHT
+	canvasResize1.setAttribute('width', width);
+	canvasResize1.setAttribute('height', height);
+
+	contextResize1.drawImage(img, 0, 0, width, height);
+
+	rotateImage(canvasResize1, img);
+}
+
+function rotateImage(canvasResize1, img)
+{
+	var canvasResize = document.getElementById('canvas-resize');
+	var contextResize = canvasResize.getContext('2d');
+	var width = 0;
+	var height = 0;
+	var x = 0;
+	var y = 0;
+	var degree = 0;
+
+	width = canvasResize1.width;
+	height = canvasResize1.height;
+
+	EXIF.getData(img, function() {
+		var orientation = EXIF.getTag(img, "Orientation");
+		switch(orientation)
+		{
+	       case 8:
+	       		degree = 270;
+				width = canvasResize1.height;
+				height = canvasResize1.width;
+				x = canvasResize1.width * (-1);
+	           break;
+	       case 3:
+	       		degree = 180;
+	       		x = canvasResize1.width * (-1);
+      			y = canvasResize1.height * (-1);
+	           break;
+	       case 6:
+	       		degree = 90;
+				width = canvasResize1.height;
+		  		height = canvasResize1.width;
+		  		y = canvasResize1.height * (-1);
+	           	break;
+	    }
+    });
+
+	// SET CANVAS WIDTH AND HEIGHT
+	canvasResize.setAttribute('width', width);
+	canvasResize.setAttribute('height', height);
+
+	// ROTATE IMAGES
+	contextResize.rotate(degree*Math.PI/180);
+
+	// DRAW IMAGE ON CANVAS
+	contextResize.drawImage(canvasResize1, x, y);
+
+    get_img = canvasResize;
+    setCanvas('shared');
+}
+
+// image processing end
