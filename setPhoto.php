@@ -82,11 +82,11 @@ if(isset($_FILES["fileselfie"]))
     $NewFileName        = $Random_Number.$File_Ext; //new file name
     
     if(move_uploaded_file($_FILES['fileselfie']['tmp_name'], $UploadDirectory.'/'.$NewFileName )){
-		$image = new Photos();
+		//$image = new Photos();
 		$source = $UploadDirectory.'/'.$NewFileName;
 		//copy($domain.$source,$source);
-		$image->load($source);
-		$image->save($source,$image->image_type);
+		// $image->load($source);
+		// $image->save($source,$image->image_type);
         echo $img = $UploadDirectory.'/'.$NewFileName;
     }
  
