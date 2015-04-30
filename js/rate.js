@@ -1031,45 +1031,22 @@ function getPhoto(){
 		}
 }
 
-var localStream = null;
-
-function videoStream(video){
-
-	var videoObj = { 'video': true },
-		errBack = function(error) {
-			console.log('Video capture error: ', error.code); 
-		};
-
-	// Put video listeners into place
-	if(navigator.getUserMedia) { // Standard
-		navigator.getUserMedia(videoObj, function(stream) {
-			video.src = stream;
-			localStream = stream;
-		}, errBack);
-	} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
-		navigator.webkitGetUserMedia(videoObj, function(stream){
-			video.src = window.URL.createObjectURL(stream);
-			localStream = stream;
-		}, errBack);
-	}
-	else if(navigator.mozGetUserMedia) { // Firefox-prefixed
-		navigator.mozGetUserMedia(videoObj, function(stream){
-			video.src = window.URL.createObjectURL(stream);
-			localStream = stream;
-		}, errBack);
-	}
-
-}
 function showCamera(IDparam){
   
 	//note: whatpage if 1 from rateone else 2 from takephoto
 	var canvas = document.getElementById('canvas'),
-		context = canvas.getContext('2d'),
-		video = document.getElementById('video');
+		context = canvas.getContext('2d');
 
-	videoStream(video);
-	 $('.cam-f').show();
-	var screen =  $('#screen');
+	Webcam.set({
+			width: 640,
+			height: 480,
+			image_format: 'jpeg',
+			jpeg_quality: 90
+		});
+	Webcam.attach('#screen');
+
+	$('.cam-f').show();
+
     $('.usesnap').show(); // button fo
     $('.usesnap').hide(); // button fo
 	var curHeight = window.innerWidth,width=0,height=0,ratio;
@@ -1085,49 +1062,41 @@ function showCamera(IDparam){
 	$('.snapshot .takesnap').click(function(){
 		var snd = new Audio("shutter.mp3"); // buffers automatically when created
 		snd.play();
+
+    	Webcam.freeze();
 		//if(!shootEnabled) return false;
 		$('.snapshot').hide(); // button for snapshot
 		$('.usesnap').show(); // button for use		
-		context.drawImage(video, 0, 0, 640, 480);
-		$('#video').css({opacity:0});
-		video.pause();
-		localStream.stop();
-		return false;
-	});
-	$('.usesnap .cancelsnap').click(function(e){
-		e.preventDefault();
-		$('.snapshot').show(); // button for snapshot
-		$('.usesnap').hide(); // button for use
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		videoStream(video);
-		$('#video').css({opacity:1});
-		//webcam.reset();
 		return false;
 	});
 	$('.snapshot .cancelsnap').click(function(e){
 		e.preventDefault();
-		localStream.stop();
-		//$.magnificPopup.close();
 		$.fancybox.close();
+
+		Webcam.reset();
+
 		if(fromtakephotopage == 2){
 			setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 100);
 		}	
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
 	});
+	$('.usesnap .cancelsnap').click(function(e){
+		e.preventDefault();
+
+		Webcam.unfreeze();
+
+		$('.snapshot').show(); // button for snapshot
+		$('.usesnap').hide(); // button for use
+		return false;
+	});
 	$('.usesnap .use').click(function(){
    
-        get_img = canvas;
-        setCanvas('shared');
+		Webcam.snap(function() {
+	        get_img = canvas;
+	        setCanvas('shared');
+			Webcam.reset();
+    	}, canvas);
 
-		// $.ajax({
-  //           type: "POST",
-  //           url: "savecam.php",
-  //       	data: {"placeId": placeId, "dataUrl" : dataUrl},
-  //           success: function(data) {
-		// 		urlphotoshared=data;
-  //           }
-  //       });
-		//$.magnificPopup.close();
 		$.fancybox.close();
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
 		//hideLoader();
