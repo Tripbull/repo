@@ -40,6 +40,7 @@ $connect->db_disconnect();
 	<script type="text/javascript" src="js/dialogcomment.js"></script>
 	<script type="text/javascript" src="js/jquery.magnific-popup.js"></script>
 	<script type="text/javascript" src="js/rate.js"></script>
+	<script type="text/javascript" src="js/webcam.js"></script>
 	<script type="text/javascript" src="js/exif.js"></script>
 </head>
 <body>
@@ -97,25 +98,22 @@ $connect->db_disconnect();
 				<div class="hide">
 					<div id="data">
 						<div class="cam-frame">
-						<div style="height:480px;">
-							<canvas id="canvas" style="position:absolute;width:100%;" width="640" height="480"></canvas>
-							<video id="video" stlye="position:absolute;width:100%;" width="640" height="480" autoplay></video>
-						</div>
-						<!-- <div id="screen"></div> -->
-						<div class="snapshotbutton">
-							<div class="snapshot hide">
-								<a href="#" data-rel="back" class="cancelsnap">cancel</a>
-								<div class="btnseparator"></div>
-								<a href="#" data-rel="back" class="takesnap">snap</a>
-							</div>
-							<div class="usesnap hide">
-								<a href="#" data-rel="back" class="cancelsnap">discard</a>
-								<div class="btnseparator"></div>
-								<a href="#" data-rel="back" class="use">use</a>
+							<div id="screen"></div>
+							<canvas id="canvas" style="position:absolute;z-index:-1;" width="640" height="480"></canvas>
+							<div class="snapshotbutton">
+								<div class="snapshot hide">
+									<a href="#" data-rel="back" class="cancelsnap">cancel</a>
+									<div class="btnseparator"></div>
+									<a href="#" data-rel="back" class="takesnap">snap</a>
+								</div>
+								<div class="usesnap hide">
+									<a href="#" data-rel="back" class="cancelsnap">discard</a>
+									<div class="btnseparator"></div>
+									<a href="#" data-rel="back" class="use">use</a>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 				</div>
 			</div><!-- /content -->
 		</div>

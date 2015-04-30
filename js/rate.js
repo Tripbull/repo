@@ -11,7 +11,7 @@ var counter1 = 0,counter2 = 0,counter3 = 0,counter4 = 0,counter5 = 0,counter6 = 
 var questionDefault = ['How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again'];
 //live mode chargify ids
 var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619;
-var istest = true,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
+var istest = false,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
 
 function alertBox(title,message){ // testing
 	clearTimeout(resizeTimeout);
@@ -759,7 +759,7 @@ function postFb()
 					preview = String(preview).replace(/<tel>/,'');
 				}else
 					preview = String(preview).replace(/<tel>/,customArray.contactNo);	
-				var location = 'https://www.tabluu.com/staging/';
+				var location = 'https://www.tabluu.com/app/';
 				if(isphototakedone < 0 && takeaphoto > 0){ // take the camera? && check if the photo temporary done uploaded
 					setTimeout(function() {
 						username = response.name;
@@ -1031,45 +1031,22 @@ function getPhoto(){
 		}
 }
 
-var localStream = null;
-
-function videoStream(video){
-
-	var videoObj = { 'video': true },
-		errBack = function(error) {
-			console.log('Video capture error: ', error.code); 
-		};
-
-	// Put video listeners into place
-	if(navigator.getUserMedia) { // Standard
-		navigator.getUserMedia(videoObj, function(stream) {
-			video.src = stream;
-			localStream = stream;
-		}, errBack);
-	} else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
-		navigator.webkitGetUserMedia(videoObj, function(stream){
-			video.src = window.URL.createObjectURL(stream);
-			localStream = stream;
-		}, errBack);
-	}
-	else if(navigator.mozGetUserMedia) { // Firefox-prefixed
-		navigator.mozGetUserMedia(videoObj, function(stream){
-			video.src = window.URL.createObjectURL(stream);
-			localStream = stream;
-		}, errBack);
-	}
-
-}
 function showCamera(IDparam){
   
 	//note: whatpage if 1 from rateone else 2 from takephoto
 	var canvas = document.getElementById('canvas'),
-		context = canvas.getContext('2d'),
-		video = document.getElementById('video');
+		context = canvas.getContext('2d');
 
-	videoStream(video);
-	 $('.cam-f').show();
-	var screen =  $('#screen');
+	Webcam.set({
+			width: 640,
+			height: 480,
+			image_format: 'jpeg',
+			jpeg_quality: 90
+		});
+	Webcam.attach('#screen');
+
+	$('.cam-f').show();
+
     $('.usesnap').show(); // button fo
     $('.usesnap').hide(); // button fo
 	var curHeight = window.innerWidth,width=0,height=0,ratio;
@@ -1085,49 +1062,41 @@ function showCamera(IDparam){
 	$('.snapshot .takesnap').click(function(){
 		var snd = new Audio("shutter.mp3"); // buffers automatically when created
 		snd.play();
+
+    	Webcam.freeze();
 		//if(!shootEnabled) return false;
 		$('.snapshot').hide(); // button for snapshot
 		$('.usesnap').show(); // button for use		
-		context.drawImage(video, 0, 0, 640, 480);
-		$('#video').css({opacity:0});
-		video.pause();
-		localStream.stop();
-		return false;
-	});
-	$('.usesnap .cancelsnap').click(function(e){
-		e.preventDefault();
-		$('.snapshot').show(); // button for snapshot
-		$('.usesnap').hide(); // button for use
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		videoStream(video);
-		$('#video').css({opacity:1});
-		//webcam.reset();
 		return false;
 	});
 	$('.snapshot .cancelsnap').click(function(e){
 		e.preventDefault();
-		localStream.stop();
-		//$.magnificPopup.close();
 		$.fancybox.close();
+
+		Webcam.reset();
+
 		if(fromtakephotopage == 2){
 			setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 100);
 		}	
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
 	});
+	$('.usesnap .cancelsnap').click(function(e){
+		e.preventDefault();
+
+		Webcam.unfreeze();
+
+		$('.snapshot').show(); // button for snapshot
+		$('.usesnap').hide(); // button for use
+		return false;
+	});
 	$('.usesnap .use').click(function(){
    
-        get_img = canvas;
-        setCanvas('shared');
+		Webcam.snap(function() {
+	        get_img = canvas;
+	        setCanvas('shared');
+			Webcam.reset();
+    	}, canvas);
 
-		// $.ajax({
-  //           type: "POST",
-  //           url: "savecam.php",
-  //       	data: {"placeId": placeId, "dataUrl" : dataUrl},
-  //           success: function(data) {
-		// 		urlphotoshared=data;
-  //           }
-  //       });
-		//$.magnificPopup.close();
 		$.fancybox.close();
 		closeselfie=1;clearInterval(timeInverval);refresh_handler();
 		//hideLoader();
