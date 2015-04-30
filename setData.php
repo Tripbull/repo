@@ -333,10 +333,16 @@ switch($opt){
 					$whatsignup = '2 yearly enterprise plan';$idplan = $connect->enterprise24;
 				}
 					
-					$result = mysql_query("INSERT INTO businessUserGroup SET productId=". $idplan .", email='$email',state='active',addLoc=0,created='$date',type=0") or die(mysql_error());
+					$result = mysql_query("INSERT INTO businessUserGroup SET productId=". $idplan .", email='$email',state='notactive',addLoc=0,created='$date',type=0") or die(mysql_error());
 					$tail = '<p>He/She signed up '.$whatsignup.'</p>';
 					$groupId = mysql_insert_id();
 					echo json_encode(array('type'=>$idplan,'groupId'=>$groupId));
+					$sql = "INSERT INTO businessUsers SET userGroupId=$groupId,fname='$fname',lname='$lname',pwd='".$pwd."',email='$email'";
+					mysql_query($sql) or die(mysql_error());
+					$time = time();
+					$name =$fname.' '.$lname; //optional
+					$join_date = round(time()/60)*60;
+					mysql_query('INSERT INTO subscribers (userID, email, name, custom_fields, list, timestamp, join_date) VALUES (1, "'.$email.'", "'.$name.'", "", 2, '.$time.', '.$join_date.')');
 				/*
 				if(isset($_SESSION['typeofaccnt']) && $_SESSION['typeofaccnt'] == 'a'){ //alpha pre launch
 					$_SESSION['typeofaccnt'] = '';
@@ -369,19 +375,15 @@ switch($opt){
 					$groupId = mysql_insert_id();
 			    }
 				*/
-				$sql = "INSERT INTO businessUsers SET userGroupId=$groupId,fname='$fname',lname='$lname',pwd='".$pwd."',email='$email'";
-				mysql_query($sql) or die(mysql_error());
-				$lastId = mysql_insert_id();
+				
+				//$lastId = mysql_insert_id();
 				//$cookie = new cookie();
 				//$cookie->setCookie( $lastId );
-				$subject = 'Tabluu - New Sign up user'; 
-				$body = '<p>Customer name: '. $fname . ' ' . $lname . '</p>'.$tail; 
-				sendEmail('support@tabluu.com',$subject,$body);
+				//$subject = 'Tabluu - New Sign up user'; 
+				//$body = '<p>Customer name: '. $fname . ' ' . $lname . '</p>'.$tail; 
+				//sendEmail('support@tabluu.com',$subject,$body);
 				/*insert the new user to email list sendy*/
-				$time = time();
-				$name =$fname.' '.$lname; //optional
-				$join_date = round(time()/60)*60;
-				mysql_query('INSERT INTO subscribers (userID, email, name, custom_fields, list, timestamp, join_date) VALUES (1, "'.$email.'", "'.$name.'", "", 2, '.$time.', '.$join_date.')');
+				
 		}
 	break;
 	case 'wizardsetupdone':

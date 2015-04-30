@@ -59,13 +59,12 @@ if(isset($_REQUEST['cust_id']) && isset($_REQUEST['subs_id']) && isset($_REQUEST
 		$gId = $_REQUEST['ref'];
 		$_SESSION['newcreated']= time();
 		mysql_query("UPDATE businessUserGroup SET chargify_cust_id =$cust_id, subscription_id =$subs_id , email='$email',state='$state',addLoc=0,productId=$productId,expiration='$expiry' WHERE gId=$gId");
-		$result = mysql_query("SELECT id businessUsers WHERE userGroupId=$gId AND permission = 0") or die(mysql_error());
+		$result = mysql_query("SELECT id FROM businessUsers WHERE userGroupId=$gId AND permission = 0") or die(mysql_error());
 		$row = mysql_fetch_object($result);
 		$cookie = new cookie();
 		$cookie->setCookie( $row->id );
 		$db->db_disconnect();
 		header("Location: index.html"); 
-
 	}else{
 		die('internal server error'); 
 	}
