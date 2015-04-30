@@ -1677,7 +1677,6 @@ function rate_initialize(){
     }
 }
 
-
 // IMAGE PROCESSING
 var overlayHeight = 0;
 var overlayY = 0;
@@ -1769,9 +1768,9 @@ function setCanvas(img_type)
 			width = get_img.width;
 			height = get_img.height;
 
+			rel = height / width;
 			if(width > 800 || height > 800)
 			{
-				rel = height / width;
 				width = 800;
 				height = width*rel;
 				if (height > 800) {
@@ -1784,17 +1783,8 @@ function setCanvas(img_type)
 			canvas.setAttribute('width', width);
 			canvas.setAttribute('height', height);
 
-			// OVERLAY Y AXIS AND OVERLAY HEIGHT
-			overlayY = height*0.75;
-			overlayHeight = height*0.25;
-
 			// DRAW IMAGE ON CANVAS
 			context.drawImage(get_img, 0, 0, width, height);
-			context.fillStyle = "rgba(0, 0 , 0, 0.5)";
-			context.fillRect(0, overlayY, width, overlayHeight);
-
-			// SET TEXT COLOR
-			context.fillStyle = "#FFFFFF";
 
 			// SET FONT SIZE BASED ON CANVAS WIDTH
 			brandNameFont = getSize(canvas, brandNameFont);
@@ -1828,10 +1818,22 @@ function setCanvas(img_type)
 			// SET Y AXIS OF TEXT BASED ON FONTSIZE
 			brandNameNom = brandNameFont+dashWidth+dashLineHeightOffset+(imgAddHeight*1.3)+(imgNumHeight*1.7);
 
+			// OVERLAY Y AXIS AND OVERLAY HEIGHT
+			overlayHeight = brandNameNom + (ratingWidth/2) * rel;
+			overlayY = height - overlayHeight;
+
+			// DRAW OVERLAY ON CANVAS
+			context.fillStyle = "rgba(0, 0 , 0, 0.5)";
+			context.fillRect(0, overlayY, width, overlayHeight);
+
+			// SET Y AXIS OF TEXT BASED ON FONTSIZE
 			brandNameHeight = (((overlayHeight - brandNameNom)/brandNameDenom)+overlayY)+brandNameFont;
 			maxRatingHeight = (((overlayHeight - maxRatingFont)/2.5)+overlayY)+maxRatingFont;
 			ratingTextHeight = maxRatingHeight+ratingTextFont+(ratingTextFont*0.5);
 			dashLineHeight = brandNameHeight+dashLineHeightOffset;
+
+			// SET TEXT COLOR
+			context.fillStyle = "#FFFFFF";
 
 			// BRAND NAME
 			context.font = brandNameFont + "pt myriadpro";
@@ -1847,7 +1849,7 @@ function setCanvas(img_type)
 
 			imgAdd.onload = function() {
 
-				addImageHeight = brandNameHeight+imgAddHeight+(imgAddHeight*0.3);
+				addImageHeight = brandNameHeight+(imgAddHeight*1.3);
 
 				context.drawImage(imgAdd, widthOffset, addImageHeight, imgAddWidth, imgAddHeight);
 
@@ -1876,32 +1878,50 @@ function setCanvas(img_type)
 				context.fillText(ratingText,widthOffsetRating+ratingWidth+widthOffset+widthOffsetAdd,ratingTextHeight);
 				ratingTextWidth =context.measureText(ratingText).width;
 
-				imgNum.onload = function() {
+				if(typeof(number) != 'undefined' && number != '')
+				{
+					imgNum.onload = function() {
 
-					numImageHeight = addImageHeight+imgNumHeight+(imgNumHeight*0.7);
+						numImageHeight = addImageHeight+(imgNumHeight*1.7);
 
-					context.drawImage(imgNum, widthOffset, numImageHeight, imgNumWidth, imgNumHeight);
+						context.drawImage(imgNum, widthOffset, numImageHeight, imgNumWidth, imgNumHeight);
 
-					// NUMBER
-					context.font = detailsFont + "pt Lato-Light";
-					context.fillText(number,imgNumWidth+widthOffset+widthOffsetAdd,numImageHeight+detailsFont);
-					numWidth =context.measureText(number).width;
+						// NUMBER
+						context.font = detailsFont + "pt Lato-Light";
+						context.fillText(number,imgNumWidth+widthOffset+widthOffsetAdd,numImageHeight+detailsFont);
+						numWidth =context.measureText(number).width;
 
+						imgDate.onload = function() {
+
+							dateImageHeight = addImageHeight+(imgDateHeight*1.7);
+
+							context.drawImage(imgDate, widthOffset+imgNumWidth+numWidth+numDateOffset, dateImageHeight, imgDateWidth, imgDateHeight);
+
+							// DATE
+							context.font = detailsFont + "pt Lato-Light";
+							context.fillText(date,imgDateWidth+imgNumWidth+numWidth+widthOffset+widthOffsetAdd+numDateOffset,dateImageHeight+detailsFont);
+							dateWidth =context.measureText(date).width;
+
+						};
+						imgDate.src = 'images/calendar-o_ffffff_32.png';
+					};
+					imgNum.src = 'images/phone_ffffff_32.png';
+				}
+				else
+				{
 					imgDate.onload = function() {
 
 						dateImageHeight = addImageHeight+imgDateHeight+(imgDateHeight*0.7);
 
-						context.drawImage(imgDate, widthOffset+imgNumWidth+numWidth+numDateOffset, dateImageHeight, imgDateWidth, imgDateHeight);
+						context.drawImage(imgDate, widthOffset, dateImageHeight, imgDateWidth, imgDateHeight);
 
 						// DATE
 						context.font = detailsFont + "pt Lato-Light";
-						context.fillText(date,imgDateWidth+imgNumWidth+numWidth+widthOffset+widthOffsetAdd+numDateOffset,dateImageHeight+detailsFont);
+						context.fillText(date,imgDateWidth+widthOffset+widthOffsetAdd,dateImageHeight+detailsFont);
 						dateWidth =context.measureText(date).width;
-
 					};
 					imgDate.src = 'images/calendar-o_ffffff_32.png';
-				};
-				imgNum.src = 'images/phone_ffffff_32.png';
+				}
 			};
 			imgAdd.src = 'images/location-arrow_ffffff_32.png';
 
