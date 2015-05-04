@@ -81,8 +81,14 @@ foreach($time_zones as $zones){
 								<input type="text" data-clear-btn="true" name="txtfb" id="txtfb" value="" placeholder="facebook page url (optional)">
 								<label for="number-1"></label>
 								<input type="text" data-clear-btn="true" name="txtweb" id="txtweb" value="" placeholder="website url (optional)">
-								<label for="number-1"></label>
-								<input type="text" data-clear-btn="true" name="txtbooknow" id="txtbooknow" value="" placeholder="book now url (optional)">
+									<label for="number-1"></label>
+									<input type="text" data-clear-btn="true" name="txtlink" id="txtlink" value="" placeholder="linkedIn url (optional)">
+									<label for="number-1"></label>
+									<input type="text" data-clear-btn="true" name="txttwit" id="txttwit" value="" placeholder="twitter url (optional)">
+									<label for="number-1"></label>
+									<input type="text" data-clear-btn="true" name="txtbooknowlabel" id="txtbooknowlabel" value="" placeholder="Book Now (optional)">
+									<br/><label for="number-1">(Create your own url label. E.g. Buy Now, Donate, Take a Selfie!)</label>
+									<input type="text" data-clear-btn="true" name="txtbooknow" id="txtbooknow" value="" placeholder="book now url (optional)">
 								<div class="btn-submit">
 									<button class="ui-btn" id="submit-pro">Submit</button>
 								</div>

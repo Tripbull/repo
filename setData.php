@@ -86,9 +86,13 @@ switch($opt){
 	break;	
 	case 'profile':
 		$placeId = $_REQUEST['placeId'];
-		$category = mysql_real_escape_string($_REQUEST['select-category']);$txtname = mysql_real_escape_string($_REQUEST['txtname']);$txtadd = mysql_real_escape_string($_REQUEST['txtadd']);$txtcity = mysql_real_escape_string($_REQUEST['txtcity']);$txtcountry = mysql_real_escape_string($_REQUEST['txtcountry']);$txtzip = mysql_real_escape_string($_REQUEST['txtzip']);$txtpho = mysql_real_escape_string($_REQUEST['txtpho']);$txtfb = mysql_real_escape_string($_REQUEST['txtfb']);$txtweb = mysql_real_escape_string($_REQUEST['txtweb']);$txtemail = mysql_real_escape_string($_REQUEST['txtproemail']);$txtbooknow = mysql_real_escape_string($_REQUEST['txtbooknow']);$txtlabel = mysql_real_escape_string($_REQUEST['txtlabel']);$lng = $_REQUEST['lng'];$lat = $_REQUEST['lat'];
+		$category = mysql_real_escape_string($_REQUEST['select-category']);$txtname = mysql_real_escape_string($_REQUEST['txtname']);$txtadd = mysql_real_escape_string($_REQUEST['txtadd']);$txtcity = mysql_real_escape_string($_REQUEST['txtcity']);$txtcountry = mysql_real_escape_string($_REQUEST['txtcountry']);$txtzip = mysql_real_escape_string($_REQUEST['txtzip']);$txtpho = mysql_real_escape_string($_REQUEST['txtpho']);$txtfb = mysql_real_escape_string($_REQUEST['txtfb']);$txtweb = mysql_real_escape_string($_REQUEST['txtweb']);$txtemail = mysql_real_escape_string($_REQUEST['txtproemail']);$txtlink = mysql_real_escape_string($_REQUEST['txtlink']);$txttwit = mysql_real_escape_string($_REQUEST['txttwit']);$txtbooknowlabel = mysql_real_escape_string($_REQUEST['txtbooknowlabel']);$txtbooknow = mysql_real_escape_string($_REQUEST['txtbooknow']);$txtlabel = mysql_real_escape_string($_REQUEST['txtlabel']);$lng = $_REQUEST['lng'];$lat = $_REQUEST['lat'];
+		if($txtbooknowlabel == '')
+		{
+			$txtbooknowlabel = 'Book Now';
+		}
 		mysql_query("UPDATE businessList SET businessName='$txtname', label='{$txtlabel}' WHERE id = $placeId");
-		$sql = "UPDATE businessProfile SET businessName='$txtname', category='$category', address='$txtadd', city='$txtcity', country='$txtcountry', zip='$txtzip', contactNo='$txtpho', facebookURL='$txtfb', websiteURL='$txtweb', booknow='$txtbooknow', email='$txtemail', latitude=$lat, longitude=$lng WHERE profilePlaceId = $placeId";
+		$sql = "UPDATE businessProfile SET businessName='$txtname', category='$category', address='$txtadd', city='$txtcity', country='$txtcountry', zip='$txtzip', contactNo='$txtpho', facebookURL='$txtfb', websiteURL='$txtweb', linkedinURL='$txtlink', twitterURL='$txttwit', booknowlabel='$txtbooknowlabel', booknow='$txtbooknow', email='$txtemail', latitude=$lat, longitude=$lng WHERE profilePlaceId = $placeId";
 		mysql_query($sql);
 		if(mysql_affected_rows()){
 			echo mysql_affected_rows();		

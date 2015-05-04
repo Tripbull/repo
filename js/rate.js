@@ -718,7 +718,7 @@ function loginFb(){
 				}, 300);}}]
 			});		
 	   }
-	 },{scope: 'email,read_friendlists,publish_actions,publish_stream,user_photos'});   
+	 },{scope: 'email,read_friendlists,publish_actions,user_photos'});   
 	 
 }
 
