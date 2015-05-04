@@ -426,7 +426,7 @@ switch($opt){
 			$imagesArray['fbImg'] = $row->fbImg;$imagesArray['webImg'] = $row->webImg;$imagesArray['webImg2'] = $row->webImg2;$imagesArray['webImg3'] = $row->webImg3;$imagesArray['webImg4'] = $row->webImg4;$imagesArray['webImg5'] = $row->webImg5;$imagesArray['webImg6'] = $row->webImg6;$imagesArray['webImg7'] = $row->webImg7;$imagesArray['webImg8'] = $row->webImg8; 
 		}
 		
-		$sql = "SELECT p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.longitude,p.latitude, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.showmap, p.email, p.booknow, l.subscribe,l.label, g.email as gmail, d.description, o.opening, c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.printvalue,c.optsocialpost FROM businessList AS l
+		$sql = "SELECT p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.longitude,p.latitude, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.linkedinURL, p.twitterURL, p.showmap, p.email, p.booknowlabel, p.booknow, l.subscribe,l.label, g.email as gmail, d.description, o.opening, c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.printvalue,c.optsocialpost FROM businessList AS l
 		LEFT JOIN businessProfile AS p ON p.profilePlaceId = l.id
 		LEFT JOIN businessDescription AS d ON d.descPlaceId = l.id
 		LEFT JOIN businessUsers AS g ON g.userGroupId = l.userGroupId AND permission = 0

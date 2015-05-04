@@ -2200,7 +2200,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		createProfileMenu2();
 		$('#placeidweb').val(places[0]);
 		// setting up values
-		$('#webthumb1').attr('src', noPhoto);$('#webthumb2').attr('src', noPhoto);$('#webthumb3').attr('src', noPhoto);$('#webthumb4').attr('src', noPhoto);$('#webthumb5').attr('src', noPhoto);$('#webthumb6').attr('src', noPhoto);$('#webthumb7').attr('src', noPhoto);$('#webthumb8').attr('src', noPhoto);$('#txtname').val('');$('#txtadd').val('');$('#txtcity').val('');$('#txtlabel').val('');$('#txtcountry').val('');$('#txtzip').val('');$('#txtpho').val('');$('#txtfb').val('');$('#txtweb').val('');$('#txtproemail').val('');$('#txtbooknow').val('');
+		$('#webthumb1').attr('src', noPhoto);$('#webthumb2').attr('src', noPhoto);$('#webthumb3').attr('src', noPhoto);$('#webthumb4').attr('src', noPhoto);$('#webthumb5').attr('src', noPhoto);$('#webthumb6').attr('src', noPhoto);$('#webthumb7').attr('src', noPhoto);$('#webthumb8').attr('src', noPhoto);$('#txtname').val('');$('#txtadd').val('');$('#txtcity').val('');$('#txtlabel').val('');$('#txtcountry').val('');$('#txtzip').val('');$('#txtpho').val('');$('#txtfb').val('');$('#txtweb').val('');$('#txtlink').val('');$('#txttwit').val('');$('#txtproemail').val('');$('#txtbooknowlabel').val('');$('#txtbooknow').val('');
 		if(customArray.category === 'Accomodation') n=1;
 		else if(customArray.category == 'Arts & Entertainment') n=2;
 		else if(customArray.category == 'Auto Sales, Rental & Repair') n=3;
@@ -2259,6 +2259,12 @@ $(document).on("pagebeforechange", function (e, data) {
 			$('#txtfb').val(customArray.facebookURL);
 		}if(customArray.websiteURL != ''){
 			$('#txtweb').val(customArray.websiteURL);
+		}if(customArray.linkedinURL != ''){
+			$('#txtlink').val(customArray.linkedinURL);
+		}if(customArray.twitterURL != ''){
+			$('#txttwit').val(customArray.twitterURL);
+		}if(customArray.booknowlabel != ''){
+			$('#txtbooknowlabel').val(customArray.booknowlabel);	
 		}if(customArray.booknow != ''){
 			$('#txtbooknow').val(customArray.booknow);	
 		}if(customArray.email != ''){
@@ -2685,7 +2691,7 @@ $(document).on("pagebeforechange", function (e, data) {
 				hideLoader();
 				placename = $('#txtname').val() + ($.trim($('#txtlabel').val()) != '' ? ' ('+$('#txtlabel').val()+')' : '');
 				$( ".right-header" ).html( placename );	
-				customArray.businessName =$('#txtname').val();customArray.category=$('#select-category').val();customArray.address=$('#txtadd').val(); customArray.city=$('#txtcity').val(); customArray.country=$('#txtcountry').val(); customArray.zip=$('#txtzip').val(); customArray.txtlabel=$('#txtlabel').val(); customArray.contactNo=$('#txtpho').val(); customArray.facebookURL=$('#txtfb').val();customArray.websiteURL=$('#txtweb').val();customArray.email=$('#txtproemail').val();customArray.booknow=$('#txtbooknow').val();
+				customArray.businessName =$('#txtname').val();customArray.category=$('#select-category').val();customArray.address=$('#txtadd').val(); customArray.city=$('#txtcity').val(); customArray.country=$('#txtcountry').val(); customArray.zip=$('#txtzip').val(); customArray.txtlabel=$('#txtlabel').val(); customArray.contactNo=$('#txtpho').val(); customArray.facebookURL=$('#txtfb').val();customArray.websiteURL=$('#txtweb').val();customArray.linkedinURL=$('#txtlink').val();customArray.twitterURL=$('#txttwit').val();customArray.email=$('#txtproemail').val();customArray.booknowlabel=$('#txtbooknowlabel').val();customArray.booknow=$('#txtbooknow').val();
 				//alertBox('update successful','Profile section has been updated');
 				$.box_Dialog('Profile section has been updated', {
 					'type':     'question',
