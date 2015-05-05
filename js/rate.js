@@ -1045,6 +1045,14 @@ function showCamera(IDparam){
 		});
 	Webcam.attach('#screen');
 
+	Webcam.on( 'error', function(err) {
+        if(err == 'Access to camera denied')
+        {
+			$.fancybox.close();
+			closeselfie=1;clearInterval(timeInverval);refresh_handler();
+        }
+    });
+
 	$('.cam-f').show();
 
     $('.usesnap').show(); // button fo
