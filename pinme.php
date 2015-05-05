@@ -247,7 +247,9 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 		else if($w == 4)	
 			$widthmenu = "width:20%";
 		else if($w == 5)	
-			$widthmenu = "width:16.6%";		
+			$widthmenu = "width:16.6%";	
+		else if($w == 6)	
+			$widthmenu = "width:14.25%";		
 	?>
 
 	<div id="nav">
