@@ -1226,7 +1226,7 @@ $(document).on('pageinit','#rateone', function() {
 					if($.inArray(getUrlVar('s'),['0','1','2','3','4','5','e','','6'] ) == -1){
 						alertErrorPage('Unauthorized',"Please contact Tabluu support");
 					}else{
-						if(ios_ver[0] == 7)
+						if(ios_ver[0] == 6)
 						{
 							$.box_Dialog(('iOS 6 is not supported by Tabluu. Please use a device running on iOS 7 and above.'), {
 								'type':     'question',
