@@ -1162,6 +1162,8 @@ $(document).on('pageinit','#rateone', function() {
 			invalidUsedBackbtn();
 
 		var ispageok = false;nicename = $('#nicename').val();
+		var ios_ver = iOSversion();
+
 		showLoader();
 		$.ajax({type: "POST",url:"getData.php",cache: false,data:'nice='+nicename+'&opt=getrate',success:function(result){
 			if(typeof(result) == 'false')
@@ -1235,64 +1237,80 @@ $(document).on('pageinit','#rateone', function() {
 					if($.inArray(getUrlVar('s'),['0','1','2','3','4','5','e','','6'] ) == -1){
 						alertErrorPage('Unauthorized',"Please contact Tabluu support");
 					}else{
-						changetextcamerabutton();
-						if(getUrlVar('s') != '' && (getUrlVar('s') == 1 || getUrlVar('s') == 6) && fromtakephotopage == 1){
-							$.box_Dialog((typeof(defaultTextMessage.takeselfieB) != 'undefined' ? decodequote(defaultTextMessage.takeselfieB) : decodequote(defaultTextMessage2.takeselfieB)), {
+						if(ios_ver[0] == 6)
+						{
+							$.box_Dialog(('iOS 6 is not supported by Tabluu. Please use a device running on iOS 7 and above.'), {
 								'type':     'question',
-								'title':    '<span class="color-white">'+(typeof(defaultTextMessage.takeselfieT) != 'undefined' ? decodequote(defaultTextMessage.takeselfieT) : decodequote(defaultTextMessage2.takeselfieT))+' <img src="emoticons/smile.png" width="20" height="20" /><span>',
+								'title':    '<span class="color-white">Unsupported Version<span>',
 								'center_buttons': true,
 								'show_close_button':false,
 								'overlay_close':false,
-								'buttons':  [{caption: (typeof(defaultButtonText.btntake) != 'undefined' ? decodequote((defaultButtonText.btntake[0] == 'no' ? 'okay' : defaultButtonText2.btntake[0])) : decodequote(defaultButtonText2.btntake[0])),callback:function(){
-										if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()))
-											setTimeout(function(){getSelfie();},200);
-										else
-											showCamera('#camera-modal');
+								'buttons':  [{caption: 'okay',callback:function(){
+										setTimeout(function(){window.location = domainpath+nicename+'.html'},300);
 									}}]
 							});
 						}
-						if(getUrlVar('s') != '' && (getUrlVar('s') == 2) && fromtakephotopage == 1){	
-							if(customArray.productId != proID && customArray.productId != pro12 && customArray.productId != pro24 && customArray.productId != enterprise12 && customArray.productId != enterprise24 && customArray.productId != enterprise)
-								alertErrorPage('no access','Please upgrade to pro plan & above to access this feature');
-							else{
+						else
+						{
+							changetextcamerabutton();
+							if(getUrlVar('s') != '' && (getUrlVar('s') == 1 || getUrlVar('s') == 6) && fromtakephotopage == 1){
 								$.box_Dialog((typeof(defaultTextMessage.takeselfieB) != 'undefined' ? decodequote(defaultTextMessage.takeselfieB) : decodequote(defaultTextMessage2.takeselfieB)), {
 									'type':     'question',
 									'title':    '<span class="color-white">'+(typeof(defaultTextMessage.takeselfieT) != 'undefined' ? decodequote(defaultTextMessage.takeselfieT) : decodequote(defaultTextMessage2.takeselfieT))+' <img src="emoticons/smile.png" width="20" height="20" /><span>',
 									'center_buttons': true,
 									'show_close_button':false,
 									'overlay_close':false,
-									'buttons':  [{caption: (typeof(defaultButtonText.btntake) != 'undefined' ? decodequote(defaultButtonText.btntake[1]) : decodequote(defaultButtonText2.btntake[1])),callback:function(){
+									'buttons':  [{caption: (typeof(defaultButtonText.btntake) != 'undefined' ? decodequote((defaultButtonText.btntake[0] == 'no' ? 'okay' : defaultButtonText2.btntake[0])) : decodequote(defaultButtonText2.btntake[0])),callback:function(){
 											if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()))
-												setTimeout(function(){getPhoto();},200);
+												setTimeout(function(){getSelfie();},200);
 											else
 												showCamera('#camera-modal');
-										}},{caption: (typeof(defaultButtonText.btntake) != 'undefined' ? decodequote(defaultButtonText.btntake[0]) : decodequote(defaultButtonText2.btntake[0])),callback:function(){closeselfie=1;clearInterval(timeInverval);refresh_handler();}}]
+										}}]
 								});
 							}
+							if(getUrlVar('s') != '' && (getUrlVar('s') == 2) && fromtakephotopage == 1){	
+								if(customArray.productId != proID && customArray.productId != pro12 && customArray.productId != pro24 && customArray.productId != enterprise12 && customArray.productId != enterprise24 && customArray.productId != enterprise)
+									alertErrorPage('no access','Please upgrade to pro plan & above to access this feature');
+								else{
+									$.box_Dialog((typeof(defaultTextMessage.takeselfieB) != 'undefined' ? decodequote(defaultTextMessage.takeselfieB) : decodequote(defaultTextMessage2.takeselfieB)), {
+										'type':     'question',
+										'title':    '<span class="color-white">'+(typeof(defaultTextMessage.takeselfieT) != 'undefined' ? decodequote(defaultTextMessage.takeselfieT) : decodequote(defaultTextMessage2.takeselfieT))+' <img src="emoticons/smile.png" width="20" height="20" /><span>',
+										'center_buttons': true,
+										'show_close_button':false,
+										'overlay_close':false,
+										'buttons':  [{caption: (typeof(defaultButtonText.btntake) != 'undefined' ? decodequote(defaultButtonText.btntake[1]) : decodequote(defaultButtonText2.btntake[1])),callback:function(){
+												if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()))
+													setTimeout(function(){getPhoto();},200);
+												else
+													showCamera('#camera-modal');
+											}},{caption: (typeof(defaultButtonText.btntake) != 'undefined' ? decodequote(defaultButtonText.btntake[0]) : decodequote(defaultButtonText2.btntake[0])),callback:function(){closeselfie=1;clearInterval(timeInverval);refresh_handler();}}]
+									});
+								}
+							}
+					
+							if(getUrlVar('s') != '' && getUrlVar('s') == 5 && fromtakephotopage == 1){
+									$.box_Dialog((typeof(defaultTextMessage.surveyselfieB) != 'undefined' ? decodequote(defaultTextMessage.surveyselfieB) : decodequote(defaultTextMessage2.surveyselfieB)), {
+										'type':     'question',
+										'title':    '<span class="color-white">'+(typeof(defaultTextMessage.surveyselfieT) != 'undefined' ? decodequote(defaultTextMessage.surveyselfieT) : decodequote(defaultTextMessage2.surveyselfieT))+' <img src="emoticons/smile.png" width="20" height="20" /><span>',
+										'center_buttons': true,
+										'show_close_button':false,
+										'overlay_close':false,
+										'buttons':  [{caption: (typeof(defaultButtonText.btnfeedback) != 'undefined' ? decodequote(defaultButtonText.btnfeedback[1]) : decodequote(defaultButtonText2.btnfeedback[1])),callback:function(){
+												if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()))
+													setTimeout(function(){closeselfie=1;clearInterval(timeInverval);refresh_handler();getPhoto();},200);
+												else
+													showCamera('#camera-modal');
+											}},{caption: (typeof(defaultButtonText.btnfeedback) != 'undefined' ? decodequote(defaultButtonText.btnfeedback[0]) : decodequote(defaultButtonText2.btnfeedback[0])),callback:function(){closeselfie=1;clearInterval(timeInverval);refresh_handler();}}]
+									});
+								//}
+							}
+							var img = new Image();
+		        			img.onload = function() {
+		        				get_img = img;
+	        					setCanvas('profile');
+							};
+							img.src = customArray.webImg;
 						}
-				
-						if(getUrlVar('s') != '' && getUrlVar('s') == 5 && fromtakephotopage == 1){
-								$.box_Dialog((typeof(defaultTextMessage.surveyselfieB) != 'undefined' ? decodequote(defaultTextMessage.surveyselfieB) : decodequote(defaultTextMessage2.surveyselfieB)), {
-									'type':     'question',
-									'title':    '<span class="color-white">'+(typeof(defaultTextMessage.surveyselfieT) != 'undefined' ? decodequote(defaultTextMessage.surveyselfieT) : decodequote(defaultTextMessage2.surveyselfieT))+' <img src="emoticons/smile.png" width="20" height="20" /><span>',
-									'center_buttons': true,
-									'show_close_button':false,
-									'overlay_close':false,
-									'buttons':  [{caption: (typeof(defaultButtonText.btnfeedback) != 'undefined' ? decodequote(defaultButtonText.btnfeedback[1]) : decodequote(defaultButtonText2.btnfeedback[1])),callback:function(){
-											if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()))
-												setTimeout(function(){closeselfie=1;clearInterval(timeInverval);refresh_handler();getPhoto();},200);
-											else
-												showCamera('#camera-modal');
-										}},{caption: (typeof(defaultButtonText.btnfeedback) != 'undefined' ? decodequote(defaultButtonText.btnfeedback[0]) : decodequote(defaultButtonText2.btnfeedback[0])),callback:function(){closeselfie=1;clearInterval(timeInverval);refresh_handler();}}]
-								});
-							//}
-						}
-						var img = new Image();
-	        			img.onload = function() {
-	        				get_img = img;
-        					setCanvas('profile');
-						};
-						img.src = customArray.webImg;
 					}
 					/*
 					$.magnificPopup.open({
@@ -2107,7 +2125,7 @@ function setCanvasTest(imgData, widthTest, heightTest, value, type, bfont, afont
 		case "brandNameFont":
 			totalBrandNameWidthTest = brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
 
-			while(totalBrandNameWidthTest > widthTest)
+			while(totalBrandNameWidthTest >= widthTest)
 			{
 				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
 				brandNameFontTest = brandNameFontTest - 2;
@@ -2123,7 +2141,7 @@ function setCanvasTest(imgData, widthTest, heightTest, value, type, bfont, afont
 
 			totalAddressWidthTest = addressWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
 
-			while(totalAddressWidthTest > widthTest)
+			while(totalAddressWidthTest >= widthTest)
 			{
 				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
 				addressFontTest = addressFontTest - 2;
@@ -2247,3 +2265,17 @@ function rotateImage(canvasResize1, img)
 }
 
 // image processing end
+
+// DETECT IF IOS VERSION == 6
+function iOSversion() {
+  if (/iP(hone|od|ad)/.test(navigator.platform)) {
+    // supports iOS 2.0 and later: <http://bit.ly/TJjs1V>
+    var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+    return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+  }
+  else
+  {
+  	return [0];
+  }
+}
+//DETECT IF IOS VERSION == 6 end
