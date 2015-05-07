@@ -12,7 +12,7 @@ $connect = new db();
 $connect->db_connect();
 $remove =  new fucn();
 $opt = $_REQUEST['opt'];
-$data = array();
+$data = array(); 
 
 switch($opt){
 	case 'generateshorturl':
