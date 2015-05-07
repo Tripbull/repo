@@ -2107,7 +2107,7 @@ function setCanvasTest(imgData, widthTest, heightTest, value, type, bfont, afont
 		case "brandNameFont":
 			totalBrandNameWidthTest = brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
 
-			while(totalBrandNameWidthTest > widthTest)
+			while(totalBrandNameWidthTest >= widthTest)
 			{
 				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
 				brandNameFontTest = brandNameFontTest - 2;
@@ -2123,7 +2123,7 @@ function setCanvasTest(imgData, widthTest, heightTest, value, type, bfont, afont
 
 			totalAddressWidthTest = addressWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
 
-			while(totalAddressWidthTest > widthTest)
+			while(totalAddressWidthTest >= widthTest)
 			{
 				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
 				addressFontTest = addressFontTest - 2;
