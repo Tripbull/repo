@@ -4,14 +4,14 @@ var count=0,sharedphoto=0,isphototakedone=0,takeaphoto=0,urlphotoshared,business
 var defaultPostReview = {posted:1,percent:3.0},ratecomment='',timeInverval='',closeselfie=0,username='',hadlabel='';
 var defaultrating = {vpoor:'Very poor',poor:'Poor',fair:'Average',good:'Good',excellent:'Excellent'};
 var defaultButtonText2 = {logout:['okay'],follow:['no','yes'],badEmail:['no','yes'],allow:['cancel','submit'],btntake:['okay'],btnfeedback:['no','yes'],cambtnoption:['cancel','snap','discard','use']};
-var defaultButtonText = {logout:['okay'],follow:['no','yes'],comment:['skip','submit'],share:['no','yes'],nxt:['okay'],photo:['no','yes'],option:['cancel','login','reset'],pass:['cancel','submit'],badEmail:['no','yes'],allow:['cancel','submit'],cambtnoption:['cancel','snap','discard','use']};
+var defaultButtonText = {logout:['okay'],follow:['no','yes'],comment:['skip','proceed'],share:['no','yes'],nxt:['okay'],photo:['no','yes'],option:['cancel','login','reset'],pass:['cancel','submit'],badEmail:['no','yes'],allow:['cancel','submit'],cambtnoption:['cancel','snap','discard','use']};
 var defaultTextMessage2 = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Be a fan of <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'This won\'t work unless you snap a photo. You can either do your awesome selfie pose or take a photo of interesting things around you.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Press the &quot;yes&quot; button to agree with Tabluu\'s <privacy_policy_link>.'};
 var defaultTextMessage = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Be a fan of <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',takePhoto:'Take a new photo?',average:'Your average rating:',thank:'Thank you!',nxt:'Next reviewer, please.',option:'Choose an option…',pass:'Enter the password…',comment:'Please share your experience...',share:'Recommend &amp; share?',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'This won\'t work unless you snap a photo. You can either do your awesome selfie pose or take a photo of interesting things around you.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Press the &quot;yes&quot; button to agree with Tabluu\'s <privacy_policy_link>.'},resizeTimeout;
 var counter1 = 0,counter2 = 0,counter3 = 0,counter4 = 0,counter5 = 0,counter6 = 0,counter7 = 0,countertake=0,countershare=0;
 var questionDefault = ['How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again'];
 //live mode chargify ids
 var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619;
-var istest = false,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
+var istest = true,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
 
 function alertBox(title,message){ // testing
 	clearTimeout(resizeTimeout);
@@ -377,21 +377,30 @@ function ratevalue(rate,page){
 			'overlay_close':false,
 			'buttons':  [{caption: defaultButtonText.comment[1],callback:function(){
 				ratecomment = $('.comment-txt').val();
+				setRating();
+				/*
+				showLoader();
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId,success:function(link){
+					hideLoader();
+					$.fancybox({'type': 'iframe','scrolling':'no','closeEffect':'fade','closeClick':false,'overlayColor': '#000','href' :'user/ukw0cjn','overlayOpacity': 0.5});
+				}});
+				
 				if(defaultPostReview.posted > 0 && aveRated >= percent){
 					setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "share.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 500);
 				}else{
 					//alert(String(defaultTextMessage.followT))
 					pressyes();
-				}
-			}},{caption: defaultButtonText.comment[0],callback:function(){
+				} */ 
+			}}/*,{caption: defaultButtonText.comment[0],callback:function(){
 				ratecomment = '';
 				if(defaultPostReview.posted > 0 && aveRated >= percent){
 					setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "share.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 500);
 				}else{
 					pressyes();
 				}
-			}}]
-		});		
+			}} */]
+		});
+        setTimeout(function(){$('.comment-txt').focus()},400);		
 	}	
 }
 function setdefault(){
@@ -429,7 +438,7 @@ $(document).on('pageshow','#sharephoto', function() {
 })
 $(document).on('pageinit','#sharephoto', function() {
 	setRating(); // ADD RATING TEXT TO IMAGE AND SAVE
-
+    
 	if(getUrlVar('s') != '' && getUrlVar('s') == 2){
 		clearInterval(timeInverval);
 		refresh_handler();
@@ -699,6 +708,8 @@ function loginFb(){
 		refresh_handler();
 	}
 	 FB.login(function(response) {
+	    console.log(response);
+		/*
 	   if (response.authResponse) {
 	   		postFb();
 	   }else {
@@ -717,7 +728,7 @@ function loginFb(){
 					 alertNextUser(defaultTextMessage.thank,defaultTextMessage.nxt,defaultButtonText.nxt[0]);
 				}, 300);}}]
 			});		
-	   }
+	   } */
 	 },{scope: 'email,read_friendlists,publish_actions,user_photos'});   
 	 
 }
@@ -1929,11 +1940,18 @@ function setCanvas(img_type)
   	});
 }
 
+function createTempSharedPage(){
+	loginFb();
+	$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId+'&photo_url='+urlphotoshared,success:function(link){
+		hideLoader();
+		$.fancybox({'type': 'iframe','scrolling':'no','closeEffect':'fade','closeClick':false,'overlayColor': '#000','href' :'user/ukw0cjn-'+placeId,'overlayOpacity': 0.5});
+	}});
+}
+
 function setRating()
 {
 	var canvas = document.getElementById('canvas-image');
 	var context = canvas.getContext('2d');
-
 	var rate_1 =ratedObj[0];
 	var rate_2 =(typeof(ratedObj[1]) != 'undefined' ? ratedObj[1] : 0);
 	var rate_3 =(typeof(ratedObj[2]) != 'undefined' ? ratedObj[2] : 0);
@@ -1959,13 +1977,12 @@ function setRating()
 function saveToServer(canvas)
 {
 	var dataUrl = canvas.toDataURL('image/jpg', 0.1);
-
+    showLoader();
 	$.ajax({
 		type: "POST",
 		url: "saveimage.php",
 		data: {"placeId" : placeId, "dataUrl" : dataUrl},
 		success: function(data) {
-
 			if(photo_url == "profile")
 			{
 				photo_url = data;
@@ -1974,8 +1991,9 @@ function saveToServer(canvas)
 			{
 				urlphotoshared = data;
 			}
+			createTempSharedPage();
 			photo_saved = 1;
-			postFb();
+			//postFb();
 		}
 	});
 }

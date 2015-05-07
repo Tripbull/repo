@@ -13,7 +13,6 @@ $(document).ready(function() {
 
 		return false;
 	});
-	
 	function hideloader(){setTimeout(function(){$( "#overlay" ).hide();},1000);}
 	function scrollToTopCheck() {
 		if ( timer ) clearTimeout(timer);

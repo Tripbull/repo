@@ -2,8 +2,8 @@
 session_start();
   //check if this is an ajax request OR user session is not setting up
 if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || !isset($_SESSION['session'])){
-	echo 'access is forbidden';
-	die();
+	//echo 'access is forbidden';
+	//die();
 }
 include_once('class/class.textToImage.php');
 include_once("class/class.resizephoto.php");
@@ -28,6 +28,61 @@ switch($opt){
 		$imagesArray['source_'.$source]['source'] = $source;
 		$imagesArray['source_'.$source]['label'] = $label;
 		echo json_encode($imagesArray);
+	break;
+	case 'generatesharedurl':
+		$placeId = $_REQUEST['placeId'];$photo_url = $_REQUEST['photo_url'];
+		$table = 'sharedlink_'.$placeId;
+        $hadTable = $connect->tableIsExist($table);
+		if($hadTable < 1){
+			$sql1 = " CREATE TABLE IF NOT EXISTS `{$table}` (
+			`id` int(11) NOT NULL,
+			  `feedbackId` int(11) NOT NULL,
+			  `fbId` bigint(20) NOT NULL,
+			  `link` varchar(10) NOT NULL,
+			  `pathimg` varchar(200) NOT NULL,
+			  `isshared` tinyint(4) NOT NULL DEFAULT '0',
+			  `datecreated` datetime NOT NULL
+			) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+			$sql2 = "ALTER TABLE `{$table}` ADD PRIMARY KEY (`id`), ADD KEY `feedbackId` (`feedbackId`,`link`), ADD KEY `fbId` (`fbId`);";
+			mysql_query($sql1);
+			mysql_query($sql2);
+			mysql_query("ALTER TABLE `{$table}` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT");
+		}
+		$date = date('Y-m-d H:i:s');
+		$link = checksharedURL($table);
+		mysql_query("INSERT INTO {$table} SET link = '{$link}',pathimg = '{$photo_url}',datecreated='{$date}'");
+		$lastId = mysql_insert_id();
+		echo $link .'_'.$lastId;
+	break;
+	case 'checkvanity':
+		$placeId = $_REQUEST['placeId'];$str = $_REQUEST['str'];
+		$link = $remove->cleanurl($str);
+		$result = mysql_query("SELECT id FROM businessvanitylink WHERE link = '{$link}'");//check if source is existed
+		if(mysql_num_rows($result)){ // existed update it
+			echo 'exist';
+		}else
+			echo $link;
+		
+	break;
+	case 'updatevanity':
+		$placeId = $_REQUEST['placeId'];
+		if($_REQUEST['case'] == 1){
+			$str = $_REQUEST['str'];
+			$link = $remove->cleanurl($str);
+			$result = mysql_query("SELECT id FROM businessvanitylink WHERE link = '{$link}'");//check if source is existed
+			if(mysql_num_rows($result)){ // existed update it
+				echo 'exist';
+			}else{
+				$result = mysql_query("SELECT id FROM businessvanitylink WHERE placeId = {$placeId}");//check if source is existed
+				if(mysql_num_rows($result))
+					mysql_query("UPDATE businessvanitylink SET link = '{$link}' WHERE placeId = {$placeId}");
+				else
+					$query = mysql_query("INSERT INTO businessvanitylink SET link = '{$link}',placeId = {$placeId}") or die(mysql_error());
+				echo $link;
+			}
+		}else if($_REQUEST['case'] == 2){
+			mysql_query("UPDATE businessvanitylink SET link = '' WHERE placeId = {$placeId}");
+		}
 	break;
 	case 'setLoc':
 		$userId = $_REQUEST['key'];
@@ -86,13 +141,9 @@ switch($opt){
 	break;	
 	case 'profile':
 		$placeId = $_REQUEST['placeId'];
-		$category = mysql_real_escape_string($_REQUEST['select-category']);$txtname = mysql_real_escape_string($_REQUEST['txtname']);$txtadd = mysql_real_escape_string($_REQUEST['txtadd']);$txtcity = mysql_real_escape_string($_REQUEST['txtcity']);$txtcountry = mysql_real_escape_string($_REQUEST['txtcountry']);$txtzip = mysql_real_escape_string($_REQUEST['txtzip']);$txtpho = mysql_real_escape_string($_REQUEST['txtpho']);$txtfb = mysql_real_escape_string($_REQUEST['txtfb']);$txtweb = mysql_real_escape_string($_REQUEST['txtweb']);$txtemail = mysql_real_escape_string($_REQUEST['txtproemail']);$txtlink = mysql_real_escape_string($_REQUEST['txtlink']);$txttwit = mysql_real_escape_string($_REQUEST['txttwit']);$txtbooknowlabel = mysql_real_escape_string($_REQUEST['txtbooknowlabel']);$txtbooknow = mysql_real_escape_string($_REQUEST['txtbooknow']);$txtlabel = mysql_real_escape_string($_REQUEST['txtlabel']);$lng = $_REQUEST['lng'];$lat = $_REQUEST['lat'];
-		if($txtbooknowlabel == '')
-		{
-			$txtbooknowlabel = 'Book Now';
-		}
+		$category = mysql_real_escape_string($_REQUEST['select-category']);$txtname = mysql_real_escape_string($_REQUEST['txtname']);$txtadd = mysql_real_escape_string($_REQUEST['txtadd']);$txtcity = mysql_real_escape_string($_REQUEST['txtcity']);$txtcountry = mysql_real_escape_string($_REQUEST['txtcountry']);$txtzip = mysql_real_escape_string($_REQUEST['txtzip']);$txtpho = mysql_real_escape_string($_REQUEST['txtpho']);$txtfb = mysql_real_escape_string($_REQUEST['txtfb']);$txtweb = mysql_real_escape_string($_REQUEST['txtweb']);$txtemail = mysql_real_escape_string($_REQUEST['txtproemail']);$txtbooknow = mysql_real_escape_string($_REQUEST['txtbooknow']);$txtlabel = mysql_real_escape_string($_REQUEST['txtlabel']);$lng = $_REQUEST['lng'];$lat = $_REQUEST['lat'];
 		mysql_query("UPDATE businessList SET businessName='$txtname', label='{$txtlabel}' WHERE id = $placeId");
-		$sql = "UPDATE businessProfile SET businessName='$txtname', category='$category', address='$txtadd', city='$txtcity', country='$txtcountry', zip='$txtzip', contactNo='$txtpho', facebookURL='$txtfb', websiteURL='$txtweb', linkedinURL='$txtlink', twitterURL='$txttwit', booknowlabel='$txtbooknowlabel', booknow='$txtbooknow', email='$txtemail', latitude=$lat, longitude=$lng WHERE profilePlaceId = $placeId";
+		$sql = "UPDATE businessProfile SET businessName='$txtname', category='$category', address='$txtadd', city='$txtcity', country='$txtcountry', zip='$txtzip', contactNo='$txtpho', facebookURL='$txtfb', websiteURL='$txtweb', booknow='$txtbooknow', email='$txtemail', latitude=$lat, longitude=$lng WHERE profilePlaceId = $placeId";
 		mysql_query($sql);
 		if(mysql_affected_rows()){
 			echo mysql_affected_rows();		
@@ -316,38 +367,7 @@ switch($opt){
 			$cookie = new cookie();
 			$cookie->setCookie( $lastId );
 		}else{
-				$date = date('Y-m-d H:i:s');$whatsignup = 'monthly basic plan';$idplan = $connect->basicID;
-				if($_SESSION['type'] == 1 && $_SESSION['plan'] == 'basic'){
-					$whatsignup = 'monthly basic plan';$idplan = $connect->basicID;
-				}else if($_SESSION['type'] == 1 && $_SESSION['plan'] == 'pro'){
-					$whatsignup = 'monthly pro plan';$idplan = $connect->proID;
-				}else if($_SESSION['type'] == 1 && $_SESSION['plan'] == 'enterprise'){
-					$whatsignup = 'monthly enterprise plan';$idplan = $connect->enterprise;
-				}else if($_SESSION['type'] == 2 && $_SESSION['plan'] == 'basic'){
-					$whatsignup = '1 yearly basic plan';$idplan = $connect->basic12;
-				}else if($_SESSION['type'] == 2 && $_SESSION['plan'] == 'pro'){
-					$whatsignup = '1 yearly pro plan';$idplan = $connect->pro12;
-				}else if($_SESSION['type'] == 2 && $_SESSION['plan'] == 'enterprise'){
-					$whatsignup = '1 yearly enterprise plan';$idplan = $connect->enterprise12;
-				}else if($_SESSION['type'] == 3 && $_SESSION['plan'] == 'basic'){
-					$whatsignup = '2 yearly basic plan';$idplan = $connect->basic24;
-				}else if($_SESSION['type'] == 3 && $_SESSION['plan'] == 'pro'){
-					$whatsignup = '2 yearly pro plan';$idplan = $connect->pro24;
-				}else if($_SESSION['type'] == 3 && $_SESSION['plan'] == 'enterprise'){
-					$whatsignup = '2 yearly enterprise plan';$idplan = $connect->enterprise24;
-				}
-					
-					$result = mysql_query("INSERT INTO businessUserGroup SET productId=". $idplan .", email='$email',state='notactive',addLoc=0,created='$date',type=0") or die(mysql_error());
-					$tail = '<p>He/She signed up '.$whatsignup.'</p>';
-					$groupId = mysql_insert_id();
-					echo json_encode(array('type'=>$idplan,'groupId'=>$groupId));
-					$sql = "INSERT INTO businessUsers SET userGroupId=$groupId,fname='$fname',lname='$lname',pwd='".$pwd."',email='$email'";
-					mysql_query($sql) or die(mysql_error());
-					$time = time();
-					$name =$fname.' '.$lname; //optional
-					$join_date = round(time()/60)*60;
-					mysql_query('INSERT INTO subscribers (userID, email, name, custom_fields, list, timestamp, join_date) VALUES (1, "'.$email.'", "'.$name.'", "", 2, '.$time.', '.$join_date.')');
-				/*
+				$date = date('Y-m-d H:i:s');
 				if(isset($_SESSION['typeofaccnt']) && $_SESSION['typeofaccnt'] == 'a'){ //alpha pre launch
 					$_SESSION['typeofaccnt'] = '';
 					$next_due_date = strtotime(date('Y-m-d H:i:s').' + 12 Months');
@@ -378,16 +398,20 @@ switch($opt){
 					echo json_encode(array('type'=>0));
 					$groupId = mysql_insert_id();
 			    }
-				*/
 				
-				//$lastId = mysql_insert_id();
-				//$cookie = new cookie();
-				//$cookie->setCookie( $lastId );
-				//$subject = 'Tabluu - New Sign up user'; 
-				//$body = '<p>Customer name: '. $fname . ' ' . $lname . '</p>'.$tail; 
-				//sendEmail('support@tabluu.com',$subject,$body);
+				$sql = "INSERT INTO businessUsers SET userGroupId=$groupId,fname='$fname',lname='$lname',pwd='".$pwd."',email='$email'";
+				mysql_query($sql) or die(mysql_error());
+				$lastId = mysql_insert_id();
+				$cookie = new cookie();
+				$cookie->setCookie( $lastId );
+				$subject = 'Tabluu - New Sign up user'; 
+				$body = '<p>Customer name: '. $fname . ' ' . $lname . '</p>'.$tail; 
+				sendEmail('support@tabluu.com',$subject,$body);
 				/*insert the new user to email list sendy*/
-				
+				$time = time();
+				$name =$fname.' '.$lname; //optional
+				$join_date = round(time()/60)*60;
+				mysql_query('INSERT INTO subscribers (userID, email, name, custom_fields, list, timestamp, join_date) VALUES (1, "'.$email.'", "'.$name.'", "", 2, '.$time.', '.$join_date.')');
 		}
 	break;
 	case 'wizardsetupdone':
@@ -480,14 +504,6 @@ switch($opt){
 			 sendEmail($email,$subject,$body);
 		}
 	break;
-	case 'getImgData':
-
-		$id = $_REQUEST['placeId'];
-
-		$bresult = mysql_query("SELECT `businessName`, `address`, `city`, `country`, `zip`, `contactNo` FROM `businessProfile` WHERE `profilePlaceId` = $id");
-		$row = mysql_fetch_array($bresult);
-		echo json_encode($row);
-	break;
 	case 'ratesave':
 	    switch($_REQUEST['case']){
 			case 1:
@@ -503,48 +519,170 @@ switch($opt){
 				echo $lastId = mysql_insert_id();
 			break;
 			case 2:
+				if($_REQUEST['photo_url'] != '')
+					$connect->rotateImages($_REQUEST['photo_url']);
 				$rated1 = $_REQUEST['rated1'];$rated2 = $_REQUEST['rated2'];$rated3 = $_REQUEST['rated3'];$rated4 = $_REQUEST['rated4'];$rated5 = $_REQUEST['rated5'];$rated6 = $_REQUEST['rated6'];$rated7 = $_REQUEST['rated7'];$aveRated = $_REQUEST['aveRate'];$comment = $_REQUEST['comment']; $userName = $_REQUEST['userName'];$userId = $_REQUEST['userId'];$photo_url = (trim($_REQUEST['photo_url']) != '' ? $_REQUEST['photo_url'] : 'https://www.tabluu.com/app/images/desktop_default.png');$id = $_REQUEST['placeId'];$date = date('Y-m-d H:i:s');$email = $_REQUEST['email'];$source = $_REQUEST['source'];$param = $_REQUEST['param'];
 				$data = $_REQUEST['data'];$totalFriends = $_REQUEST['totalFriends'];$label = $_REQUEST['label'];$textimg_height = 80;$tranparent = 85;
-				$tempPhoto = $_REQUEST['tempPhoto'];
 				$addnewfield = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'feedsource'") or die(mysql_error());
 				if(mysql_num_rows($addnewfield) < 1)
 					mysql_query("ALTER TABLE `businessplace_$id` ADD `feedsource` VARCHAR(2) NOT NULL AFTER `source`");
 				$addnewfield1 = mysql_query("SHOW COLUMNS FROM `businessplace_$id` LIKE 'labelId'") or die(mysql_error());
 				if(mysql_num_rows($addnewfield1) < 1)
 					mysql_query("ALTER TABLE `businessplace_$id` ADD `labelId` INT NOT NULL AFTER `source`");	
-				
 				if($_REQUEST['socialopt']){ //options to post social customer photo selected
 					if(strstr($photo_url,'shared')){
-						
+						$bresult = mysql_query("SELECT `businessName` FROM `businessList` WHERE `id` = $id");
+						$row = mysql_fetch_object($bresult);
+						$UploadDirectory    = 'images/shared/'.$id.'/';
+						$image = new Photos();
+						$namejpg = rand(); 
+						$tempf1 = $UploadDirectory.$namejpg.'.jpg';
+						copy($photo_url,$tempf1);
+						$image->load($tempf1);
+						if($image->getWidth() >= 1000)
+						  $image->scale(40);
+						if($image->getWidth() > 500 && $image->getWidth() < 1000)
+						  $image->scale(80); 
+						$image->save($tempf1,$image->image_type);  
+						$_im = new TextToImage();
+						$_im->makeImage($image->getWidth(),$textimg_height);
+						$_im->createText('See my "selfie review"',dirname(__FILE__)."/myriad.ttf");
+						$_im->createText("\n@ ".$row->businessName,dirname(__FILE__)."/myriad.ttf");
+						$namejpg = rand();
+						$_im->saveAsJpg("jpg".$namejpg,$UploadDirectory);
+						$p1 = $tempf1;
+						$p2 = $UploadDirectory."jpg".$namejpg.'.jpg'; //caption for photo
+						if( $image->image_type == 2 ) { // jpg
+						 $dest = imagecreatefromjpeg($tempf1);
+						} elseif( $image->image_type == 1 ) { //gif
+						 $dest = imagecreatefromgif($tempf1);
+						} elseif( $image->image_type == 3 ) { //png
+						 $dest = imagecreatefrompng($tempf1);
+						}
+						$caption = imagecreatefromjpeg($p2);
+						$namejpg = rand();
+						echo $sharepic = $UploadDirectory.$namejpg.'.jpg';
+						imagecopymerge($dest, $caption, 0, $image->getHeight()-$textimg_height, 0, 0, $image->getWidth(), $textimg_height, $tranparent);
+						imagejpeg($dest,$sharepic);
+						greyscale($sharepic);
+						imagedestroy($dest);imagedestroy($caption);
+						unlink($tempf1);unlink($p2);
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						//echo $last_Id.'_'.$lastId; 
-						echo $photo_url;
-					}
-					else{	
-
-						$photo_url = '';
-
+						//echo $photo_url;
+					}else{	
+						$namejpg = rand();
+						$UploadDirectory    = 'images/shared/'.$id.'/';
+						if (!file_exists('images/shared/'.$id))
+							mkdir('images/shared/'.$id, 0777);
+						$profileimage = $UploadDirectory.$namejpg.'.jpg';
+						//copy("https://graph.facebook.com/$userId/picture?width=400&height=400", 'images/'.$namejpg.'.jpg');	
+		
+$headers = get_headers("https://graph.facebook.com/$userId/picture?width=400&height=400",1);
+$url = $headers['Location']; //fb user image URL
+$ch = curl_init( $url );
+$fp = fopen( $profileimage, 'wb');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+curl_setopt($ch, CURLOPT_FILE, $fp);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+curl_exec($ch);
+curl_close($ch);
+fclose($fp);
+						$bresult = mysql_query("SELECT `businessName` FROM `businessList` WHERE `id` = $id");
+						$row = mysql_fetch_object($bresult);
+						$image = new Photos();
+						$image->load($profileimage);
+						if($image->getWidth() > 1000)
+						  $image->scale(40);
+						if($image->getWidth() > 500 && $image->getWidth() < 1000)
+						  $image->scale(80); 
+						$image->save($profileimage,$image->image_type);  
+						$_im = new TextToImage();
+						$_im->makeImage($image->getWidth(),$textimg_height);
+						$_im->createText('See my "selfie review"',dirname(__FILE__)."/myriad.ttf");
+						$_im->createText("\n@ ".$row->businessName,dirname(__FILE__)."/myriad.ttf");
+						$namejpg = rand();
+						$_im->saveAsJpg("jpg".$namejpg,$UploadDirectory);
+						$p1 = $profileimage;
+						$p2 = $UploadDirectory."jpg".$namejpg.'.jpg';
+						if( $image->image_type == 2 ) { // jpg
+						 $dest = imagecreatefromjpeg($profileimage);
+						} elseif( $image->image_type == 1 ) { //gif
+						 $dest = imagecreatefromgif($profileimage);
+						} elseif( $image->image_type == 3 ) { //png
+						 $dest = imagecreatefrompng($profileimage);
+						}
+						$src = imagecreatefromjpeg($p2);
+						$namejpg = rand();
+						echo $sharepic = $UploadDirectory.$namejpg.'.jpg';
+						imagecopymerge($dest, $src, 0, $image->getHeight()-$textimg_height, 0, 0, $image->getWidth(), $textimg_height, $tranparent);
+						imagejpeg($dest,$sharepic);
+						greyscale($sharepic);
+						imagedestroy($dest);imagedestroy($src);
+						unlink($p2);unlink($profileimage);
+						$photo_url='';
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						//echo $last_Id.'_'.$lastId;
-						echo $tempPhoto;
+						//echo $photo_url;
 					} 
 				}else{
 					if(strstr($photo_url,'shared')){
-						
+						$bresult = mysql_query("SELECT `businessName` FROM `businessList` WHERE `id` = $id");
+						$row = mysql_fetch_object($bresult);
+						$UploadDirectory    = 'images/shared/'.$id.'/';
+						$image = new Photos();
+						$namejpg = rand(); 
+						$tempf1 = $UploadDirectory.$namejpg.'.jpg';
+						copy($photo_url,$tempf1);
+						$image->load($tempf1);
+						if($image->getWidth() >= 1000)
+						  $image->scale(40);
+						if($image->getWidth() > 500 && $image->getWidth() < 1000)
+						  $image->scale(80); 
+						$image->save($tempf1,$image->image_type);  
+						$_im = new TextToImage();
+						$_im->makeImage($image->getWidth(),$textimg_height);
+						$_im->createText('See my "selfie review"',dirname(__FILE__)."/myriad.ttf");
+						$_im->createText("\n@ ".$row->businessName,dirname(__FILE__)."/myriad.ttf");
+						$namejpg = rand();
+						$_im->saveAsJpg("jpg".$namejpg,$UploadDirectory);
+						$p1 = $tempf1;
+						$p2 = $UploadDirectory."jpg".$namejpg.'.jpg'; //caption for photo
+						if( $image->image_type == 2 ) { // jpg
+						 $dest = imagecreatefromjpeg($tempf1);
+						} elseif( $image->image_type == 1 ) { //gif
+						 $dest = imagecreatefromgif($tempf1);
+						} elseif( $image->image_type == 3 ) { //png
+						 $dest = imagecreatefrompng($tempf1);
+						}
+						$caption = imagecreatefromjpeg($p2);
+						$namejpg = rand();
+						echo $sharepic = $UploadDirectory.$namejpg.'.jpg';
+						imagecopymerge($dest, $caption, 0, $image->getHeight()-$textimg_height, 0, 0, $image->getWidth(), $textimg_height, $tranparent);
+						imagejpeg($dest,$sharepic);
+						greyscale($sharepic);
+						imagedestroy($dest);imagedestroy($caption);
+						unlink($tempf1);unlink($p2);
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						//echo $last_Id.'_'.$lastId; 
-						echo $photo_url;
+						//echo $photo_url;
 					}else{
-
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
@@ -555,6 +693,7 @@ switch($opt){
 				}
 			break;
 		}
+		
 	break;
 	case 'photoshare':
 		$rated1 = $_REQUEST['rated1'];$rated2 = $_REQUEST['rated2'];$rated3 = $_REQUEST['rated3'];$rated4 = $_REQUEST['rated4'];$rated5 = $_REQUEST['rated5'];$rated6 = $_REQUEST['rated6'];$rated7 = $_REQUEST['rated7'];$aveRated = $_REQUEST['aveRate'];$comment = $_REQUEST['comment']; $userName = $_REQUEST['userName'];$userId = $_REQUEST['userId'];$photo_url = $_REQUEST['photo_url'];$id = $_REQUEST['placeId'];$date = date('Y-m-d h:i:s');$email = $_REQUEST['email'];
@@ -712,7 +851,6 @@ switch($opt){
 			  `date` datetime NOT NULL,
 			  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
-			
 			$sql2 = "CREATE TABLE IF NOT EXISTS `businessCustomer_$id` (
 			  `id` int(11) NOT NULL AUTO_INCREMENT,
 			  `placeId` int(11) NOT NULL,
@@ -725,12 +863,27 @@ switch($opt){
 			  `data` longtext NOT NULL,
 			  PRIMARY KEY (`id`),
 			  KEY `follow` (`follow`)
-			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";	
+			) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+			$sql3 = " CREATE TABLE IF NOT EXISTS `sharedlink_$id` (
+			`id` int(11) NOT NULL,
+			  `feedbackId` int(11) NOT NULL,
+			  `fbId` bigint(20) NOT NULL,
+			  `link` varchar(10) NOT NULL,
+			  `pathimg` varchar(200) NOT NULL,
+			  `isshared` tinyint(4) NOT NULL DEFAULT '0',
+			  `datecreated` datetime NOT NULL
+			) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+			$sql4 = "ALTER TABLE `{$table}` ADD PRIMARY KEY (`id`), ADD KEY `feedbackId` (`feedbackId`,`link`), ADD KEY `fbId` (`fbId`);";
+			$sql5 = "ALTER TABLE `sharedlink_$id` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT";
 			mysql_query($sql);
 			mysql_query($sql2);
+			mysql_query($sql3);
+			mysql_query($sql4);
+			mysql_query($sql5);
 			mysql_query("UPDATE businessCustom SET settingsItem= 1 WHERE customPlaceId = $id");
 		}else{
 			mysql_query("DROP TABLE IF EXISTS businessplace_$id");
+			mysql_query("DROP TABLE IF EXISTS sharedlink_$id");
 			mysql_query("UPDATE businessCustom SET settingsItem= 0 WHERE customPlaceId = $id");
 		}	
 	break;
@@ -818,6 +971,19 @@ function checkshortULR(){
 	$result = mysql_query("SELECT id,source FROM businessshorturl WHERE link = '{$link}'");//check if link is existed
 	if(mysql_num_rows($result))
 		checkshortULR();
+	else
+		return $link; 
+	$connect->db_connect();	
+}
+function checksharedURL($table){
+	include_once('class/class.main.php');
+	$connect = new db();
+	$connect->db_connect();
+	$con =  new fucn();
+	$link = strtolower($con->rand_string( 7 ));
+	$result = mysql_query("SELECT id FROM {$table} WHERE link = '{$link}'");//check if link is existed
+	if(mysql_num_rows($result))
+		checksharedURL();
 	else
 		return $link; 
 	$connect->db_connect();	
