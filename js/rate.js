@@ -2105,33 +2105,33 @@ function setCanvasTest(imgData, widthTest, heightTest, value, type, bfont, afont
 			return widthOffsetTest;
 		break;
 		case "brandNameFont":
-			totalBrandNameWidthTest = brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
+			totalBrandNameWidthTest = brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest+(widthTest*0.05);
 
 			while(totalBrandNameWidthTest >= widthTest)
 			{
 				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
-				brandNameFontTest = brandNameFontTest - 2;
+				brandNameFontTest = brandNameFontTest - 1;
 				contextTest.font = brandNameFontTest + "pt myriadpro";
 				contextTest.fillText(brandNameTest,0,0);
 				brandNameWidthTest = contextTest.measureText(brandNameTest).width;
 
-				totalBrandNameWidthTest = brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
+				totalBrandNameWidthTest = brandNameWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest+(widthTest*0.05);
 			}
 			return brandNameFontTest;
 		break;
 		case "addressFont":
 
-			totalAddressWidthTest = addressWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
+			totalAddressWidthTest = addressWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest+(widthTest*0.05);
 
 			while(totalAddressWidthTest >= widthTest)
 			{
 				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
-				addressFontTest = addressFontTest - 2;
+				addressFontTest = addressFontTest - 1;
 				contextTest.font = addressFontTest + "pt Lato-Light";
 				contextTest.fillText(addressTest,0,0);
 				addressWidthTest = contextTest.measureText(addressTest).width;
 
-				totalAddressWidthTest = addressWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest;
+				totalAddressWidthTest = addressWidthTest+ratingWidthTest+maxRatingWidthTest+widthOffsetAddTest+(widthTest*0.05);
 			}
 			return addressFontTest;
 		break;
