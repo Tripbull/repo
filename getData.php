@@ -648,11 +648,21 @@ switch($opt){
 			mysql_query("INSERT INTO businessImages (placeId,path,name) VALUES($placeId,'".$row->fbImg."','fbImg'),($placeId,'".$row->webImg."','webImg'),($placeId,'".$row->webImg2."','webImg2'),($placeId,'".$row->webImg3."','webImg3'),($placeId,'".$row->webImg4."','webImg4'),($placeId,'".$row->webImg5."','webImg5'),($placeId,'".$row->webImg6."','webImg6'),($placeId,'".$row->webImg7."','webImg7'),($placeId,'".$row->webImg8."','webImg8')") or die(mysql_error());
 			$imagesArray['fbImg'] = $row->fbImg;
 		}
-		$result2 = mysql_query("SELECT path FROM businessImages AS ps WHERE placeId = ".$a1['placeId']." AND name = 'webImg' LIMIT 1") or die(mysql_error());
+		$result2 = mysql_query("SELECT path,name FROM businessImages AS ps WHERE placeId = ".$a1['placeId']." AND name IN ('webImg', 'webImg2', 'webImg3', 'webImg4', 'webImg5', 'webImg6', 'webImg7', 'webImg8')") or die(mysql_error());
 		$imagesArray1 = array();
 		if(mysql_num_rows($result2)){
-			$row1 = mysql_fetch_object($result2);
-			$imagesArray1['webImg'] = $row1->path;
+			while($row1 = mysql_fetch_object($result2)){
+			 	if($row1->name == 'webImg' && $row1->path != '')
+			 	{
+					$imagesArray1['webImg'] = $row1->path;
+					break;
+			 	}
+			 	else if($row1->path != '')
+			 	{
+					$imagesArray1['webImg'] = $row1->path;
+					break;
+			 	}
+			}
 		}
 		echo json_encode(array_merge($a1,$imagesArray,$imagesArray1));
 		//print_r(mysql_fetch_object($result));
