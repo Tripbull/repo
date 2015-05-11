@@ -105,6 +105,31 @@
 								</div>	
 							</section>
 							<section class="setup-cust-post hide">
+							    <!--
+								<form id="frmpost2social" action="#" method="post" enctype="multipart/form-data" >
+							    <div class="clear" style="padding-top:0.5em"></div>
+								<p>Customize your message's title by editing the following...</p>
+								<div class="clear" style="padding-top:0.5em"></div>
+								<textarea cols="20" rows="1" style="resize:none" name="postdesc" id="postdesc">My "Selfie Review" of <brand></textarea>
+								<div class="clear" style="padding-top:0.5em"></div>
+								<p>Preview:<br/><span class="preview2">My "Selfie Review" of</p>	
+								<div class="clear" style="padding-top:1em"></div>
+								<p>Customize your message's description by editing the following...</p>	
+								<div class="clear" style="padding-top:0.5em"></div>	
+								 <textarea cols="20" rows="2" style="resize:none" name="txtFBPost" id="txtFBPost">See my "Selfie Review" of <brand> here! <tabluu_url> <brand>, <address>, <tel>.</textarea>
+								  <div class="clear" style="padding-top:1em"></div>
+								 <p>Preview:<br/><span class="preview">See my "Selfie Review" of Tokyo Cafe 4.3 out of 5. Awesome! Go to: <span style="text-decoration:underline;color:blue;">http://tabluu.com/ukw0cjn.html</span> - Addr: Spui 15 (tramhalte Spui), Amsterdam, Netherlands. Tel: 020-489 7918.</span></p>	
+								 <div class="clear" style="padding-top:1em"></div>
+								 <p>Note: <br/>The &lt;comment&gt;, &lt;brand&gt; &amp; &lt;tabluu_url&gt; tags are mandatory.</p>
+								 <div class="clear" style="padding-top:0.5em"></div>								 
+								 <div class="btn-submit">
+									<button class="ui-btn" id="fblinkupdate">Update</button>
+								</div>	
+								<div class="clear" style="padding-top:0.5em"></div>	
+								<div class="btn-submit">
+									<button class="ui-btn" id="fblinkreset">Reset</button>
+								</div>
+								</form> -->
 								<p>Customize your Facebook post by editing the following...</p>	
 								<div class="clear" style="padding-top:0.5em"></div>	
 								 <textarea cols="20" rows="3" style="resize:none" name="txtFBPost" id="txtFBPost">See my "Selfie Review" of <brand> here! <tabluu_url> <brand>, <address>, <tel>.</textarea>

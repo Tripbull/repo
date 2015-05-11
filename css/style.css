@@ -412,7 +412,20 @@ p.ratetxt{margin: 0 auto;width:70%;}
 	background: transparent !important;
     padding: 10px;
 }
-
+.fluidMedia {
+    position: relative;
+    padding-bottom: 70%; /* proportion value to aspect ratio 16:9 (9 / 16 = 0.5625 or 56.25%) */
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+}
+.fluidMedia iframe {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 /* for iphone 325px */
 @media (max-width: 20.3em){
 	.main-wrap .left-content{max-width:100%;height:100%;background:#E6E7E8;}
@@ -442,6 +455,7 @@ p.ratetxt{margin: 0 auto;width:70%;}
 	#alpha .bullet li {font-size: 17px;}
 	p.title-2{font-size:18px;}
 	h3.subtitle-2{font-size:25px;}
+	.fluidMedia {padding-bottom: 100%;}
 }
 
 /* for htc 600px */
@@ -466,6 +480,7 @@ p.ratetxt{margin: 0 auto;width:70%;}
 	#login #popup-prob-login .wrap{width:80%;margin:0 auto;padding-top:20px;}
 	.pop-comment .title-comment{font-size:0.6em;}
 	.pop-comment a{height:20px;font-size:0.8em;min-width: 60px;}	
+	.fluidMedia {padding-bottom: 80%;}
 }
 @media (max-width: 62em){
 	#reviews .divwrap{font-size:12px;}
@@ -489,6 +504,7 @@ p.ratetxt{margin: 0 auto;width:70%;}
 /* for desktop 900px */
 @media (max-width: 30em){
 	 p.ratetxt{width:90%;}
+	 .fluidMedia {padding-bottom: 90%;}
 }
 /* for desktop 900px */
 @media (min-width: 46.875em) and (max-width: 56.25em){

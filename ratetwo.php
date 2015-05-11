@@ -11,7 +11,7 @@ $address = $_SESSION['address'];
 	<meta name="robots" content="index, follow"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<script type='text/javascript'>window.location='rateone.html?p=<?php echo $_REQUEST['p'] . (isset($_REQUEST['s']) ? '&s='.$_REQUEST['s'] : '' ) ?>'</script>
+	<script type='text/javascript'>window.location='rateone.html?<?php echo  $_SERVER['QUERY_STRING']; ?>'</script>
 
 </head>
 <body>

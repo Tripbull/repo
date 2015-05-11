@@ -8,7 +8,7 @@ var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 
 var com_basicID=26331,com_basic12 = 39047,com_basic24 = 39048,com_proID=26332,com_pro12 = 39050,com_pro24 = 39051,com_enterprise=26333,com_enterprise12 =39053,com_enterprise24 =39054,newentryloc = 0; 
 //compoentprice
 com_basicID_price=9.90,com_basic12_price = 99.00,com_basic24_price = 178.20,com_proID_price=29.90,com_pro12_price = 299.00,com_pro24_price = 538.20,com_enterprise_price=59.90,com_enterprise12_price =599.00,com_enterprise24_price =1078.20;
-var istest=false,domainpath='',pathfolder='';
+var istest=true,domainpath='',pathfolder='';
 var creditsFree=0,creditsBasic = 2000, creditsPro = 5000, creditsEnterprise = 10000,creditsPrise = 6000;
 var newplaceId,profilewizardsetup=0,profilewizardwebImg = 0,uicwizardsetup=0,questionwizardsetup=0,emailwizardsetup=0,resizeTimeout,isdonewizard=0;
 var state_Array = ['unpaid','canceled'];
@@ -6203,13 +6203,74 @@ $(document).on('pageshow','#fbpost', function () {
 	/* end of code for panel-post */	
 	
 	/* code for setup-cust-post */
+	/*
+	console.log($.isPlainObject(customArray.fbpost));
+	if(customArray.fbpost != ''){
+		if($.isPlainObject(customArray.fbpost))
+			arrayfbpost = $.parseJSON(customArray.fbpost);
+		else
+			arrayfbpost = {fbpost:customArray.fbpost,postdesc:'My "Selfie Review" of <brand>'}
+	}else{
+		arrayfbpost = {fbpost:'<comment>. <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>',postdesc:'My "Selfie Review" of <brand>'}
+	}
+	console.log(arrayfbpost.fbpost);
+	if(arrayfbpost.fbpost != ''){
+			var address = customArray.address +', '+ customArray.city +', '+customArray.country;
+			var preview = String(customArray.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
+			$('.preview').html(preview);
+			$('#txtFBPost').val(customArray.fbpost);
+	}else{
+		var defaultstr = arrayfbpost.fbpost;
+		var address = customArray.address +', '+ customArray.city +', '+customArray.country;
+		var preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
+		$('#txtFBPost').val(defaultstr);
+		$('.preview').html(preview);
+	}	
+	if(arrayfbpost.postdesc != ''){
+			var preview = String(arrayfbpost.postdesc).replace(/<brand>/g,customArray.businessName);
+			$('.preview2').html(preview);
+			$('#postdesc').val(arrayfbpost.postdesc);
+	}else{
+		var defaultstr = arrayfbpost.postdesc;
+		var preview = String(defaultstr).replace(/<brand>/g,customArray.businessName);
+		$('#postdesc').val(defaultstr);
+		$('.preview2').html(preview);
+	}
+	$("#fblinkupdate").click(function (e){ 
+		places = locId.split('|');
+		var found= true;
+		
+		if($('#txtFBPost').val().search(/<brand>/i) == '-1'){
+			found = false;
+			uicAlertBox('incorrect entry / entries','Please ensure that "&lt;comment&gt",, "&lt;brand&gt" and "&lt;tabluu_url&gt" are used or entered correctly.','#txtFBPost');
+		}else if($('#txtFBPost').val().search(/<tabluu_url>/i) == '-1'){
+			found = false;
+			uicAlertBox('incorrect entry / entries','Please ensure that "&lt;comment&gt", "&lt;brand&gt" and "&lt;tabluu_url&gt" are used or entered correctly.','#txtFBPost');
+		}else if($('#txtFBPost').val().search(/<comment>/i) == '-1'){
+			found = false;
+			uicAlertBox('incorrect entry / entries','Please ensure that "&lt;comment&gt", "&lt;brand&gt" and "&lt;tabluu_url&gt" are used or entered correctly.','#txtFBPost');	
+		}
+		if(found){
+			showLoader();
+			var address = customArray.address +', '+ customArray.city +', '+customArray.country;
+			var preview = String($('#txtFBPost').val()).replace(/<brand>/,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
+			var preview2 = String($('#txtFBPost').val()).replace(/<brand>/,customArray.businessName);
+			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=fblink&'+$('#frmpost2social').serialize(),success:function(lastId){
+				hideLoader();
+				customArray.fbpost = {fbpost:$('#txtFBPost').val(),postdesc:$('#postdesc').val()}
+				$('.preview').html(preview);
+				$('.preview2').html(preview2);
+			}});
+		}
+	}); */
+	/* code for setup-cust-post */
 	if(customArray.fbpost != ''){
 			var address = customArray.address +', '+ customArray.city +', '+customArray.country;
 			var preview = String(customArray.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
 			$('.preview').html(preview);
 			$('#txtFBPost').val(customArray.fbpost);
 	}else{
-		var defaultstr = '<comment>. <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.';
+		var defaultstr = '<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.';
 		var address = customArray.address +', '+ customArray.city +', '+customArray.country;
 		var preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
 		$('#txtFBPost').val(defaultstr);
