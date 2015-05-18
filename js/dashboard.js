@@ -8,7 +8,7 @@ var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 
 var com_basicID=26331,com_basic12 = 39047,com_basic24 = 39048,com_proID=26332,com_pro12 = 39050,com_pro24 = 39051,com_enterprise=26333,com_enterprise12 =39053,com_enterprise24 =39054,newentryloc = 0; 
 //compoentprice
 com_basicID_price=9.90,com_basic12_price = 99.00,com_basic24_price = 178.20,com_proID_price=29.90,com_pro12_price = 299.00,com_pro24_price = 538.20,com_enterprise_price=59.90,com_enterprise12_price =599.00,com_enterprise24_price =1078.20;
-var istest=true,domainpath='',pathfolder='';
+var istest=false,domainpath='',pathfolder='';
 var creditsFree=0,creditsBasic = 2000, creditsPro = 5000, creditsEnterprise = 10000,creditsPrise = 6000;
 var newplaceId,profilewizardsetup=0,profilewizardwebImg = 0,uicwizardsetup=0,questionwizardsetup=0,emailwizardsetup=0,resizeTimeout,isdonewizard=0;
 var state_Array = ['unpaid','canceled'];
@@ -2817,49 +2817,71 @@ $(document).on("pagebeforechange", function (e, data) {
 			if(profilewizardwebImg == 1){
 				setTimeout(function() {wizardsetup();profilewizardwebImg = 0;},200);
 			}	
-			if(customArray.webImg == ''){
-				$('#webthumb1').attr('src', responseText);
-				customArray.webImg = responseText;
-				$('.title1').html(txtimg);$('.desc1').html(txtdescription);
-			}else if(customArray.webImg2 == ''){
-				$('#webthumb2').attr('src', responseText);
-				customArray.webImg2 = responseText;
-				$('.title2').html(txtimg);$('.desc2').html(txtdescription);
-			}else if(customArray.webImg3 == ''){
-				$('#webthumb3').attr('src', responseText);
-				$('.title3').html(txtimg);$('.desc3').html(txtdescription);
-				customArray.webImg3 = responseText;
-			}else if(customArray.webImg4 == ''){
-				$('#webthumb4').attr('src', responseText);
-				$('.title4').html(txtimg);$('.desc4').html(txtdescription);
-				customArray.webImg4 = responseText;
-			}else if(customArray.webImg5 == ''){
-				$('#webthumb5').attr('src', responseText);
-				$('.title5').html(txtimg);$('.desc5').html(txtdescription);
-				customArray.webImg5 = responseText;
-			}else if(customArray.webImg6 == ''){
-				$('#webthumb6').attr('src', responseText);
-				$('.title6').html(txtimg);$('.desc6').html(txtdescription);
-				customArray.webImg6 = responseText;
-			}else if(customArray.webImg7 == ''){
-				$('#webthumb7').attr('src', responseText);
-				$('.title7').html(txtimg);$('.desc7').html(txtdescription);
-				customArray.webImg7 = responseText;
-			}else if(customArray.webImg8 == ''){
-				$('#webthumb8').attr('src', responseText);
-				customArray.webImg8 = responseText;
-				$('.title8').html(txtimg);$('.desc8').html(txtdescription);
+			if(responseText == 'less'){
+				hideLoader();
+				if(customArray.webImg == ''){
+					$('#webthumb1').attr('src', noPhoto);
+				}else if(customArray.webImg2 == ''){
+					$('#webthumb2').attr('src', noPhoto);
+				}else if(customArray.webImg3 == ''){
+					$('#webthumb3').attr('src', noPhoto);
+				}else if(customArray.webImg4 == ''){
+					$('#webthumb4').attr('src', noPhoto);
+				}else if(customArray.webImg5 == ''){
+					$('#webthumb5').attr('src', noPhoto);
+				}else if(customArray.webImg6 == ''){
+					$('#webthumb6').attr('src', noPhoto);
+				}else if(customArray.webImg7 == ''){
+					$('#webthumb7').attr('src', noPhoto);
+				}else if(customArray.webImg8 == ''){
+					$('#webthumb8').attr('src', noPhoto);
+				}
+				alertBox('incorrect image size','Please upload images products with min width 600px & min height 200px');
+			}else{
+				if(customArray.webImg == ''){
+					$('#webthumb1').attr('src', responseText);
+					customArray.webImg = responseText;
+					$('.title1').html(txtimg);$('.desc1').html(txtdescription);
+				}else if(customArray.webImg2 == ''){
+					$('#webthumb2').attr('src', responseText);
+					customArray.webImg2 = responseText;
+					$('.title2').html(txtimg);$('.desc2').html(txtdescription);
+				}else if(customArray.webImg3 == ''){
+					$('#webthumb3').attr('src', responseText);
+					$('.title3').html(txtimg);$('.desc3').html(txtdescription);
+					customArray.webImg3 = responseText;
+				}else if(customArray.webImg4 == ''){
+					$('#webthumb4').attr('src', responseText);
+					$('.title4').html(txtimg);$('.desc4').html(txtdescription);
+					customArray.webImg4 = responseText;
+				}else if(customArray.webImg5 == ''){
+					$('#webthumb5').attr('src', responseText);
+					$('.title5').html(txtimg);$('.desc5').html(txtdescription);
+					customArray.webImg5 = responseText;
+				}else if(customArray.webImg6 == ''){
+					$('#webthumb6').attr('src', responseText);
+					$('.title6').html(txtimg);$('.desc6').html(txtdescription);
+					customArray.webImg6 = responseText;
+				}else if(customArray.webImg7 == ''){
+					$('#webthumb7').attr('src', responseText);
+					$('.title7').html(txtimg);$('.desc7').html(txtdescription);
+					customArray.webImg7 = responseText;
+				}else if(customArray.webImg8 == ''){
+					$('#webthumb8').attr('src', responseText);
+					customArray.webImg8 = responseText;
+					$('.title8').html(txtimg);$('.desc8').html(txtdescription);
+				}
+				$('#overlay').remove();
+				if(customArray.webImg8 != '' && customArray.webImg7 != '' && customArray.webImg6 != '' && customArray.webImg5 != '' && customArray.webImg4 != '' && customArray.webImg3 != '' && customArray.webImg2 != '' && customArray.webImg != '')
+					$('#frmweb').css({display:'none'});	
+				createProfileMenu2();
+				var $container = $('#container');
+				$container.imagesLoaded( function(){
+				  $container.masonry({
+					itemSelector : '.masonryImage'
+				  });
+				});
 			}
-			$('#overlay').remove();
-			if(customArray.webImg8 != '' && customArray.webImg7 != '' && customArray.webImg6 != '' && customArray.webImg5 != '' && customArray.webImg4 != '' && customArray.webImg3 != '' && customArray.webImg2 != '' && customArray.webImg != '')
-				$('#frmweb').css({display:'none'});	
-			createProfileMenu2();
-			var $container = $('#container');
-			$container.imagesLoaded( function(){
-			  $container.masonry({
-				itemSelector : '.masonryImage'
-			  });
-			});
 		}
 		function changephoto2(){
 			if(customArray.webImg == ''){
@@ -3050,7 +3072,9 @@ $(document).on("pagebeforechange", function (e, data) {
 			if(typeof(messArray.takeselfieT) != 'undefined')
 				$('.btnTakeSelfie').html(decodequote(messArray.takeselfieT));
 			if(typeof(messArray.surveyselfieT) != 'undefined')
-				$('.btnfeedbackSelfie').html(decodequote(messArray.surveyselfieT));	
+				$('.btnfeedbackSelfie').html(decodequote(messArray.surveyselfieT));
+			if(typeof(messArray.captureT) != 'undefined')
+				$('.btncapture').html(decodequote(messArray.captureT));		
 				
 		 }
 		//set default value	
@@ -3091,7 +3115,13 @@ $(document).on("pagebeforechange", function (e, data) {
 			if(typeof(messArray.surveyselfieB) != 'undefined')
 				$('#txtbox21').val(decodequote(messArray.surveyselfieB));
 			if(typeof(messArray.shareB) != 'undefined')
-				$('#txtbox22').val(decodequote(messArray.shareB));	
+				$('#txtbox22').val(decodequote(messArray.shareB));
+            if(typeof(messArray.commentB) != 'undefined')
+				$('#txtbox23').val(decodequote(messArray.commentB));
+            if(typeof(messArray.captureT) != 'undefined')
+				$('#txtbox24').val(decodequote(messArray.captureT));
+            if(typeof(messArray.captureB) != 'undefined')
+				$('#txtbox25').val(decodequote(messArray.captureB)); 				
 			setmessageBox();
 		}else
 			$('.follow-loc').html('Be a fan of '+customArray.businessName+'?');
@@ -3132,6 +3162,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			$('#btnTakeSelfie').val((typeof(boxArray.btntake) != 'undefined' ? decodequote(boxArray.btntake[0]) : 'okay'));
 			$('#btnfeedbackSelfie').val((typeof(boxArray.btnfeedback) != 'undefined' ? decodequote(boxArray.btnfeedback[0]) : 'no'));
 			$('#btnfeedbackSelfie2').val((typeof(boxArray.btnfeedback) != 'undefined' ? decodequote(boxArray.btnfeedback[1]) : 'yes'));
+			$('#btncapture').val((typeof(boxArray.btncapture) != 'undefined' ? decodequote(boxArray.btncapture[0]) : 'okay'));
 		}	
 		if(customArray.logo != ''){ 
 			var logoArray = $.parseJSON(customArray.logo);
@@ -3222,7 +3253,7 @@ $(document).on("pagebeforechange", function (e, data) {
 				showLoader();	
 				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=setcustom&case=7&'+$('#frmUIC3').serialize(),success:function(lastId){
 					customArray.messageBox = 
-					JSON.stringify({"comment":$('#txtbox1').val(),"logoutT":$('#txtbox9').val(),"logoutB":$('#txtbox10').val(),"average":$('#txtbox2').val(),"followT":$('#txtbox11').val(),"followB":$('#txtbox12').val(),"badEmailT":$('#txtbox13').val(),"badEmailB":$('#txtbox14').val(),"detailsEmailT":$('#txtbox15').val(),"detailsEmailB":$('#txtbox16').val(),"allow":$('#txtbox17').val(),"share":$('#txtbox3').val(),"thank":$('#txtbox4').val(),"nxt":$('#txtbox5').val(),"option":$('#txtbox6').val(),"pass":$('#txtbox7').val(),"takePhoto":$('#txtbox8').val(),"takeselfieB":$('#txtbox18').val(),"takeselfieT":$('#txtbox19').val(),"surveyselfieT":$('#txtbox20').val(),"surveyselfieB":$('#txtbox21').val(),"shareB":$('#txtbox22').val()});
+					JSON.stringify({"comment":$('#txtbox1').val(),"logoutT":$('#txtbox9').val(),"logoutB":$('#txtbox10').val(),"average":$('#txtbox2').val(),"followT":$('#txtbox11').val(),"followB":$('#txtbox12').val(),"badEmailT":$('#txtbox13').val(),"badEmailB":$('#txtbox14').val(),"detailsEmailT":$('#txtbox15').val(),"detailsEmailB":$('#txtbox16').val(),"allow":$('#txtbox17').val(),"share":$('#txtbox3').val(),"thank":$('#txtbox4').val(),"nxt":$('#txtbox5').val(),"option":$('#txtbox6').val(),"pass":$('#txtbox7').val(),"takePhoto":$('#txtbox8').val(),"takeselfieB":$('#txtbox18').val(),"takeselfieT":$('#txtbox19').val(),"surveyselfieT":$('#txtbox20').val(),"surveyselfieB":$('#txtbox21').val(),"shareB":$('#txtbox22').val(),"commentB":$('#txtbox23').val(),"captureT":$('#txtbox24').val(),"captureB":$('#txtbox25').val()});
 					hideLoader();
 					setmessageBox();
 					alertBox('successful','Update completed.');
@@ -3234,7 +3265,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			showLoader();
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=setcustom&case=6&'+$('#frmUIC2').serialize(),success:function(lastId){
 				customArray.button =
-				JSON.stringify({"btntake":[$('#btnTakeSelfie').val()],"btnfeedback":[$('#btnfeedbackSelfie').val(),$('#btnfeedbackSelfie2').val()],"share":[$('#txtshare1').val(),$('#txtshare2').val()],"comment":[$('#txtrecommend1').val(),$('#txtrecommend2').val()],"leave":[$('#txtleave1').val(),$('#txtleave2').val()],"allow":[$('#txtallow1').val(),$('#txtallow2').val()],"logout":[$('#txt-logout').val()],"follow":[$('#follow-no').val(),$('#follow-yes').val()],"nxt":[$('#txtnxt').val()],"photo":[$('#txtphoto1').val(),$('#txtphoto2').val()],"option":[$('#txtoption1').val(),$('#txtoption2').val(),$('#txtoption3').val()],"pass":[$('#txtpass1').val(),$('#txtpass2').val()],"cambtnoption":[$('#btncam1').val(),$('#btncam2').val(),$('#btncam3').val(),$('#btncam4').val()]});
+				JSON.stringify({"btntake":[$('#btnTakeSelfie').val()],"btncapture":[$('#btncapture').val()],"btnfeedback":[$('#btnfeedbackSelfie').val(),$('#btnfeedbackSelfie2').val()],"share":[$('#txtshare1').val(),$('#txtshare2').val()],"comment":[$('#txtrecommend1').val(),$('#txtrecommend2').val()],"leave":[$('#txtleave1').val(),$('#txtleave2').val()],"allow":[$('#txtallow1').val(),$('#txtallow2').val()],"logout":[$('#txt-logout').val()],"follow":[$('#follow-no').val(),$('#follow-yes').val()],"nxt":[$('#txtnxt').val()],"photo":[$('#txtphoto1').val(),$('#txtphoto2').val()],"option":[$('#txtoption1').val(),$('#txtoption2').val(),$('#txtoption3').val()],"pass":[$('#txtpass1').val(),$('#txtpass2').val()],"cambtnoption":[$('#btncam1').val(),$('#btncam2').val(),$('#btncam3').val(),$('#btncam4').val()]});
 				hideLoader();
 				alertBox('successful','Update completed.');
 			}});	
@@ -6138,10 +6169,15 @@ $(document).on('pageshow','#fbpost', function () {
 		});
 		
 		function showResponse(responseText, statusText, xhr, $form)  { 
-			$('#overlay').remove();$('#frmfb').css({display:'none'});			
-			$('#fbthumb').attr('src', responseText);
-			customArray.fbImg = responseText;
-			createProfileMenu2();
+		   if(responseText == 'less'){
+				hideLoader();
+				$('#fbthumb').attr('src', noPhoto);
+				alertBox('incorrect image size','Please upload image with min width 600px & min height 200px');
+			}else{	
+				$('#overlay').remove();$('#frmfb').css({display:'none'});			
+				$('#fbthumb').attr('src', responseText);
+				customArray.fbImg = responseText;
+			}
 		}
 
 		function beforeSubmitfb(){
@@ -6203,80 +6239,24 @@ $(document).on('pageshow','#fbpost', function () {
 	/* end of code for panel-post */	
 	
 	/* code for setup-cust-post */
-	/*
-	console.log($.isPlainObject(customArray.fbpost));
 	if(customArray.fbpost != ''){
-		if($.isPlainObject(customArray.fbpost))
-			arrayfbpost = $.parseJSON(customArray.fbpost);
-		else
-			arrayfbpost = {fbpost:customArray.fbpost,postdesc:'My "Selfie Review" of <brand>'}
+		try {arrayfbpost = $.parseJSON(customArray.fbpost);}
+		catch(err) {arrayfbpost = {fbpost:customArray.fbpost,postdesc:'My review of <brand>'}}
 	}else{
-		arrayfbpost = {fbpost:'<comment>. <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>',postdesc:'My "Selfie Review" of <brand>'}
+		arrayfbpost = {fbpost:'<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>',postdesc:'My review of <brand>'}
 	}
-	console.log(arrayfbpost.fbpost);
-	if(arrayfbpost.fbpost != ''){
-			var address = customArray.address +', '+ customArray.city +', '+customArray.country;
-			var preview = String(customArray.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
-			$('.preview').html(preview);
-			$('#txtFBPost').val(customArray.fbpost);
-	}else{
-		var defaultstr = arrayfbpost.fbpost;
-		var address = customArray.address +', '+ customArray.city +', '+customArray.country;
-		var preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
-		$('#txtFBPost').val(defaultstr);
-		$('.preview').html(preview);
-	}	
-	if(arrayfbpost.postdesc != ''){
-			var preview = String(arrayfbpost.postdesc).replace(/<brand>/g,customArray.businessName);
-			$('.preview2').html(preview);
-			$('#postdesc').val(arrayfbpost.postdesc);
-	}else{
-		var defaultstr = arrayfbpost.postdesc;
-		var preview = String(defaultstr).replace(/<brand>/g,customArray.businessName);
-		$('#postdesc').val(defaultstr);
-		$('.preview2').html(preview);
-	}
-	$("#fblinkupdate").click(function (e){ 
-		places = locId.split('|');
-		var found= true;
 		
-		if($('#txtFBPost').val().search(/<brand>/i) == '-1'){
-			found = false;
-			uicAlertBox('incorrect entry / entries','Please ensure that "&lt;comment&gt",, "&lt;brand&gt" and "&lt;tabluu_url&gt" are used or entered correctly.','#txtFBPost');
-		}else if($('#txtFBPost').val().search(/<tabluu_url>/i) == '-1'){
-			found = false;
-			uicAlertBox('incorrect entry / entries','Please ensure that "&lt;comment&gt", "&lt;brand&gt" and "&lt;tabluu_url&gt" are used or entered correctly.','#txtFBPost');
-		}else if($('#txtFBPost').val().search(/<comment>/i) == '-1'){
-			found = false;
-			uicAlertBox('incorrect entry / entries','Please ensure that "&lt;comment&gt", "&lt;brand&gt" and "&lt;tabluu_url&gt" are used or entered correctly.','#txtFBPost');	
-		}
-		if(found){
-			showLoader();
-			var address = customArray.address +', '+ customArray.city +', '+customArray.country;
-			var preview = String($('#txtFBPost').val()).replace(/<brand>/,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
-			var preview2 = String($('#txtFBPost').val()).replace(/<brand>/,customArray.businessName);
-			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=fblink&'+$('#frmpost2social').serialize(),success:function(lastId){
-				hideLoader();
-				customArray.fbpost = {fbpost:$('#txtFBPost').val(),postdesc:$('#postdesc').val()}
-				$('.preview').html(preview);
-				$('.preview2').html(preview2);
-			}});
-		}
-	}); */
-	/* code for setup-cust-post */
-	if(customArray.fbpost != ''){
-			var address = customArray.address +', '+ customArray.city +', '+customArray.country;
-			var preview = String(customArray.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
-			$('.preview').html(preview);
-			$('#txtFBPost').val(customArray.fbpost);
-	}else{
-		var defaultstr = '<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.';
-		var address = customArray.address +', '+ customArray.city +', '+customArray.country;
-		var preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
-		$('#txtFBPost').val(defaultstr);
-		$('.preview').html(preview);
-	}	
+	var address = customArray.address +', '+ customArray.city +', '+customArray.country;
+	var preview = String(arrayfbpost.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
+	$('.preview').html(preview);
+	$('#txtFBPost').val(arrayfbpost.fbpost);
+
+	var preview = String(arrayfbpost.postdesc).replace(/<brand>/g,customArray.businessName);
+	$('.preview2').html(preview);
+	$('#postdesc').val(arrayfbpost.postdesc);
+	
 	$("#fblinkupdate").click(function (e){ 
+		e.preventDefault();
 		places = locId.split('|');
 		var found= true;
 		
@@ -6290,40 +6270,36 @@ $(document).on('pageshow','#fbpost', function () {
 			found = false;
 			alertBox('incorrect entry / entries','Please ensure that "&lt;comment&gt", "&lt;brand&gt" and "&lt;tabluu_url&gt" are used or entered correctly.');	
 		}
-		/*
-		else if($('#txtFBPost').val().search(/<rating>/i) != '-1'){
-			if($('#txtFBPost').val().search(/<max_rating>/i) == '-1'){
-				found = false;
-				alertBox('incorrect entry / entries','Please ensure that "&lt;max_rating&gt" was used or entered correctly.');
-			}
-		}else if($('#txtFBPost').val().search(/<max_rating>/i) != '-1'){
-			if($('#txtFBPost').val().search(/<rating>/i) == '-1'){
-				found = false;
-				alertBox('incorrect entry / entries','Please ensure that "&lt;rating&gt" was used or entered correctly.');
-			}
-		}	*/
 		if(found){
-			$('<div id="overlay"> </div>').appendTo(document.body);
+			showLoader();
 			var address = customArray.address +', '+ customArray.city +', '+customArray.country;
 			var preview = String($('#txtFBPost').val()).replace(/<brand>/,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
-			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=fblink&link='+$('#txtFBPost').val(),success:function(lastId){
-				$("#overlay").remove();
-				customArray.fbpost = $('#txtFBPost').val();
+			var preview2 = String($('#postdesc').val()).replace(/<brand>/,customArray.businessName);
+			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=fblink&'+$('#frmpost2social').serialize(),success:function(lastId){
+				hideLoader();
+				customArray.fbpost = {fbpost:$('#txtFBPost').val(),postdesc:$('#postdesc').val()}
 				$('.preview').html(preview);
+				$('.preview2').html(preview2);
 			}});
 		}
 	});
+	
 	$("#fblinkreset").click(function (e){
+		e.preventDefault();
 		places = locId.split('|');
 		$('<div id="overlay"> </div>').appendTo(document.body);
-		var defaultstr = '<comment>. <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.';
+		var defaultstr = '<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.';
+		var defaultstr2 = 'My review of <brand>';
 		var address = customArray.address +', '+ customArray.city +', '+customArray.country;
+		var preview2 = String(defaultstr2).replace(/<brand>/g,customArray.businessName);
 		var preview = String(defaultstr).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
 		$('#txtFBPost').val(defaultstr);
 		$('.preview').html(preview);
-		$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=fblink&link='+$('#txtFBPost').val(),success:function(lastId){
+		$('#postdesc').val(defaultstr2);
+		$('.preview2').html(preview2);
+		$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=fblink&'+$('#frmpost2social').serialize(),success:function(lastId){
 			$("#overlay").remove();
-			customArray.fbpost = $('#txtFBPost').val();
+			customArray.fbpost = {fbpost:defaultstr,postdesc:defaultstr2};
 		}});
 	});
 	/* end of code for setup-cust-post */

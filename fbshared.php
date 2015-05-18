@@ -21,20 +21,24 @@ $path = '../'.$connect->path;
 $businessTitle = $row->businessName .', '.$row->address.' '.$row->city.', '.$row->zip.' '.$row->country. ' @ Tabluu';
 $domainpath = '';
 if($row->state == 'canceled' || $row->state == 'unpaid' || $row->ave == null){
-	//header("HTTP/1.0 404 Not Found");
-	//header('Location: http://www.tabluu.com');
-	//exit;
+	header("HTTP/1.0 404 Not Found");
+	header('Location: http://www.tabluu.com');
+	exit;
 }
-	if($row->fbpost)
-		$str = $row->fbpost;
-	else
-		$str = '<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.';
+$fbpost = json_decode($row->fbpost);
+	$str = (!empty($fbpost->fbpost) ? $fbpost->fbpost : '<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.');
+	$rev = (!empty($fbpost->postdesc) ? $fbpost->postdesc : 'My review of <brand>');
+	if($row->fbpost){
+		if(empty($fbpost->fbpost) && empty($fbpost->postdesc))
+			echo $str =  $row->fbpost;
+	}
+	$rev = str_replace("<brand>",$row->businessName,$rev); 
 	$str = str_replace("<brand>",$row->businessName,$str); 
 	$str = str_replace("<rating>",round($row->ave,1),$str);
 	$str = str_replace("<max_rating>",5,$str);
 	$str = str_replace("<address>",$row->address,$str); 
 	if(trim($row->comment) == ''){
-		$str = str_replace('<comment>. ','',$str);
+		$str = str_replace('<comment> ','',$str);
 	}else
 		$str = str_replace("<comment>",$row->comment,$str); 
 		
@@ -62,17 +66,18 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 	list($width, $height) = getimagesize($srcimg);	
 $istest = true;
 if($istest){
-   $curDomain = 'https://tabluu.com/';
+   $curDomain = 'https://www.tabluu.com/';
 }else
 	$curDomain = '../';	
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <meta property="og:description" content="<?php echo $desc_meta?>" />
-<meta property="og:title" content="My review of <?php echo $row->businessName?>" />
+<meta property="og:title" content="<?php echo $rev?>" />
+<meta property="og:type" content="website" />
 <meta property="og:site_name" content="tabluu.com" />
 <meta property="og:url" content="<?=$curDomain.'user/'.$nice?>" />
-<meta property="og:image:url" content="<?=$curDomain.$srcimg;?>" />
+<meta property="og:image:url" content="<?=$curDomain.'app/'.$srcimg;?>" />
 <meta property="og:image:width" content="<?=$width?>" />
 <meta property="og:image:height" content="<?=$height?>" />
 <meta property="fb:app_id" content="682746285089153" />
@@ -89,6 +94,7 @@ if($istest){
 if($width > 820)
 	$width = 820;
 ?>
+<input type="hidden" value="<?=$row->nicename?>" id="nice" name="nice" />
 <div id="vdesktop">
 	<div class="header">
 		<div class="HeaderContainer">
@@ -108,13 +114,16 @@ if($width > 820)
 		</ul>
 	</div>
 </div>
+<!--<div style="position:fixed;top:0;left:0;background-color:#000;height:100%;width:100%"> </div>-->
+<div class="overlay"> </div>
 <div class="ColumnContainer">
 	<div class="wrapheader">
-	    <div class="MerchantHead">
-		   
+	    <div class="MerchantHead" style="min-height:<?=$height+45?>px;max-width:<?=$width+380?>px;">
+			<a href="https://www.tabluu.com/<?=$row->nicename?>.html" rel="follow"><div class="xclose"></div></a>
+			<div class="clear"></div>
 			<div style="margin:0 auto;width:100%;max-width:<?=$width+390?>px;">
 			  <div class="left text-center" style="max-width:<?=$width?>px;">
-				<img src="<?=$path.$srcimg;?>" width="<?=$width?>" height="<?=$height?>"  alt="selfie photo" />
+				<a href="https://www.tabluu.com/<?=$row->nicename?>.html"><img src="<?=$path.$srcimg;?>" width="<?=$width?>" height="<?=$height?>"  alt="selfie photo" /></a>
 			  </div>
 			 <div class="right">
 				<?php
@@ -126,7 +135,6 @@ if($width > 820)
 		</div>
 	</div>
 </div>
-
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;

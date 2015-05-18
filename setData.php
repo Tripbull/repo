@@ -183,12 +183,8 @@ switch($opt){
 		mysql_query($sql) or die(mysql_error());
 	break;
 	case 'fblink': // update format facebook post link
-	   /*
 		$txtFBPost = mysql_real_escape_string($_REQUEST['txtFBPost']);$postdesc = mysql_real_escape_string($_REQUEST['postdesc']);$placeId = $_REQUEST['placeId'];
-		$sql = "UPDATE businessCustom SET fbpost='".array('fbpost'=>$txtFBPost,'postdesc'=>$postdesc)."' WHERE customPlaceId = $placeId";	
-		mysql_query($sql) or die(mysql_error()); */
-		$link = $_REQUEST['link'];$placeId = $_REQUEST['placeId'];
-		$sql = "UPDATE businessCustom SET fbpost='".mysql_real_escape_string($link)."' WHERE customPlaceId = $placeId";	
+		$sql = "UPDATE businessCustom SET fbpost='".json_encode(array('fbpost'=>$txtFBPost,'postdesc'=>$postdesc))."' WHERE customPlaceId = $placeId";	
 		mysql_query($sql) or die(mysql_error());
 	break;
 	case 'savePhotobooth': // update format facebook post link
@@ -558,8 +554,8 @@ switch($opt){
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						mysql_query("UPDATE {$table} SET feedbackId = {$last_Id},fbId = {$userId},isshared=1 WHERE id = {$sharedId[1]}");
-						//echo $last_Id.'_'.$lastId; 
-						echo $photo_url;
+						echo $last_Id.'_'.$lastId; 
+						//echo $photo_url;
 					}
 					else{	
 						$photo_url = '';
@@ -568,8 +564,8 @@ switch($opt){
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						mysql_query("UPDATE {$table} SET feedbackId = {$last_Id},fbId = {$userId},isshared=1 WHERE id = {$sharedId[1]}");
-						//echo $last_Id.'_'.$lastId;
-						echo $tempPhoto;
+						echo $last_Id.'_'.$lastId;
+						//echo $tempPhoto;
 					} 
 				}else{
 					if(strstr($photo_url,'shared')){
@@ -579,16 +575,16 @@ switch($opt){
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						mysql_query("UPDATE {$table} SET feedbackId = {$last_Id},fbId = {$userId},isshared=1 WHERE id = {$sharedId[1]}");
-						//echo $last_Id.'_'.$lastId; 
-						echo $photo_url;
+						echo $last_Id.'_'.$lastId; 
+						//echo $photo_url;
 					}else{
 						$query = mysql_query('INSERT INTO businessplace_'.$id.' SET rated1='.$rated1.',rated2='.$rated2.',rated3='.$rated3.',rated4='.$rated4.',rated5='.$rated5.',rated6='.$rated6.',rated7='.$rated7.',aveRate='.$aveRated.',userName="'.$userName.'",userId="'.$userId.'",photo_url="'.$photo_url.'",source="'.$source .'",comment = "'.mysql_real_escape_string($comment).'",date="'.$date.'",feedsource="'.$param.'",labelId="'.$label.'"') or die(mysql_error());
 						$last_Id = mysql_insert_id();
 						$query = mysql_query('INSERT INTO businessCustomer_'.$id.' SET source=1,userId="'.$userId.'",name="'.$userName.'",totalFriends='.$totalFriends.',email="'.$email.'",placeId='.$id.',data=""') or die(mysql_error());
 						$lastId = mysql_insert_id();
 						mysql_query("UPDATE {$table} SET feedbackId = {$last_Id},fbId = {$userId},isshared=1 WHERE id = {$sharedId[1]}");
-						//echo $last_Id.'_'.$lastId;
-						echo $photo_url;
+						echo $last_Id.'_'.$lastId;
+						//echo $photo_url;
 					} 
 				}
 			break;
@@ -667,11 +663,11 @@ switch($opt){
 			echo $json = array2json($obj);
 			$sql = "UPDATE businessCustom SET ratingText= '".$json."' WHERE customPlaceId = $placeId";
 		}else if($case ==6){
-		   $obj =  array('btntake' => array(encodequote($_REQUEST['btnTakeSelfie']),encodequote($_REQUEST['btnTakeSelfie2'])),'btnfeedback' => array(encodequote($_REQUEST['btnfeedbackSelfie']),encodequote($_REQUEST['btnfeedbackSelfie2'])),'share' => array(encodequote($_REQUEST['txtshare1']),encodequote($_REQUEST['txtshare2'])), 'comment' => array(encodequote($_REQUEST['txtrecommend1']),encodequote($_REQUEST['txtrecommend2'])),'badEmail' => array(encodequote($_REQUEST['txtleave1']),encodequote($_REQUEST['txtleave2'])),'allow' => array(encodequote($_REQUEST['txtallow1']),encodequote($_REQUEST['txtallow2'])),'logout' => array(encodequote($_REQUEST['txt-logout'])),'follow' => array(encodequote($_REQUEST['follow-no']),encodequote($_REQUEST['follow-yes'])), 'nxt' => array(encodequote($_REQUEST['txtnxt'])), 'photo' => array(encodequote($_REQUEST['txtphoto1']),encodequote($_REQUEST['txtphoto2'])), 'option' => array(encodequote($_REQUEST['txtoption1']),encodequote($_REQUEST['txtoption2']),encodequote($_REQUEST['txtoption3'])), 'pass' => array(encodequote($_REQUEST['txtpass1']),encodequote($_REQUEST['txtpass2'])),'cambtnoption' => array(encodequote($_REQUEST['btncam1']),encodequote($_REQUEST['btncam2']),encodequote($_REQUEST['btncam3']),encodequote($_REQUEST['btncam4'])));
+		   $obj =  array('btntake' => array(encodequote($_REQUEST['btnTakeSelfie']),encodequote($_REQUEST['btnTakeSelfie2'])),'btncapture' => array(encodequote($_REQUEST['btncapture'])),'btnfeedback' => array(encodequote($_REQUEST['btnfeedbackSelfie']),encodequote($_REQUEST['btnfeedbackSelfie2'])),'share' => array(encodequote($_REQUEST['txtshare1']),encodequote($_REQUEST['txtshare2'])), 'comment' => array(encodequote($_REQUEST['txtrecommend1']),encodequote($_REQUEST['txtrecommend2'])),'badEmail' => array(encodequote($_REQUEST['txtleave1']),encodequote($_REQUEST['txtleave2'])),'allow' => array(encodequote($_REQUEST['txtallow1']),encodequote($_REQUEST['txtallow2'])),'logout' => array(encodequote($_REQUEST['txt-logout'])),'follow' => array(encodequote($_REQUEST['follow-no']),encodequote($_REQUEST['follow-yes'])), 'nxt' => array(encodequote($_REQUEST['txtnxt'])), 'photo' => array(encodequote($_REQUEST['txtphoto1']),encodequote($_REQUEST['txtphoto2'])), 'option' => array(encodequote($_REQUEST['txtoption1']),encodequote($_REQUEST['txtoption2']),encodequote($_REQUEST['txtoption3'])), 'pass' => array(encodequote($_REQUEST['txtpass1']),encodequote($_REQUEST['txtpass2'])),'cambtnoption' => array(encodequote($_REQUEST['btncam1']),encodequote($_REQUEST['btncam2']),encodequote($_REQUEST['btncam3']),encodequote($_REQUEST['btncam4'])));
 			echo $json = array2json($obj);
 			$sql = "UPDATE businessCustom SET button= '".$json."' WHERE customPlaceId = $placeId";
 		}else if($case ==7){
-		   $obj = array('comment' => encodequote($_REQUEST['txtbox1']),'logoutT' => encodequote($_REQUEST['txtbox9']),'logoutB' => encodequote($_REQUEST['txtbox10']), 'average' => encodequote($_REQUEST['txtbox2']),'followT' => encodequote($_REQUEST['txtbox11']),'followB' => encodequote($_REQUEST['txtbox12']),'badEmailT' => encodequote($_REQUEST['txtbox13']),'badEmailB' => encodequote($_REQUEST['txtbox14']),'detailsEmailT' => encodequote($_REQUEST['txtbox15']),'detailsEmailB' => encodequote($_REQUEST['txtbox16']),'allow' => encodequote($_REQUEST['txtbox17']), 'share' => encodequote($_REQUEST['txtbox3']), 'thank' => encodequote($_REQUEST['txtbox4']), 'nxt' => encodequote($_REQUEST['txtbox5']), 'option' => encodequote($_REQUEST['txtbox6']), 'pass' => encodequote($_REQUEST['txtbox7']), 'takePhoto' => encodequote($_REQUEST['txtbox8']), 'takeselfieB' => encodequote($_REQUEST['txtbox18']), 'takeselfieT' => encodequote($_REQUEST['txtbox19']), 'surveyselfieT' => encodequote($_REQUEST['txtbox20']), 'surveyselfieB' => encodequote($_REQUEST['txtbox21']), 'shareB' => encodequote($_REQUEST['txtbox22']));
+		   $obj = array('comment' => encodequote($_REQUEST['txtbox1']),'logoutT' => encodequote($_REQUEST['txtbox9']),'logoutB' => encodequote($_REQUEST['txtbox10']), 'average' => encodequote($_REQUEST['txtbox2']),'followT' => encodequote($_REQUEST['txtbox11']),'followB' => encodequote($_REQUEST['txtbox12']),'badEmailT' => encodequote($_REQUEST['txtbox13']),'badEmailB' => encodequote($_REQUEST['txtbox14']),'detailsEmailT' => encodequote($_REQUEST['txtbox15']),'detailsEmailB' => encodequote($_REQUEST['txtbox16']),'allow' => encodequote($_REQUEST['txtbox17']), 'share' => encodequote($_REQUEST['txtbox3']), 'thank' => encodequote($_REQUEST['txtbox4']), 'nxt' => encodequote($_REQUEST['txtbox5']), 'option' => encodequote($_REQUEST['txtbox6']), 'pass' => encodequote($_REQUEST['txtbox7']), 'takePhoto' => encodequote($_REQUEST['txtbox8']), 'takeselfieB' => encodequote($_REQUEST['txtbox18']), 'takeselfieT' => encodequote($_REQUEST['txtbox19']), 'surveyselfieT' => encodequote($_REQUEST['txtbox20']), 'surveyselfieB' => encodequote($_REQUEST['txtbox21']), 'shareB' => encodequote($_REQUEST['txtbox22']), 'commentB' => encodequote($_REQUEST['txtbox23']), 'captureT' => encodequote($_REQUEST['txtbox24']), 'captureB' => encodequote($_REQUEST['txtbox25']));
 			$json = array2json($obj);
 			$sql = "UPDATE businessCustom SET messageBox= '".$json."' WHERE customPlaceId = $placeId";
 		}else if($case ==8){

@@ -27,15 +27,16 @@ if(isset($_FILES["filefb"]))
     $NewFileName        = $Random_Number.$File_Ext; //new file name
     
     if(move_uploaded_file($_FILES['filefb']['tmp_name'], $UploadDirectory.'/'.$NewFileName )){
-        $image = new Photos();
-		$source = $UploadDirectory.'/'.$NewFileName;
-		//copy($domain.$source,$source);
-		//$image->load($source);
-		//$image->save($source,$image->image_type);
-		echo $path = $UploadDirectory.'/'.$NewFileName;
-		//$sql = "UPDATE businessPhotos SET fbImg= '$img' WHERE photoPlaceId = $placeId";
-		mysql_query("UPDATE businessImages SET path= '$path',title='',description='' WHERE id = $id") or die(mysql_error());		
-		//mysql_query($sql);
+		$img = $UploadDirectory.'/'.$NewFileName;
+		$image = new Photos();
+			$image->load($img);
+			if($image->getWidth() < 600 || $image->getHeight() < 200){
+				echo 'less';
+				unlink($img);
+				die();
+			}
+		echo $img;
+		mysql_query("UPDATE businessImages SET path= '$img',title='',description='' WHERE id = $id") or die(mysql_error());		
     }else{
         die('error uploading File!');
     }
@@ -195,7 +196,15 @@ if(isset($_FILES["fileweb"]))
      $path = $UploadDirectory.'/'.$NewFileName;
 		
 		if(move_uploaded_file($_FILES['fileweb']['tmp_name'], $UploadDirectory.'/'.$NewFileName )){
-			echo $img = $UploadDirectory.'/'.$NewFileName;
+			$img = $UploadDirectory.'/'.$NewFileName;
+			$image = new Photos();
+			$image->load($img);
+			if($image->getWidth() < 600 || $image->getHeight() < 200){
+				echo 'less';
+				unlink($img);
+				die();
+			}
+			echo $img;
 			$result = mysql_query("SELECT id,name FROM businessImages WHERE placeId = $placeId AND name = '$name' LIMIT 1") or die(mysql_error());
 			if(mysql_num_rows($result)){
 				$row = mysql_fetch_object($result);

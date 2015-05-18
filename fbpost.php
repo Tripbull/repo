@@ -105,7 +105,7 @@
 								</div>	
 							</section>
 							<section class="setup-cust-post hide">
-							    <!--
+							    
 								<form id="frmpost2social" action="#" method="post" enctype="multipart/form-data" >
 							    <div class="clear" style="padding-top:0.5em"></div>
 								<p>Customize your message's title by editing the following...</p>
@@ -129,7 +129,8 @@
 								<div class="btn-submit">
 									<button class="ui-btn" id="fblinkreset">Reset</button>
 								</div>
-								</form> -->
+								</form>
+								<!--
 								<p>Customize your Facebook post by editing the following...</p>	
 								<div class="clear" style="padding-top:0.5em"></div>	
 								 <textarea cols="20" rows="3" style="resize:none" name="txtFBPost" id="txtFBPost">See my "Selfie Review" of <brand> here! <tabluu_url> <brand>, <address>, <tel>.</textarea>
@@ -144,7 +145,7 @@
 								<div class="clear" style="padding-top:0.5em"></div>	
 								<div class="btn-submit">
 									<button class="ui-btn" id="fblinkreset">Reset</button>
-								</div>
+								</div> -->
 							</section>
 						</div>
 					</div>	
