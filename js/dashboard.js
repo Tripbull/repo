@@ -8,7 +8,7 @@ var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 
 var com_basicID=26331,com_basic12 = 39047,com_basic24 = 39048,com_proID=26332,com_pro12 = 39050,com_pro24 = 39051,com_enterprise=26333,com_enterprise12 =39053,com_enterprise24 =39054,newentryloc = 0; 
 //compoentprice
 com_basicID_price=9.90,com_basic12_price = 99.00,com_basic24_price = 178.20,com_proID_price=29.90,com_pro12_price = 299.00,com_pro24_price = 538.20,com_enterprise_price=59.90,com_enterprise12_price =599.00,com_enterprise24_price =1078.20;
-var istest=false,domainpath='',pathfolder='';
+var istest=true,domainpath='',pathfolder='';
 var creditsFree=0,creditsBasic = 2000, creditsPro = 5000, creditsEnterprise = 10000,creditsPrise = 6000;
 var newplaceId,profilewizardsetup=0,profilewizardwebImg = 0,uicwizardsetup=0,questionwizardsetup=0,emailwizardsetup=0,resizeTimeout,isdonewizard=0;
 var state_Array = ['unpaid','canceled'];
@@ -245,13 +245,13 @@ $(document).ready(function(){
 					if(customArray.webImg8 != '')
 						j++;
 					if(customArray.city == '')	
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');
+						alertBox('setup incomplete','Go to Setup > Your Tabluu Page ');
 					else if(customArray.fbImg == '' && customArray.optsocialpost < 1)
 						alertBox('setup incomplete','Go to Setup > Customers\' Social Media Posts > Default Image for Facebook Posts ');
 					//else if(j < 2)
 					//	alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
 					else if(customArray.nicename == "")
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page > Create Your Tabluu Page');
+						alertBox('setup incomplete','Go to Setup > Your Tabluu Page > Create Your Tabluu Page');
 					else if(customArray.subscribe < 1)
 						alertBox('this location is offline','Please change the status to online');
 					else if(customArray.settingsItem < 1)
@@ -288,13 +288,13 @@ $(document).ready(function(){
 					if(customArray.webImg8 != '')
 						j++;
 					if(customArray.city == '')	
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');
+						alertBox('setup incomplete','Go to Setup > Your Tabluu Page ');
 					else if($.trim(customArray.fbImg) == '' && customArray.optsocialpost < 1)
 						alertBox('setup incomplete','Go to Setup > Customers\' Social Media Posts > What to Post to Social Media? ');
 					//else if(j < 2)
 						//alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
 					else if(customArray.nicename == "")
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page > Create Your Tabluu Page');
+						alertBox('setup incomplete','Go to Setup > Your Tabluu Page > Create Your Tabluu Page');
 					else if(customArray.subscribe < 1)
 						alertBox('this location is offline','Please change the status to online');
 					else if(customArray.settingsItem < 1)
@@ -546,7 +546,7 @@ $(document).ready(function(){
 							}, 300);
 						}
 					}
-				}},{caption: 'cancel',callback:function(){
+				}},{caption: 'skip',callback:function(){
 					clearTimeout(resizeTimeout);
 					resizeTimeout = setTimeout(function(){ 
 					_setBusinessName2('');
@@ -1319,13 +1319,13 @@ $(document).ready(function(){
 					if(customArray.webImg8 != '')
 						j++;
 					if(customArray.city == '')	
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
+						alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 					else if(customArray.fbImg == '' && customArray.optsocialpost < 1)
 						alertBox('setup incomplete','Go to Setup > Customers\' Social Media Posts > Default Image for Facebook Posts ');
 					//else if(j < 2)
 						//alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page ');						
 					else if(customArray.nicename == "")
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
+						alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 					else if(customArray.subscribe < 1)
 						alertBox('this location is offline','Please change the status to online');
 					else if(customArray.settingsItem < 1)
@@ -5245,14 +5245,14 @@ $(document).on('pageinit','#feedback', function () {
 					customArray =  $.parseJSON(result);
 					hideLoader();
 					if(customArray.nicename == ''){
-						alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
+						alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 					}else{
 						$(".feedback-weblink").show();
 					}
 				  }});
 			}else{
 				if(customArray.nicename == ''){
-					alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
+					alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 				}else{
 					$(".feedback-weblink").show();
 				}
@@ -5271,7 +5271,7 @@ $(document).on('pageinit','#feedback', function () {
 				}
 			} */
 			if(customArray.nicename == ''){	
-					alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
+					alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 			}else{
 				$(".tellafriend").show();
 				$(function() {
@@ -5318,7 +5318,7 @@ $(document).on('pageinit','#feedback', function () {
 			$( '#feedback .right-content' ).addClass("bgwhite");
 			$('#photolink').val('http://www.tabluu.com/app/rateone.html?p='+customArray.nicename+'&s=2');
 			if(customArray.nicename == ''){	
-				alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
+				alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 			}else{
 				if(userArray.productId != proID && userArray.productId != pro12 && userArray.productId != pro24 && userArray.productId != enterprise12 && userArray.productId != enterprise24 && userArray.productId != enterprise)
 					alertBox('no access','Please upgrade to pro plan & above to access this feature');
@@ -5828,7 +5828,7 @@ $(document).on('pageshow','#widget', function () {
 			$.ajax({type: "POST",url:"getData.php",cache: false,data:'placeId='+placeId[0]+'&opt=getReviewProduct',success:function(result){
 				reviewProduct =  $.parseJSON(result);
 				if(reviewProduct.nicename == '')
-					alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
+					alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 				else if(reviewProduct.productId != proID && reviewProduct.productId != enterprise && reviewProduct.productId != pro12 && reviewProduct.productId != pro24 && reviewProduct.productId != enterprise12 && reviewProduct.productId != enterprise24)
 					alertBox('no access','Please upgrade to pro plan & above to access this widget');
 				else{

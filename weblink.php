@@ -99,7 +99,7 @@
 								<input type="text" name="txtlabel2" id="txtlabel2" value="" placeholder="nolabel" >
 								<div class="clear" style="padding-top:5px"></div>
 								<span class="color-grey font-12 fl">
-									<i>Examples: Room #, Table #, Touch Point #, Taxi #, Booth #, etc, etc</i>
+									<i>Examples: Room #, Table #, Touch Point #, Booth #, Name of Waiter or Hair Stylist, etc, etc</i>
 								</span>
 								<div class="clear"></div>
 								<div class="btn-submit">
@@ -179,7 +179,7 @@
 								<input type="text" name="txtlabel1" id="txtlabel1" value="" placeholder="nolabel" >
 								<div class="clear" style="padding-top:5px"></div>
 								<span class="color-grey font-12 fl">
-									<i>Examples: Room #, Table #, Touch Point #, Taxi #, Booth #, etc, etc</i>
+									<i>Examples: Room #, Table #, Touch Point #, Booth #, Name of Waiter or Hair Stylist, etc, etc</i>
 								</span>
 								<div class="clear"></div>
 								<div class="btn-submit">

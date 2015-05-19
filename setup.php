@@ -25,7 +25,7 @@
 						<div class="left-content fl">
 							<div class="left-header">Setup</div>			
 							<ul class="setup-left-menu" data-role="listview">
-								<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">Your Tabluu (Business) Page<span class="listview-arrow-default listview-arrow-active"></span></a></li>
+								<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">Your Tabluu Page<span class="listview-arrow-default listview-arrow-active"></span></a></li>
 								<li><a href="#">Customize Feedback / Review Page<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">What Question(s) to Ask?<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Customers’ Social Media Posts<span class="listview-arrow-default"></span></a></li>

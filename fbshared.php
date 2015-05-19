@@ -30,7 +30,7 @@ $fbpost = json_decode($row->fbpost);
 	$rev = (!empty($fbpost->postdesc) ? $fbpost->postdesc : 'My review of <brand>');
 	if($row->fbpost){
 		if(empty($fbpost->fbpost) && empty($fbpost->postdesc))
-			echo $str =  $row->fbpost;
+			$str =  $row->fbpost;
 	}
 	$rev = str_replace("<brand>",$row->businessName,$rev); 
 	$str = str_replace("<brand>",$row->businessName,$str); 
@@ -64,7 +64,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 		echo '<meta name="robots" content="noindex, nofollow" />';	
 	$srcimg = $row->pathimg;
 	list($width, $height) = getimagesize($srcimg);	
-$istest = true;
+$istest = false;
 if($istest){
    $curDomain = 'https://www.tabluu.com/';
 }else

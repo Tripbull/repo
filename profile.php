@@ -55,10 +55,10 @@ foreach($time_zones as $zones){
 											<option value="Restaurant, Cafe & Food and Beverage">Restaurant, Cafe & Food and Beverage</option>
 											<option value="Travel">Travel</option>
 											<option value="Wedding Planning">Wedding Planning</option>
-											<option value="Online">Online / Ecommerce</option>
+											<option value="Online">Internet related</option>
 											<option value="Others">Others</option>
 									</select>
-								<input type="text" data-clear-btn="true" name="txtname" id="txtname" value="" placeholder="business name">
+								<input type="text" data-clear-btn="true" name="txtname" id="txtname" value="" placeholder="business name or website">
 								<label for="number-1"></label>
 								<input type="text" data-clear-btn="true" name="txtlabel" id="txtlabel" value="" placeholder="label (optional)">
 								<label for="number-1"></label>
