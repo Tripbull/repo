@@ -28,6 +28,7 @@ $_SESSION['session']=$ur_session;
 	  ga('create', 'UA-46314042-2', 'tabluu.com');
 	  ga('send', 'pageview');
 	</script>
+	<link rel="Shortcut Icon" href="http://www.tabluu.com/blog/wp-content/themes/Tabluu%20Theme%20V1/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
 		<div id="login" data-role="page" data-prefetch="false">
