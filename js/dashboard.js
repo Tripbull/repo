@@ -1,9 +1,9 @@
-var curClick=0,locId=0,frmpagemanage=0,setupclickmenu=0,defaultSetup=0,noPhoto = 'images/template/no-photo.gif',loadingPhoto = 'images/template/no-photo-tran.gif',isprofileupdated=0,reviewQuestion=[],feedbackArray=[],featureArray=[],inviteEmailvisited=0,isAdminCreatedLocation=0,lab='';
-var locArray=[],userArray=[],customArray=[],viewOnce=0,geocoder,lat=0,lng=0,domainFile="http://www.tabluu.com";chargifydomain = 'https://tabluu.chargify.com';
+var curClick=0,locId=0,frmpagemanage=0,setupclickmenu=0,defaultSetup=0,noPhoto = 'images/template/no-photo.gif',loadingPhoto = 'images/template/no-photo-tran.gif',isprofileupdated=0,reviewQuestion=[],feedbackArray=[],featureArray=[],inviteEmailvisited=0,isAdminCreatedLocation=0,lab='',vanitylinkupdate=0,newvanitylink='';
+var locArray=[],userArray=[],customArray=[],viewOnce=0,geocoder,lat=0,lng=0,domainFile="http://tabluu.com";chargifydomain = 'https://tabluu.chargify.com';
 var locDefault = '',placeId=0,placename='',keyId=0,loader='',activeLocLength=1,isfocus=0,t=0,comp_id_old=0,locname='',arraylabel=[];
 var online ='images/template/active.png',onlineBg='images/template/activeOnline.png',offline ='images/template/inactive.png',offlineBg='images/template/activeOffline.png',imagesArray=[],txtdescription='',txtimg='',product_plan_array=[],component_array=[],transac=[],activity_array=[],issetup = 0;
 //live mode chargify ids
-var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619;
+var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619,lite = 3700318;
 //live component chargify ids
 var com_basicID=26331,com_basic12 = 39047,com_basic24 = 39048,com_proID=26332,com_pro12 = 39050,com_pro24 = 39051,com_enterprise=26333,com_enterprise12 =39053,com_enterprise24 =39054,newentryloc = 0; 
 //compoentprice
@@ -26,11 +26,11 @@ $(document).ready(function(){
 		//test component chargify ids
 		com_basicID=27367,com_basic12 = 69598,com_basic24 = 69599,com_proID=27368,com_pro12 = 69600,com_pro24 = 69601,com_enterprise=69597,com_enterprise12 =69602,com_enterprise24 =69603;
 		chargifydomain = 'https://tripbull.chargify.com';
-		domainpath = '';pathfolder = 'https://www.tabluu.com/staging/';
+		domainpath = '';pathfolder = 'https://tabluu.com/staging/';
 	}else{
-		domainpath = 'https://www.tabluu.com/';
+		domainpath = 'https://tabluu.com/';
 		chargifydomain = 'https://tabluu.chargify.com';
-		pathfolder = 'https://www.tabluu.com/app/';
+		pathfolder = 'https://tabluu.com/app/';
 	}
 });
 
@@ -67,7 +67,7 @@ $(document).ready(function(){
 			var body = '<p style="text-align:left;">Please upload at least one image of your business, product or service.</p>'
 						+'<p>Upload the best image first as it will be used for posting to the social media in case your customer does not take a selfie or photo.</p>';
 			var redirect = "profile.html";
-			curClick = 4;
+			curClick = 5;
         }else if(whatsetup == 7){
 			var title = 'Setup Wizard - Step 7 / 7';
 			var body = '<p>Get your customers to give you<br/>"X" Selfies now!</p>'
@@ -621,8 +621,16 @@ $(document).ready(function(){
 			$('#visit-tabluu-page').hide();
 			placeId= locId;
 			var index = row - 5;
+			//$('.link-visit-page').attr('href','tabluu.com/'+newvanitylink);
 			if(locArray[index].nicename){
-				$('#visit-tabluu-page a').attr('href',domainpath+locArray[index].nicename+'.html');
+				if(newvanitylink != ''){
+					locArray[index].vlink = newvanitylink;
+					newvanitylink= '';
+				}		
+				if(locArray[index].vlink != '')
+					$('#visit-tabluu-page a').attr('href',domainpath+locArray[index].vlink);
+				else
+					$('#visit-tabluu-page a').attr('href',domainpath+locArray[index].nicename+'.html');
 				$('#visit-tabluu-page').show();
 			}	
 			$('.right-menu-loc').show();
@@ -794,14 +802,12 @@ $(document).ready(function(){
 	function getData(opt){
 	 switch(opt){
 		case 'getUser':
-		  if(userArray.length < 1){
 			   showLoader();
 			  $.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+keyId+'&opt='+opt,success:function(result){
 				userArray =  $.parseJSON(result);
 				hideLoader();
 				getData('getLoc');
 			  }});
-		  }
 		break;
 		case 'getCustom': 
 		  showLoader();	
@@ -834,7 +840,7 @@ $(document).ready(function(){
 				hadError(lastId);
 				newplaceId = lastId +'|'+s.subs+'|'+0;
 				newentryloc = 1;
-				//window.open('http://www.tabluu.com/blog/tabluu-general/how-do-i-setup-tabluu-2', '_blank');
+				//window.open('http://tabluu.com/blog/tabluu-general/how-do-i-setup-tabluu-2', '_blank');
 			}});
 		break;
 		case 'delLoc':
@@ -879,7 +885,10 @@ $(document).ready(function(){
 		showHideMenu(curClick);
 		defaultMenu();
 		viewOnce=1;
-		getData('getUser');
+		if(userArray.length < 1){
+			//vanitylinkupdate = 0;
+			getData('getUser');
+		}	
 		setTimeout(function(){hideLoader();},1000);
 	});
 	
@@ -1724,7 +1733,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=nicename&nicename='+nicename,success:function(link){
 				$("#overlay").remove();
 				customArray.nicename=link;
-				//window.open('http://www.tabluu.com/'+nicename+'.html');
+				//window.open('http://tabluu.com/'+nicename+'.html');
 				createProfileMenu1();
 			}});		
 		}
@@ -1753,24 +1762,23 @@ $(document).on("pagebeforechange", function (e, data) {
 		if(customArray.webImg8 != '')
 			j++;
 		//if(customArray.city != '' && j > 2){
+		var addli='',newnice = (customArray.link == null || customArray.link == '' ? customArray.nicename+'.html' : customArray.link);
 		if(customArray.city != ''){
-			var addli='';
 			if(customArray.nicename == "")
 				addli = '<li ><a href="#" id="create-page" data-prefetch="true">Create Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
 			else
-				addli = '<li ><a href="'+domainpath+customArray.nicename+'.html" target="_blank">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-				var newli = '<ul class="profile-left-menu1" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';			
+				addli = '<li ><a href="'+domainpath+newnice+'" class="link-visit-page" target="_blank">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
+				var newli = '<ul class="profile-left-menu1" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li><a href="profile.html" data-prefetch="true" class="vanity">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';
 		}else{
-			var addli='';
 			if(customArray.nicename != "")
-				addli = '<li ><a href="'+domainpath+customArray.nicename+'.html" target="_blank" >Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-			var newli = '<ul class="profile-left-menu1" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';	
+				addli = '<li ><a href="'+domainpath+newnice+'" class="link-visit-page" target="_blank" >Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
+			var newli = '<ul class="profile-left-menu1" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li><a href="profile.html" data-prefetch="true" class="vanity">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';	
 				
 		}
 			$('.profile-left-menu1').html(newli);
 			$('.profile-left-menu1').on('click', ' > li', function () {
 				curClick = $(this).index();
-				if(curClick == 3){
+				if(curClick == 4){
 					curClick = 0;
 					$( ":mobile-pagecontainer" ).pagecontainer( "change", "uic.html",{});
 				}	
@@ -1922,8 +1930,8 @@ $(document).on("pagebeforechange", function (e, data) {
 		
 	}); 
 	$(document).on('pageshow','#setup', function () {
-		
-	
+		if(newvanitylink != "")
+			$('.link-visit-page').attr('href',domainpath+newvanitylink);
 	});
 	
 	var rateName=[],tagName=[],noAswer=0;
@@ -2108,8 +2116,69 @@ $(document).on("pagebeforechange", function (e, data) {
 			e.preventDefault();
 		});	
 		$('#profile .star').click(function(){goHome();});
-	})
-
+		$("#vanity-checklink").click(function (e){
+			var places = locId.split('|');
+			showLoader();var vanitystr = $('#vanity-str').val();
+			if($.trim(vanitystr) != ''){
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=checkvanity'+'&str='+encodeURIComponent(encodequote(vanitystr)),success:function(data){
+					hideLoader();
+					if(data == '')
+						alertBox('not available','This entry is not available anymore. Please try another one.');
+					else{
+						alertBox('available','This entry is available.');
+					}
+				}});
+			}else{
+				hideLoader();
+				uicAlertBox('incomplete information','Please input your customize link','#vanity-str');
+			}
+		});
+		$( "#vanity-str" ).keypress(function(e) {
+			if(e.which == 13) createvanitylink();
+        });	
+		function createvanitylink(){
+			var places = locId.split('|');
+			showLoader();
+			var vanitystr = $('#vanity-str').val();
+			if($.trim(vanitystr) != ''){
+			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=updatevanity&case=1'+'&str='+encodeURIComponent(encodequote(vanitystr)),success:function(data){
+				hideLoader();
+				if(data == 'exist')
+					setTimeout(function(){alertBox('not available','This entry is not available anymore. Please try another one.');},300);
+				else{
+					vanitylinkupdate = 1;
+					$('#vanity-reset').show();
+					$('#vanity-str').val(data);newvanitylink = data;
+					$('.link-visit-page').attr('href',domainpath+data); 
+					//$('.van-link-default').html('<a href="'+domainpath+data+'" target="_blank" style="text-decoration:none;font-weight: normal;font-size: 16px">https://tabluu.com/'+data+'</a>');
+					setTimeout(function(){alertBox('successful!','Congratulations! Your Custom Tabluu URL has been updated.');},300);
+				}
+			}});
+			}else{
+				hideLoader();
+				setTimeout(function(){uicAlertBox('incomplete information','Please input your customize link','#vanity-str');},300);
+			}
+		}
+		$("#vanity-update").click(function (e){createvanitylink();});
+		$("#vanity-reset").click(function (e){
+			$.box_Dialog('Do you really want to reset', {'type':'confirm','title': '<span class="color-gold">are you sure?<span>','center_buttons': true,'show_close_button':false,'overlay_close':false,'buttons':  [
+				{caption: 'yes', callback: function() {
+					var places = locId.split('|');
+					showLoader();var vanitystr = $('#vanity-str').val();
+					$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=updatevanity&case=2',success:function(data){
+						hideLoader();
+						$('#vanity-str').val('');$('#vanity-reset').hide();
+						//$('.van-link-default').html('<a href="'+domainpath+customArray.nicename+'" target="_blank" style="text-decoration:none;font-weight: normal;font-size: 16px">https://tabluu.com/'+customArray.nicename+'.html</a>');
+						$('.van-link-default').html('https://tabluu.com/');
+						setTimeout(function(){alertBox('successful!','Your Custom Tabluu URL has been reset.');},300);
+					}});
+				}},{caption: 'no'}]
+			
+			});
+		});
+		$('.vanity-default-link').html('tabluu.com/'+customArray.nicename+'.html');
+	});
+    
     function drawMap(){
 		lat = 1.3090538697731884;lng = 103.8515001953125;
 		$('#submit-map').show();
@@ -2288,7 +2357,7 @@ $(document).on("pagebeforechange", function (e, data) {
 				profilewizardsetup = 0;
 				setTimeout(function() {wizardsetup();},200);
 			}else{	
-			//window.open('http://www.tabluu.com/'+nicename+'.html', '_blank');
+			//window.open('http://tabluu.com/'+nicename+'.html', '_blank');
 			$.box_Dialog('Click "visit your Tabluu page" on the left column', {
 				'type':     'question',
 				'title':    '<span class="color-gold">visit your Tabluu page?<span>',
@@ -2334,28 +2403,24 @@ $(document).on("pagebeforechange", function (e, data) {
 		if(customArray.webImg8 != '')
 			j++;
 		//if(customArray.city != '' && j > 1){
+		var addli='',newnice = (customArray.link == null || customArray.link == '' ? customArray.nicename+'.html' : customArray.link);
 		if(customArray.city != ''){
-			var addli='';
-			
-			//addli = '<li ><a href="#" id="create-page2" data-transition="flip" >Create Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
 			if(customArray.nicename == "")
 				createPage2();
-				addli = '<li '+clas+'><a href="'+domainpath+customArray.nicename+'.html" target="_blank">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>'			
+				addli = '<li '+clas+'><a href="'+domainpath+newnice+'" class="link-visit-page" target="_blank">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
+				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>'
 		}else{
-			
-			var addli='';
-			if(customArray.nicename != "")	
-				addli = '<li '+clas+'><a href="'+domainpath+customArray.nicename+'.html" target="_blank" >Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas )+'><a href="profile.html"  data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';			
+			if(customArray.nicename != "")
+				addli = '<li '+clas+'><a href="'+domainpath+newnice+'" target="_blank" class="link-visit-page" >Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
+				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas )+'><a href="profile.html"  data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';
 		}
 		
 			$('.profile-left-menu2').html(newli);
 			$('.profile-left-menu2').on('click', ' > li', function () {
-				if($(this).index() == 3){
+				if($(this).index() == 4){
 					curClick = 0;
 					$( ":mobile-pagecontainer" ).pagecontainer( "change", "uic.html",{});
-				}else if($(this).index() < 6){
+				}else if($(this).index() < 7){
 					curClick = $(this).index();
 					showHideMenuProfile(curClick);
 					defaultMenuProfile();
@@ -2530,12 +2595,13 @@ $(document).on("pagebeforechange", function (e, data) {
 		
 		function showHideMenuProfile(row){
 			curClick = row;
+			console.log(row)
 			if($( window ).width() <= 600){
 				$( '.main-wrap .left-content' ).hide();
 				$( '.main-wrap .right-content' ).show();
 				$( '.main-wrap .right-content' ).css( {"max-width":'100%'} );
 			}
-			$('.pro-section').hide();$('.desc-section').hide();$('.open-section').hide();$('.photo-section').hide();$('.map-section').hide();
+			$('.pro-section').hide();$('.desc-section').hide();$('.open-section').hide();$('.photo-section').hide();$('.map-section').hide();$('.pro-vanity').hide();
 			if(row == 0){
 				$('.pro-section').show();
 			}else if(row == 1){
@@ -2571,7 +2637,27 @@ $(document).on("pagebeforechange", function (e, data) {
 				if(customArray.opening != '' && customArray.opening != null)
 					$('#textarea-hour').sceditor('instance').val(strdecode(customArray.opening));
 				
-			}else if(row == 4){
+			}else if(row == 3){
+				if(userArray.productId == basicID || userArray.productId == basic24 || userArray.productId == basic12 || userArray.productId == everFree){
+					alertBox('no access','Please upgrade to pro plan & above to access this feature');
+				}else{		
+				showLoader();
+					$.ajax({type: "POST",url:"getData.php",cache: false,data:'placeId='+places[0]+'&opt=vanitylink',success:function(data){
+						hideLoader();
+						createdvanity = data;
+						if($.trim(createdvanity) != '' ){
+							$('#vanity-reset').show();
+							//$('.van-link-default').html('<a href="'+domainpath+createdvanity+'" target="_blank" style="text-decoration:none;font-weight: normal;font-size: 16px">https://tabluu.com/'+createdvanity+'</a>');
+							$('#vanity-str').val(createdvanity);
+						}else{
+							$('#vanity-reset').hide();
+							//$('.van-link-default').html('');
+						}	
+						$('.pro-vanity').show();
+					}});
+				}
+			
+			}else if(row == 5){
 				showLoader();
 				$('.ishide1').hide();$('.ishide2').hide();$('.ishide3').hide();$('.ishide4').hide();$('.ishide5').hide();$('.ishide6').hide();$('.ishide7').hide();$('.ishide8').hide();
 				$.ajax({type: "POST",url:"getData.php",cache: false,data:'placeId='+places[0]+'&opt=getImages&',async: false,success:function(result){
@@ -2620,7 +2706,7 @@ $(document).on("pagebeforechange", function (e, data) {
 					$('.photo-section').show();
 				}});
 				
-			}else if(row == 5){
+			}else if(row == 6){
 				$('.map-section').show();
 				drawMap();
 			}
@@ -4195,10 +4281,12 @@ $(document).on('pageshow','#plan', function () {
 		if(product_plan_array.code == 200){
 			var t = '<option value="">Change Your Plan</option>';
 			for(var i in product_plan_array.response){
-				if(userArray.productId != product_plan_array.response[i].productId && product_plan_array.response[i].productId != 3602345 && product_plan_array.response[i].productId != 3356308){
-					t = t + '<option value="'+product_plan_array.response[i].productId+'_'+product_plan_array.response[i].price+'">'+product_plan_array.response[i].name+' ($'+seCommas(parseFloat(product_plan_array.response[i].price))+') '+'</option>'
+				if(userArray.productId != product_plan_array.response[i].productId){
+					if($.inArray(product_plan_array.response[i].productId,[basic12,basic24,pro12,pro24,enterprise12,enterprise24,lite,everFree]) == -1){
+						
+						t = t + '<option value="'+product_plan_array.response[i].productId+'_'+product_plan_array.response[i].price+'">'+product_plan_array.response[i].name+' ($'+seCommas(parseFloat(product_plan_array.response[i].price))+') '+'</option>'
+					} 
 				}else{
-					currentPlan = product_plan_array.response[i].name;
 					currentPlanprice = product_plan_array.response[i].price;
 					$('#lblPlan').html('Current plan: '+product_plan_array.response[i].name+' ($'+currentPlanprice+')');
 					if(userArray.addLoc > 0){
@@ -5173,6 +5261,23 @@ $(document).on('pageinit','#feedback', function () {
 		feedbackpage(2);
 		//window.open('rateone.html?p='+customArray.nicename+'&s=2','_blank');
 	});
+	$('#website-widget-update').click(function(e){
+		e.preventDefault();
+		var placeId = locId.split('|'),top=0,bot=0;
+		showLoader();
+		$(".feedback-widget input[type='checkbox']").each(function(index){
+			if($(this).is(':checked')){
+				if($(this).val() == 1)
+					bot = 1; 
+				else if($(this).val() == 0)
+					top = 1;
+			}	
+		 });
+		$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId[0]+'&opt=webwidget&top='+top+'&bot='+bot,success:function(result){
+			hideLoader();
+			alertBox('updated','Website widget updated');
+		}});
+	});
 	$('#surveyopen').click(function(e){
 		e.preventDefault();
 		feedbackpage(5);
@@ -5234,34 +5339,20 @@ $(document).on('pageinit','#feedback', function () {
 	}
 	*/
 	function showFeedbackMenu(row){
-		var placeId = locId.split('|');
-		$(".feedback-weblink").hide();$(".tellafriend").hide();$(".feedback-photo").hide();$(".survey").hide();
+		
+		$(".feedback-weblink").hide();$(".tellafriend").hide();$(".feedback-photo").hide();$(".survey").hide();$(".feedback-widget").hide();
 		if(row == 1){
 			$( '#feedback .right-content' ).removeClass("bgwhite");
 			$( '#feedback .right-content' ).addClass("right-bgblue");
-			if(customArray.length < 1){
-				showLoader();
-				$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+placeId[0]+'&opt=getFeedbackUser',success:function(result){
-					customArray =  $.parseJSON(result);
-					hideLoader();
-					if(customArray.nicename == ''){
-						alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
-					}else{
-						$(".feedback-weblink").show();
-					}
-				  }});
+			if(customArray.nicename == ''){
+				alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 			}else{
-				if(customArray.nicename == ''){
-					alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
-				}else{
-					$(".feedback-weblink").show();
-				}
+				$(".feedback-weblink").show();
 			}
-			
 		}else if(row == 2){
 			/*if(iframeisload == 0){
 				showLoader();
-				$("#tellFrame").attr("src", "https://www.tabluu.com/tellafriend/index.php?placeId="+placeId[0]+(emailwizardsetup == 1 ? '&wizard=1' : ''));
+				$("#tellFrame").attr("src", "https://tabluu.com/tellafriend/index.php?placeId="+placeId[0]+(emailwizardsetup == 1 ? '&wizard=1' : ''));
 				if(customArray.nicename == ''){	
 					alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
 				}else{
@@ -5286,7 +5377,7 @@ $(document).on('pageinit','#feedback', function () {
 				//getEmailSent();
 				var subject = "You're invited to give "+placename+" a review!";
 				$('#invitxtsubject').val(subject);
-				var nice = 'https://www.tabluu.com/'+customArray.nicename+'=e';
+				var nice = 'https://tabluu.com/'+customArray.nicename+'=e';
 				var message = '<p>Dear Customer,</p>'
 						+'<div style="clear:both;"></div>'
 						+'<p>Thank you for patronizing our business recently.</p>'
@@ -5311,12 +5402,12 @@ $(document).on('pageinit','#feedback', function () {
 			$( '#feedback .right-content' ).removeClass("bgwhite");
 			$( '#feedback .right-content' ).addClass("right-bgblue");
 			
-			//$('#surveylink').val('http://www.tabluu.com/app/rateone.html?p='+customArray.nicename);
+			//$('#surveylink').val('http://tabluu.com/app/rateone.html?p='+customArray.nicename);
 			$(".survey").show();
 		}else if(row == 3){
 			$( '#feedback .right-content' ).removeClass("right-bgblue");
 			$( '#feedback .right-content' ).addClass("bgwhite");
-			$('#photolink').val('http://www.tabluu.com/app/rateone.html?p='+customArray.nicename+'&s=2');
+			$('#photolink').val('http://tabluu.com/app/rateone.html?p='+customArray.nicename+'&s=2');
 			if(customArray.nicename == ''){	
 				alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 			}else{
@@ -5325,6 +5416,28 @@ $(document).on('pageinit','#feedback', function () {
 				else	
 					$(".feedback-photo").show();
 			}
+		}else if(row == 4){	
+			var placeId = locId.split('|');
+			showLoader();
+			$.ajax({type: "POST",url:"getData.php",cache: false,data:'placeId='+placeId[0]+'&opt=webwidget',success:function(result){
+				hideLoader();
+				$(".feedback-widget").show();
+				if(result != ''){
+					data = $.parseJSON(result);
+					if(data.top == 1)
+						$('.feedback-widget input[id="checkbox-top"]').attr("checked",true).checkboxradio();
+					else
+						$('.feedback-widget input[id="checkbox-top"]').attr("checked",false).checkboxradio();
+					if(data.bot == 1)
+						$('.feedback-widget input[id="checkbox-bottom"]').attr("checked",true).checkboxradio();
+					else
+						$('.feedback-widget input[id="checkbox-bottom"]').attr("checked",false).checkboxradio();	
+			   }else
+				  $('.feedback-widget input[type="checkbox"]').attr("checked",true).checkboxradio();
+				$(".feedback-widget [data-role=controlgroup]").controlgroup("refresh");
+			
+			}});
+			$('.feedback-widget .script-tag').html('<div style="overflow-x:scroll;white-space:wrap;line-height:1.2em;padding:10px;border:1px solid #ccc">&lt;script type="text/javascript" id="tabluu-script" src= "http://tabluu.com/app/widget/js/tabluuwidget.min.js?pubId='+customArray.nicename+'"&gt;&lt;/script&gt;</div>');
 		}
 		feedbackActiveMenu();
 	}
@@ -5360,6 +5473,12 @@ $(document).on('pageshow','#feedback', function () {
 	$('#feedback .ui-content').css({"background-color":'#E6E7E8'})
 	$( "#feedback .left-header" ).html('Collect Feedback / Reviews');
 	$( "#feedback .right-header" ).html( placename );
+	var placeId = locId.split('|');
+	showLoader();
+	$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+placeId[0]+'&opt=getFeedbackUser',success:function(result){
+		customArray =  $.parseJSON(result);
+		hideLoader();
+	  }});	
 	showFeedbackMenu(curClick);
 });
 //==================================================== Reviews =============================================== 
@@ -5833,7 +5952,7 @@ $(document).on('pageshow','#widget', function () {
 					alertBox('no access','Please upgrade to pro plan & above to access this widget');
 				else{
 					$('.thirdwidget').show();
-					$('.script-tag').html('<div style="overflow-x:scroll;white-space:wrap;line-height:1.2em;padding:10px;border:1px solid #ccc">&lt;script type="text/javascript" id="script-tabluu" src= "http://www.tabluu.com/app/widget/widget.min.js?pubId='+reviewProduct.nicename+'"&gt;&lt;/script&gt;</div>');
+					$('.script-tag').html('<div style="overflow-x:scroll;white-space:wrap;line-height:1.2em;padding:10px;border:1px solid #ccc">&lt;script type="text/javascript" id="script-tabluu" src= "http://tabluu.com/app/widget/widget.min.js?pubId='+reviewProduct.nicename+'"&gt;&lt;/script&gt;</div>');
 					getWidgetReview();
 				}
 				hideLoader();

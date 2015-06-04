@@ -9,7 +9,7 @@ if(isset($_REQUEST['type']) && isset($_REQUEST['plan'])){
 }	
 ?>
 <!DOCTYPE html>
-<html> 
+<html lang="en"> 
 <head>
 	<title>Sign up</title>
     <meta name="robots" content="noindex, nofollow"/>
@@ -62,6 +62,11 @@ if(isset($_REQUEST['type']) && isset($_REQUEST['plan'])){
 		</div><!-- /content -->
 		<div data-role="footer"></div><!-- /footer -->
 	</div>
-					
+	<script type="text/javascript" src="https://static.leaddyno.com/js"></script>
+	<script>
+	LeadDyno.key = "8e2a70840f441554c2eb5208c4ef501baa0f7d38";
+	LeadDyno.recordVisit();
+	LeadDyno.autoWatch();
+	</script>				
 </body>
 </html>

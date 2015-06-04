@@ -59,7 +59,9 @@ function sendEmail2Client(cases){
 	$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId+'&opt=sendEmail2Client&cases='+cases+'&name='+username,success:function(lastId){
 		setTimeout(function() {
 			hideLoader();
-			if(isTakeSelfie == 0 || isTakeSelfie == 1 || isTakeSelfie == 'e' || isTakeSelfie == 4){
+			if(getUrlVar('s') != '' && getUrlVar('s') == 8){
+				window.close();
+			}else if(isTakeSelfie == 0 || isTakeSelfie == 1 || isTakeSelfie == 'e' || isTakeSelfie == 4){
 				//window.location = domainpath+nicename+'.html';
 				showLoader();
 				setTimeout(function(){window.location = domainpath+nicename+'.html'},300);
@@ -1217,6 +1219,19 @@ function refresh_handler() {
 function invalidUsedBackbtn(){
 	//alert('u used back browser');
 }
+function getCookie(cname) {
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0; i<ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1);
+		if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+	}
+	return "";
+}
+function delCookie(cname){
+	document.cookie = cname+"=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+}
 $(document).on('pageinit','#rateone', function() {
 	hideLoader();	
 	//if(counter1 < 1){
@@ -1296,7 +1311,7 @@ $(document).on('pageinit','#rateone', function() {
 					$('.ratetxt').html(ratetxt[0]);
 					placeId = customArray.placeId;
 					rate_initialize();
-					if($.inArray(getUrlVar('s'),['0','1','2','3','4','5','e','','6'] ) == -1){
+					if($.inArray(getUrlVar('s'),['0','1','2','3','4','5','e','','6','8'] ) == -1){
 						alertErrorPage('Unauthorized',"Please contact Tabluu support");
 					}else{
 						if(ios_ver[0] == 6)
@@ -1329,6 +1344,12 @@ $(document).on('pageinit','#rateone', function() {
 												showCamera('#camera-modal');
 										}}]
 								});
+							}
+							if(getUrlVar('s') != '' && getUrlVar('s') == 8){
+								if(getCookie('tabluurated') > 0){
+									ratevalue(parseInt(getCookie('tabluurated')),2);
+									delCookie('tabluurated');
+								}	
 							}
 							/*
 							if(getUrlVar('s') != '' && (getUrlVar('s') == 2) && fromtakephotopage == 1){	

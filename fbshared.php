@@ -68,16 +68,20 @@ $istest = false;
 if($istest){
    $curDomain = 'https://www.tabluu.com/';
 }else
-	$curDomain = '../';	
+	$curDomain = 'https://www.tabluu.com/staging/';//'../';	
+/*
+note: if live set the url with "app/"
+og:image:url
+*/
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<meta property="og:description" content="<?php echo $desc_meta?>" />
+<meta property="og:description" content="<?php echo htmlentities($desc_meta)?>" />
 <meta property="og:title" content="<?php echo $rev?>" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="tabluu.com" />
 <meta property="og:url" content="<?=$curDomain.'user/'.$nice?>" />
-<meta property="og:image:url" content="<?=$curDomain.'app/'.$srcimg;?>" />
+<meta property="og:image:url" content="<?=$curDomain.$srcimg;?>" />
 <meta property="og:image:width" content="<?=$width?>" />
 <meta property="og:image:height" content="<?=$height?>" />
 <meta property="fb:app_id" content="682746285089153" />

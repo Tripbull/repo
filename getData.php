@@ -12,6 +12,14 @@ $connect->db_connect();
 $opt = $_REQUEST['opt'];
 $data = array();
 switch($opt){
+	case 'vanitylink':
+		$placeId = $_REQUEST['placeId'];
+		$result = mysql_query("SELECT link FROM businessvanitylink WHERE placeId = {$placeId}");//check if source is existed
+		if(mysql_num_rows($result)){ // existed update it
+			$row = mysql_fetch_object($result);	
+			echo $row->link; 
+		}
+	break;
 	case 'getTransaction':
 		$subscription_id = $_REQUEST['subsId'];
 		$url = '/subscriptions/'. $subscription_id .'/transactions.xml?per_page=30';
@@ -58,10 +66,12 @@ switch($opt){
 			$objxml = simplexml_load_string($result->response);
 			for($i=0;$i<count($objxml->product);$i++){
 				setlocale(LC_MONETARY,"en_US");
-				$price = money_format('%i',(int)$objxml->product[$i]->price_in_cents/100);
-				$array[$i]['productId'] = (int)$objxml->product[$i]->id;
-				$array[$i]['name'] = (String)$objxml->product[$i]->name;
-				$array[$i]['price'] = $price;
+				//if(!in_array((int)$objxml->product[$i]->id, array($connect->basic12,$connect->basic24,$connect->pro12,$connect->pro24,$connect->enterprise12,$connect->enterprise24))){
+					$price = money_format('%i',(int)$objxml->product[$i]->price_in_cents/100);
+					$array[$i]['productId'] = (int)$objxml->product[$i]->id;
+					$array[$i]['name'] = (String)$objxml->product[$i]->name;
+					$array[$i]['price'] = $price;
+				//}
 			}
 			$array = array_merge(array('response'=>$array,'code'=>$result->code));
 		}else{
@@ -156,6 +166,16 @@ switch($opt){
 			$array = array('response'=>$result->response,'code'=>$result->code); 
 			echo json_encode($array);
 		}	
+	break;
+	case 'webwidget':
+		$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'webwidget'") or die(mysql_error());
+		if(mysql_num_rows($addnewfield) < 1)
+			mysql_query('ALTER TABLE `businessCustom` ADD `webwidget` VARCHAR(22) NOT NULL AFTER `printvalue`');
+		$placeId = $_REQUEST['placeId'];
+		$result = mysql_query("SELECT webwidget FROM  businessCustom WHERE customPlaceId = {$placeId}") or die(mysql_error());
+		$row = mysql_fetch_object($result);
+		if($row->webwidget)
+			echo ($row->webwidget);
 	break;
 	case 'offlineLocation':
 		$groupID = $_REQUEST['groupID'];$remove = $_REQUEST['remove'];$allocate = $_REQUEST['allocate'];$arrayPlace = array();$userId= $_REQUEST['userId'];$permission = $_REQUEST['permission'];
@@ -426,11 +446,12 @@ switch($opt){
 			$imagesArray['fbImg'] = $row->fbImg;$imagesArray['webImg'] = $row->webImg;$imagesArray['webImg2'] = $row->webImg2;$imagesArray['webImg3'] = $row->webImg3;$imagesArray['webImg4'] = $row->webImg4;$imagesArray['webImg5'] = $row->webImg5;$imagesArray['webImg6'] = $row->webImg6;$imagesArray['webImg7'] = $row->webImg7;$imagesArray['webImg8'] = $row->webImg8; 
 		}
 		
-		$sql = "SELECT p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.longitude,p.latitude, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.linkedinURL, p.twitterURL, p.showmap, p.email, p.booknowlabel, p.booknow, l.subscribe,l.label, g.email as gmail, d.description, o.opening, c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.printvalue,c.optsocialpost FROM businessList AS l
+		$sql = "SELECT p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.longitude,p.latitude, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.linkedinURL, p.twitterURL, p.showmap, p.email, p.booknowlabel, p.booknow, l.subscribe,l.label, g.email as gmail, d.description, o.opening, c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.printvalue,c.optsocialpost,v.link FROM businessList AS l
 		LEFT JOIN businessProfile AS p ON p.profilePlaceId = l.id
 		LEFT JOIN businessDescription AS d ON d.descPlaceId = l.id
 		LEFT JOIN businessUsers AS g ON g.userGroupId = l.userGroupId AND permission = 0
 		LEFT JOIN businessOpeningHours AS o ON o.openingPlaceId = l.id
+		LEFT JOIN businessvanitylink AS v ON v.placeId = l.id
 		LEFT JOIN businessCustom AS c ON c.customPlaceId = l.id
 		WHERE l.id =  $placeId
 		LIMIT 1";
@@ -1317,10 +1338,11 @@ function sendEmail($email,$subject,$body,$cc_email=''){
 function getLocations($userId,$permission){
 	include_once('class/class.main.php');
 	$connect = new db();
-	$sql = "SELECT l.id, l.businessName, l.subscribe, l.setup, l.label, p.nicename
+	$sql = "SELECT l.id, l.businessName, l.subscribe, l.setup, l.label, p.nicename, v.link
 			FROM businessUsers AS u
 			LEFT JOIN businessList AS l ON l.userGroupId = u.userGroupId
 			LEFT JOIN businessProfile AS p ON p.profilePlaceId = l.id
+			LEFT JOIN businessvanitylink AS v ON v.placeId = l.id
 			WHERE u.id = $userId ORDER BY l.id ASC
 			LIMIT 0 , 30";	
 	$result = mysql_query($sql);$i=0;$arrayPlace=array();
@@ -1331,7 +1353,8 @@ function getLocations($userId,$permission){
 			$arrayPlace[$i]['subscribe'] = $row->subscribe;
 			$arrayPlace[$i]['setup'] = $row->setup;
 			$arrayPlace[$i]['label'] = $row->label;
-			$arrayPlace[$i++]['nicename'] = $row->nicename;
+			$arrayPlace[$i]['nicename'] = $row->nicename;
+			$arrayPlace[$i++]['vlink'] = ($row->link != null ? $row->link : '');
 		}
 	}	
 	$array = $arrayPlace;	
@@ -1352,7 +1375,8 @@ function getLocations($userId,$permission){
 					$tempArray[$j]['subscribe'] = $val['subscribe'];
 					$tempArray[$j]['setup'] = $val['setup'];
 					$tempArray[$j]['label'] = $val['label'];
-					$tempArray[$j++]['nicename'] = $val['nicename'];						
+					$tempArray[$j]['nicename'] = $val['nicename'];
+					$tempArray[$j++]['vlink'] = $val['vlink'];	
 				}
 			}	
 			$array = $tempArray;			

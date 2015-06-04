@@ -4,7 +4,7 @@ $ur_session = rand(0, 15);
 $_SESSION['session']=$ur_session;
 ?>
 <!DOCTYPE html>
-<html> 
+<html lang="en"> 
 <head>
 	<title>Login</title>
     <meta name="robots" content="index, follow"/>
@@ -90,6 +90,12 @@ $_SESSION['session']=$ur_session;
 			</div>
 			
   </div>
-		</div><!-- /page -->		
+		</div><!-- /page -->
+	<script type="text/javascript" src="https://static.leaddyno.com/js"></script>
+	<script>
+	LeadDyno.key = "8e2a70840f441554c2eb5208c4ef501baa0f7d38";
+	LeadDyno.recordVisit();
+	LeadDyno.autoWatch();
+	</script>		
 </body>
 </html>

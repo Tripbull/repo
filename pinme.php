@@ -1,11 +1,12 @@
 <?php
+/*
 if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();//page compressed
 include_once('class/class.main.php');
 $connect = new db();
 $connect->db_connect();
 $imgrotate = new fucn();
 $nice = strtolower($_REQUEST['nicename']);
-
+*/
 $sql = "SELECT p.profilePlaceId, p.businessName, p.category, p.longitude, p.latitude, p.address, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.linkedinURL, p.twitterURL, p.showmap, p.booknowlabel, p.booknow,p.email as pemail, l.subscribe, u.productId,u.state,u.email, d.description, o.opening, c.item2Rate,c.selectedItems,c.reviewPost,c.logo FROM businessProfile AS p
 LEFT JOIN businessList AS l ON l.id = p.profilePlaceId
 LEFT JOIN businessDescription AS d ON d.descPlaceId = l.id
@@ -27,9 +28,9 @@ if($row->state == 'canceled' || $row->state == 'unpaid'){
 	header('Location: http://www.tabluu.com');
 	exit;
 }
-$topostFB = json_decode($row->reviewPost);
-$rateLimit = array(1.0,1.25,1.5,1.75,2.0,2.25,2.5,2.75,3.0,3.25,3.5,3.75,4.0,4.25,4.5,4.75);
-$avgLimit = $topostFB->percent;	
+//$topostFB = json_decode($row->reviewPost);
+//$rateLimit = array(1.0,1.25,1.5,1.75,2.0,2.25,2.5,2.75,3.0,3.25,3.5,3.75,4.0,4.25,4.5,4.75);
+//$avgLimit = $topostFB->percent;	
 
 function htmldecode($str){
 	$remove = array("\n", "\r\n", "\r", "<br />", "</p>");
@@ -172,7 +173,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 				<!--<div style="width:120px;float:right;padding-right:5px;"><?php //echo "<span class=\"stargrey2\"><span class=\"staryellow2\" style=\"$style\"></span></span>"?></div> -->
 					<div style="clear:both;text-align:right;">
 					<div style="color: #777;padding:2px 0;font-size:18px"><?php echo round($rowAvg->totalReviews,1)?> out of 5</div>
-					<a href="<?=$path?>baseshared.php?id=<?=$placeId ?>" class="fancybox fancybox.iframe" style="font-weight:normal;text-decoration:none;color: #00AEEF;font-size:14px;"><?php echo $rowAvg->totalAvg; ?> selfie reviews</a></div>
+					<a href="<?=$path?>baseshared.php?id=<?=$placeId ?>" class="fancybox fancybox.iframe" style="font-weight:normal;text-decoration:none;color: #00AEEF;font-size:14px;"><?php echo $rowAvg->totalAvg; ?> reviews</a></div>
 			</div>
 		<?php
 			}

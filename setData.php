@@ -69,7 +69,7 @@ switch($opt){
 		$link = $remove->cleanurl($str);
 		$result = mysql_query("SELECT id FROM businessvanitylink WHERE link = '{$link}'");//check if source is existed
 		if(mysql_num_rows($result)){ // existed update it
-			echo 'exist';
+			echo '';
 		}else
 			echo $link;
 		
@@ -125,7 +125,10 @@ switch($opt){
 			$src = 'images/profile/'.$placeId;
 			$remove->delete_dir($src);			
 		}else
-			echo 0;
+			echo 0; 
+		mysql_query("DROP TABLE IF EXISTS businessplace_$placeId");
+		mysql_query("DROP TABLE IF EXISTS businessCustomer_$placeId");
+		mysql_query("DROP TABLE IF EXISTS sharedlink_$placeId");	
 	break;
 	case 'setFeature':
 		$placeId = $_REQUEST['placeId'];$id = $_REQUEST['id'];$check = $_REQUEST['check'];
@@ -362,9 +365,14 @@ switch($opt){
 		//$sql = "UPDATE businessUserGroup SET fname='$fname',lname='$lname',pwd='".$pwd."',email='$email' WHERE id = $id";	
 		//mysql_query($sql);
 	break;
+	case 'webwidget':
+		$arr = json_encode(array('top'=>$_REQUEST['top'],'bot'=>$_REQUEST['bot']));
+		$placeId = $_REQUEST['placeId'];
+		$sql = "UPDATE businessCustom SET webwidget='{$arr}' WHERE customPlaceId = {$placeId}";	
+		mysql_query($sql);
+	break;
 	case 'signup':
 		include_once('class/class.cookie.php');
-		include_once 'class/class.phpmailer2.php';
 		$fname = mysql_real_escape_string($_REQUEST['fname']);
 		$lname = mysql_real_escape_string($_REQUEST['lname']);
 		$email = mysql_real_escape_string($_REQUEST['email']);
@@ -377,47 +385,43 @@ switch($opt){
 			$cookie = new cookie();
 			$cookie->setCookie( $lastId );
 		}else{
-				$date = date('Y-m-d H:i:s');
-				if(isset($_SESSION['typeofaccnt']) && $_SESSION['typeofaccnt'] == 'a'){ //alpha pre launch
-					$_SESSION['typeofaccnt'] = '';
-					$next_due_date = strtotime(date('Y-m-d H:i:s').' + 12 Months');
-					$due_date = date('Y-m-d H:i:s a', $next_due_date);
-					$result = mysql_query("INSERT INTO businessUserGroup SET productId=". $connect->enterprise12 .", email='$email',state='active',addLoc=0,created='$date',type=1,expiration='$due_date'") or die(mysql_error());
-					$tail = '<p>He/She signed up alpha pre launch</p>';
-					$groupId = mysql_insert_id();
-					echo json_encode(array('type'=>1));
-					$result = mysql_query("SELECT * FROM `businessClockcounter` WHERE 1 ") or die(mysql_error());
-					$row = mysql_fetch_object($result);
-					$account =($row->accounts > 0 ? $row->accounts - 1 : 0);
-					mysql_query("UPDATE businessClockcounter SET `accounts`=$account WHERE id = $row->id") or die(mysql_error());
-				}else if(isset($_SESSION['typeofaccnt']) && $_SESSION['typeofaccnt'] == 'b'){ //beta pre launch
-					$_SESSION['typeofaccnt'] = '';
-					$next_due_date = strtotime(date('Y-m-d H:i:s').' + 12 Months');
-					$due_date = date('Y-m-d H:i:s a', $next_due_date);
-					$result = mysql_query("INSERT INTO businessUserGroup SET productId=". $connect->enterprise12 .", email='$email',state='active',addLoc=0,created='$date',type=2,expiration='$due_date'") or die(mysql_error());
-					$tail = '<p>He/She signed up beta pre launch</p>';
-					$groupId = mysql_insert_id();
-					echo json_encode(array('type'=>2,'groupId'=>$groupId));
-					$result = mysql_query("SELECT * FROM `businessClockcounter` WHERE 1 ") or die(mysql_error());
-					$row = mysql_fetch_object($result);
-					$account =($row->accounts > 0 ? $row->accounts - 1 : 0);
-					mysql_query("UPDATE businessClockcounter SET `accounts`=$account WHERE id = $row->id") or die(mysql_error());
-				}else{
-					$result = mysql_query("INSERT INTO businessUserGroup SET productId=". $connect->freever .", email='$email',state='active',addLoc=0,created='$date',type=0") or die(mysql_error());
-					$tail = '<p>He/She signed up for free plan</p>';
-					echo json_encode(array('type'=>0));
-					$groupId = mysql_insert_id();
-			    }
-				
+				$date = date('Y-m-d H:i:s');$plan = $connect->basicID;
+				if($_SESSION['type'] == 1){ //monthly
+					if($_SESSION['plan'] == 'basic'){
+						$plan = $connect->basicID;
+					}
+					if($_SESSION['plan'] == 'pro'){
+						$plan = $connect->proID;
+					}
+					if($_SESSION['plan'] == 'enterprise'){
+						$plan = $connect->enterprise;
+					}
+				}else if($_SESSION['type'] == 2){ // 1 yearly
+					if($_SESSION['plan'] == 'basic'){
+						$plan = $connect->basic12;
+					}
+					if($_SESSION['plan'] == 'pro'){
+						$plan = $connect->pro12;
+					}
+					if($_SESSION['plan'] == 'enterprise'){
+						$plan = $connect->enterprise12;
+					}
+				}else if($_SESSION['type'] == 3){ // 2 yearly
+					if($_SESSION['plan'] == 'basic'){
+						$plan = $connect->basic24;
+					}
+					if($_SESSION['plan'] == 'pro'){
+						$plan = $connect->pro24;
+					}
+					if($_SESSION['plan'] == 'enterprise'){
+						$plan = $connect->enterprise24;
+					}
+				}
+				$result = mysql_query("INSERT INTO businessUserGroup SET productId=". $plan .", email='$email',state='notactive',addLoc=0,created='$date',type=0,expiration=''") or die(mysql_error());
+				$groupId = mysql_insert_id();
+				echo json_encode(array('type'=>$plan,'groupId'=>$groupId));
 				$sql = "INSERT INTO businessUsers SET userGroupId=$groupId,fname='$fname',lname='$lname',pwd='".$pwd."',email='$email'";
 				mysql_query($sql) or die(mysql_error());
-				$lastId = mysql_insert_id();
-				$cookie = new cookie();
-				$cookie->setCookie( $lastId );
-				$subject = 'Tabluu - New Sign up user'; 
-				$body = '<p>Customer name: '. $fname . ' ' . $lname . '</p>'.$tail; 
-				sendEmail('support@tabluu.com',$subject,$body);
-				/*insert the new user to email list sendy*/
 				$time = time();
 				$name =$fname.' '.$lname; //optional
 				$join_date = round(time()/60)*60;

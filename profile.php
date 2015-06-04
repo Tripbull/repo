@@ -222,10 +222,52 @@ foreach($time_zones as $zones){
 								 <div class="clear" style="padding-top:1em"></div>
 								 <span class="color-grey font-12 fl">Note: Max image size is 1000kb</span>		
 								  <div class="clear" style="padding-top:1em"></div>
-							</section>	
+							</section>
+							<section class="pro-vanity hide">
+								<div class="clear" style="padding-top:0.2em"></div>
+								<p class="font-16 fl bgrey" style="width:97%;padding:10px">
+									Using your current subscription, you can change your URL to an easy to remember custom link your customers will not forget.
+								</p>
+								<div class="clear" style="padding:1.5em 10px 0 10px;">
+								<p class="font-16 fl">Your default Tabluu URL:&nbsp;</p>
+								<p class="font-16 fl vanity-default-link" style="text-decoration:none;font-weight: normal;font-size: 16px;color:blue">        tabluu.com/09z9wxb.html</p>
+								<!--<div class="clear" style="padding-top:1em"></div>
+								<p class="van-link-default font-16" style="font-weight: normal;color:#38c">https://tabluu.com/</p> -->
+								<div class="clear" style="padding-top:1.5em"></div>
+							    <div class="tbl">
+									<div class="row">
+										<div class="left">
+											<div class="font-16" style="width:195px;">Your custom Tabluu URL: </div>
+										</div>
+										<div class="right">
+											<input type="text" data-clear-btn="true" name="vanity-str" id="vanity-str" value="" placeholder="CustomName">
+											<div style="position:relative;left:0;top:-29px;width:50px;color:#38c;padding-left:5px">tabluu.com/</div>
+										</div>
+									</div>
+								</div>
+								</div>
+								<div class="clear" style="padding-top:0.5em"></div>
+								<p class="font-16 fl bgrey" style="width:97%;padding:20px 10px">
+									<i>
+									Examples:<br/>  
+										bestcafe (flagship site)<br/>
+										bestcafenewyork<br/>
+										bestcafe singapore<br/>
+										</i>
+								</p>
+
+								<div class="clear" style="padding-top:1.5em"></div>
+								<div class="btn-submit">
+									<button class="ui-btn" id="vanity-update">Update</button>
+								</div>
+								<div class="clear" style="padding-top:1em"></div>
+								<div class="btn-submit">
+									<button class="ui-btn" id="vanity-reset">Reset</button>
+								</div>
+							</section>
 							<section class="map-section hide">	
 								<div class="clear" style="padding-top:0.2em"></div>
-								<span class="font-17 fl">Flick the switch âOffâ to remove the map on your Tabluu page</span>
+								<span class="font-17 fl">Flick the switch Off to remove the map on your Tabluu page</span>
 								<div class="clear"></div>
 								<select name="flipmap" id="flipmap" data-role="flipswitch" data-corners="false">
 									<option value="0">Off</option>
