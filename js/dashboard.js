@@ -2269,7 +2269,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		createProfileMenu2();
 		$('#placeidweb').val(places[0]);
 		// setting up values
-		$('#webthumb1').attr('src', noPhoto);$('#webthumb2').attr('src', noPhoto);$('#webthumb3').attr('src', noPhoto);$('#webthumb4').attr('src', noPhoto);$('#webthumb5').attr('src', noPhoto);$('#webthumb6').attr('src', noPhoto);$('#webthumb7').attr('src', noPhoto);$('#webthumb8').attr('src', noPhoto);$('#txtname').val('');$('#txtadd').val('');$('#txtcity').val('');$('#txtlabel').val('');$('#txtcountry').val('');$('#txtzip').val('');$('#txtpho').val('');$('#txtfb').val('');$('#txtweb').val('');$('#txtlink').val('');$('#txttwit').val('');$('#txtproemail').val('');$('#txtbooknowlabel').val('');$('#txtbooknow').val('');
+		$('#webthumb1').attr('src', noPhoto);$('#webthumb2').attr('src', noPhoto);$('#webthumb3').attr('src', noPhoto);$('#webthumb4').attr('src', noPhoto);$('#webthumb5').attr('src', noPhoto);$('#webthumb6').attr('src', noPhoto);$('#webthumb7').attr('src', noPhoto);$('#webthumb8').attr('src', noPhoto);$('#txtname').val('');$('#txtadd').val('');$('#txtcity').val('');$('#txtlabel').val('');$('#txtcountry').val('');$('#txtzip').val('');$('#txtpho').val('');$('#txtfb').val('');$('#txtweb').val('');$('#txtlink').val('');$('#txttwit').val('');$('#txtproemail').val('');$('#txtbooknow').val('');
 		if(customArray.category === 'Accomodation') n=1;
 		else if(customArray.category == 'Arts & Entertainment') n=2;
 		else if(customArray.category == 'Auto Sales, Rental & Repair') n=3;
