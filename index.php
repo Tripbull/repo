@@ -81,6 +81,7 @@ echo date_default_timezone_get();*/
 	<script type="text/javascript" src="js/dialog.js"></script>
 	<script type="text/javascript" src="js/dashboard.js"></script>
 	<script type="text/javascript" src="js/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+	<link rel="Shortcut Icon" href="http://www.tabluu.com/blog/wp-content/themes/Tabluu%20Theme%20V1/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
 		<div id="dashboard" data-role="page" data-dom-cache="false" data-prefetch="false">
