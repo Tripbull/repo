@@ -2701,7 +2701,7 @@ function setCanvasSelfieTest(widthTest, heightTest, type, bfont, afont, tfont)
 				contextTest.fillText(eventNameTest,0,0);
 				eventNameWidthTest = contextTest.measureText(eventNameTest).width;
 
-				taglineFontTest = taglineFontTest - 1;
+				taglineFontTest = taglineFontTest - 1.5;
 				contextTest.font = taglineFontTest + "pt myriadproit";
 				contextTest.fillText(getLineText,0,0);
 				getLineWidth = contextTest.measureText(getLineText).width;
@@ -2721,7 +2721,7 @@ function setCanvasSelfieTest(widthTest, heightTest, type, bfont, afont, tfont)
 				contextTest.fillText(companyNameTest,0,0);
 				compWidthTest = contextTest.measureText(companyNameTest).width;
 
-				taglineFontTest = taglineFontTest - 1;
+				taglineFontTest = taglineFontTest - 1.5;
 				contextTest.font = taglineFontTest + "pt myriadproit";
 				contextTest.fillText(getLineText,0,0);
 				getLineWidth = contextTest.measureText(getLineText).width;
