@@ -3,7 +3,7 @@ var customArray = [],item2Rate=[],ratedObj= [],nicename,isTakeSelfie='',alertave
 var count=0,sharedphoto=0,isphototakedone=0,takeaphoto=0,urlphotoshared,businessname='',txtname='',txtphone='',txtemail='',sharedlinkphoto='',sharedurl='',userCurEmail='';
 var defaultPostReview = {posted:1,percent:3.0},ratecomment='',timeInverval='',closeselfie=0,username='',hadlabel='',istakephoto = 0;
 var defaultrating = {vpoor:'Very poor',poor:'Poor',fair:'Average',good:'Good',excellent:'Excellent'};
-var defaultButtonText2 = {logout:['okay'],btncampaign:['Your Selfie Now!'],btncapture:['okay'],follow:['no','yes'],badEmail:['no','yes'],allow:['cancel','submit'],btntake:['okay'],btnfeedback:['no','yes'],cambtnoption:['cancel','snap','discard','use']};
+var defaultButtonText2 = {logout:['okay'],btncampaign:['Your Selfie Now!'],btncapture:['okay'],follow:['no','yes'],badEmail:['no','yes'],allow:['cancel','submit'],btntake:['okay'],btnfeedback:['no','yes'],cambtnoption:['cancel','snap','discard','use']},arraytagline={};
 var defaultButtonText = {logout:['okay'],btncampaign:['Your Selfie Now!'],follow:['no','yes'],comment:['skip','proceed'],share:['don\'t share','share'],nxt:['okay'],photo:['no','yes'],option:['cancel','login','reset'],pass:['cancel','submit'],badEmail:['no','yes'],allow:['cancel','submit'],cambtnoption:['cancel','snap','discard','use']};
 var defaultTextMessage2 = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Be a fan of <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'This won\'t work unless you snap a photo. You can either do your awesome selfie pose or take a photo of interesting things around you.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Please use the "share" button to recommend <brand>. By sharing you agree with Tabluu\'s <privacy_policy_link>',commentB:'What do you like the most? Is there any area that needs improvement?',captureT:'Your photo is captured',captureB:'This photo will be used to create your review page of the merchant later.'};
 var defaultTextMessage = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Be a fan of <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',takePhoto:'Take a new photo?',average:'Your average rating:',thank:'Thank you!',nxt:'Next reviewer, please.',option:'Choose an option…',pass:'Enter the password…',comment:'Please share your experience...',share:'Share this page?',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'This won\'t work unless you snap a photo. You can either do your awesome selfie pose or take a photo of interesting things around you.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Please use the "share" button to recommend <brand>. By sharing you agree with Tabluu\'s <privacy_policy_link>',commentB:'What do you like the most? Is there any area that needs improvement?',captureT:'Your photo is captured',captureB:'This photo will be used to create your review page of the merchant later.'},resizeTimeout;
@@ -966,8 +966,8 @@ $(document).ready(function(){
    $('.fancybox').fancybox();
    
    if(istest == true){
-		//domainpath = 'https://tabluu.com/staging/';
-		domainpath = '';
+		domainpath = 'https://tabluu.com/staging/';
+		//domainpath = '';
 		everFree = 3602345,basicID=3361656,basic12 = 3602785,basic24 = 3602788,proID=3361672,pro12 = 3602786,pro24 = 3602789,enterprise=3602346,enterprise12 =3602787,enterprise24 = 3602790; fbPhotoPathShare= 'https://www.tabluu.com/staging/';
 	}else{
 		domainpath = 'https://tabluu.com/';
@@ -1309,7 +1309,8 @@ $(document).on('pageinit','#rateone', function() {
 				defaultButtonText = $.parseJSON(customArray.button);
 			if(customArray.messageBox != '')	
 				defaultTextMessage = $.parseJSON(customArray.messageBox);
-
+            if(customArray.taglineselfie != '')
+				arraytagline =  $.parseJSON(customArray.taglineselfie);
 			if(customArray.nicename == "")
 				alertErrorPage('setup incomplete','Go to Setup > Your Tabluu Page');
 			else if(customArray.city == '')	
@@ -2399,12 +2400,11 @@ function setCanvasSelfie(img_type)
 	var imgLogoHeight = 12;
 	var overlayHeight = 0;
 	var overlayY = 0;
-
-	var eventName = 'International Selfie Day';
-	var companyName = 'Presented by Tabluu, ' + getDate();
+	var eventName = arraytagline.txtoccation;
+	var companyName = 'Presented by Tabluu, ' +arraytagline.txtinfodate;
 	var logoText = "Powered by"
-	var firstLine = 'Making the world a better';
-	var secondLine = 'place, one snap at a time';
+	var firstLine = arraytagline.tagline1;
+	var secondLine = arraytagline.tagline2;
 	var logourl = "images/tabluu-logo-mono-xxsmall.png";
 	var eventNameFont = 11;
 	var companyNameFont = 4;
@@ -2580,11 +2580,11 @@ function setCanvasSelfieTest(widthTest, heightTest, type, bfont, afont, tfont)
 	var canvasTest = document.getElementById('canvas-image-test');
 	var contextTest = canvasTest.getContext('2d');
 
-	var eventNameTest = 'International Selfie Day';
-	var companyNameTest = 'Presented by Tabluu, ' +  getDate();
-	var firstLineTest = 'Making the world a better';
-	var secondLineTest = 'place, one snap at a time';
-
+	var eventName = arraytagline.txtoccation;
+	var companyName = 'Presented by Tabluu, ' +arraytagline.txtinfodate;
+	var firstLine = arraytagline.tagline1;
+	var secondLine = arraytagline.tagline2;
+	
 	var eventNameFontTest = 11;
 	var companyNameFontTest = 4;
 	var taglineFontTest = 6;

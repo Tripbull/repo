@@ -655,10 +655,13 @@ switch($opt){
 	break;
 	case 'getrate':
 		$nice = $_REQUEST['nice'];
+		$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'taglineselfie'") or die(mysql_error());
+		if(mysql_num_rows($addnewfield) < 1)
+			mysql_query("ALTER TABLE `businessCustom` ADD `taglineselfie` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `fbpost`");	
 		$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'isselfie'") or die(mysql_error());
 		if(mysql_num_rows($addnewfield) < 1)
 			mysql_query("ALTER TABLE `businessCustom`  ADD `isselfie` TINYINT NOT NULL DEFAULT '0'  AFTER `fbpost`");
-		$sql = "SELECT c.customPlaceId as placeId,p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.city, p.country, p.zip, p.contactNo, p.showmap,c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.isselfie,g.state,g.productId,g.suspend,l.subscribe,c.optsocialpost FROM businessProfile AS p
+		$sql = "SELECT c.customPlaceId as placeId,p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.city, p.country, p.zip, p.contactNo, p.showmap,c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.isselfie,g.state,g.productId,g.suspend,l.subscribe,c.optsocialpost,c.taglineselfie FROM businessProfile AS p
 		LEFT JOIN businessCustom AS c ON c.customPlaceId = p.profilePlaceId
 		LEFT JOIN businessList AS l ON l.id = p.profilePlaceId
 		LEFT JOIN businessUserGroup AS g ON g.gId = l.userGroupId
