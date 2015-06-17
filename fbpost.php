@@ -33,33 +33,59 @@
 								<div class="clear" style="padding-top:0.5em"></div>	
 								<fieldset data-role="controlgroup" data-corners="false" id="optPost">
 									<input type="radio" name="optPost" id="optPost-b" value="1">
-									<label for="optPost-b">Customers’ photo / selfie / profile image</label>
+									<label for="optPost-b">Selfie / photo (with rating score)</label>
+									<input type="radio" name="optPost" id="optPost-c" value="2">
+									<label for="optPost-c">Selfie / photo (without rating score)</label>
 									<input type="radio" name="optPost" id="optPost-a" value="0">
-									<label for="optPost-a">Your own banner / image / photo</label>
+									<label for="optPost-a">Your own banner / image (recommended for slow internet connections)</label>
 								</fieldset>	
 								<div class="clear"></div>
-								<div class="ownimg hide">
-								<div class="clear" style="padding-top:1em"></div>
-								<span class="font-17 fl">Upload your own image for your customers' social media posts...</span>
-								 <div class="clear" style="padding-top:1em"></div>
-								<form id="frmfb" action="setPhoto.php" method="post" enctype="multipart/form-data" >
-									<button class="ui-btn" id="upload">Upload an Image</button>
-									<div style="visibility:hidden;height:0px">
-									<input type="file" name="filefb" style="visibility:hidden;height:0px" id="filefb" value="">
+								<div class="selfie-2 hide">
+									<form id="frmselfies" action="#" method="post" enctype="multipart/form-data" >
+									<div class="clear" style="padding-top:1em"></div>
+									<span class="font-17 fl">Event / Cause / Promotion:</span>
+									<div class="clear" style="padding-top:0.5em"></div>
+									<input type="text" data-clear-btn="true" name="txtoccation" id="txtoccation" value="" placeholder="Text (max 100 chars)">
+									<div class="clear" style="padding-top:1em"></div>
+									<span class="font-17 fl">"Presented by" brand, date:</span>
+									<div class="clear" style="padding-top:0.5em"></div>
+									<input type="text" data-clear-btn="true" name="txtinfodate" id="txtinfodate" value="" placeholder="Text (max 100 chars)">
+									<div class="clear" style="padding-top:1em"></div>
+									<span class="font-17 fl">Add your slogan: </span>
+									<div class="clear" style="padding-top:0.5em"></div>
+									<input type="text" data-clear-btn="true" name="txtcamp1" id="txtcamp1" value="" placeholder="Text for row 1 (max 100 chars)">
+									<div class="clear" style="padding-top:0.5em"></div>
+									<input type="text" data-clear-btn="true" name="txtcamp2" id="txtcamp2" value="" placeholder="Text for row 2 (max 100 chars)">
+									<div class="clear" style="padding-top:1em"></div>
+									<span class="font-17 fl">Sample: </span>
+									<div class="clear" style="padding-top:0.5em"></div>
+									<div style="width:500px;">
+										<img src="images/campaign-sample.png" style="width:100%;height:auto;" />
 									</div>
-									<input type="hidden" value="" name="placeidfb" id="placeidfb" />
-									<input type="hidden" value="" name="idfb" id="idfb" />
-								 </form>
-								 
-								 <div class="clear"></div>
-								<div style="height: 1.5em">
-								   <div class="thumb">
-										<img src="<?php echo $noPhoto ?>" id="fbthumb" style="width:100%;height:100%" />
-								   </div>
-								   <div class="clear" style="padding-top:0.5em"></div>
-								   <span class="color-grey font-12 fl">Note: Max image size is 1000kb</span>
-								    <div class="clear" style="padding-top:1em"></div>
-								</div>	
+									</form>
+								</div>
+								<div class="ownimg hide">
+									<div class="clear" style="padding-top:1em"></div>
+									<span class="font-17 fl">Upload your own image for your customers' social media posts...</span>
+									 <div class="clear" style="padding-top:1em"></div>
+									<form id="frmfb" action="setPhoto.php" method="post" enctype="multipart/form-data" >
+										<button class="ui-btn" id="upload">Upload an Image</button>
+										<div style="visibility:hidden;height:0px">
+										<input type="file" name="filefb" style="visibility:hidden;height:0px" id="filefb" value="">
+										</div>
+										<input type="hidden" value="" name="placeidfb" id="placeidfb" />
+										<input type="hidden" value="" name="idfb" id="idfb" />
+									 </form>
+									 
+									 <div class="clear"></div>
+									<div style="height: 1.5em">
+									   <div class="thumb">
+											<img src="<?php echo $noPhoto ?>" id="fbthumb" style="width:100%;height:100%" />
+									   </div>
+									   <div class="clear" style="padding-top:0.5em"></div>
+									   <span class="color-grey font-12 fl">Note: Max image size is 1000kb</span>
+										<div class="clear" style="padding-top:1em"></div>
+									</div>	
 								</div>
 								<div class="clear" style="padding-top:0.5em"></div>	
 								<div class="btn-submit">

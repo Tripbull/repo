@@ -4,7 +4,10 @@ $connect = new db();
 $connect->db_connect();
 $imgrotate = new fucn();
 $placeId = $_REQUEST['placeId'];
-$sql = "SELECT c.item2Rate,c.selectedItems,c.reviewPost,c.logo FROM businessCustom AS c WHERE c.customPlaceId = $placeId LIMIT 1";
+$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'isselfie'") or die(mysql_error());
+if(mysql_num_rows($addnewfield) < 1)
+	mysql_query("ALTER TABLE `businessCustom`  ADD `isselfie` TINYINT NOT NULL DEFAULT '0'  AFTER `fbpost`");
+$sql = "SELECT c.item2Rate,c.selectedItems,c.reviewPost,c.logo,c.isselfie FROM businessCustom AS c WHERE c.customPlaceId = $placeId LIMIT 1";
 $result1 = mysql_query($sql) or die(mysql_error());
 $row = mysql_fetch_object($result1);
 $path = $connect->path;
@@ -64,7 +67,7 @@ else
 	//die();
 	//die();
 // DUPLICATE FIX
-	$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
+	$rateResult =  mysql_query("SELECT b.id, b.rated1, b.rated2, b.rated3, b.rated4, b.rated5, b.rated6, b.rated7, b.aveRate, b.comment, b.userName, b.userId, b.source, b.labelId, b.feedsource, b.photo_url, b.date, b.hideimg, b.feature,s.link,s.isshared FROM businessplace_$placeId as b LEFT JOIN sharedlink_$placeId AS s ON s.feedbackId = b.id INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT $offset,$limit") or die(mysql_error());
 	
 	//$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' ORDER BY date DESC LIMIT $offset,$limit");
 	//$rateResult = mysql_query("SELECT * FROM (SELECT * FROM  `businessplace_$placeId` WHERE feature = 0 AND  `source` =  'fb' ORDER BY id DESC LIMIT $offset,$limit) AS output_name GROUP BY  `userId` ORDER BY DATE DESC");

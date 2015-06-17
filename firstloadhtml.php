@@ -8,7 +8,10 @@ switch($_REQUEST['opt']){
 
 	case 'review':
         $offset = $_REQUEST['offset'];
-		$sql = "SELECT c.item2Rate,c.selectedItems,c.reviewPost,c.logo FROM businessCustom AS c WHERE c.customPlaceId = $placeId LIMIT 1";
+		$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'isselfie'") or die(mysql_error());
+		if(mysql_num_rows($addnewfield) < 1)
+			mysql_query("ALTER TABLE `businessCustom`  ADD `isselfie` TINYINT NOT NULL DEFAULT '0'  AFTER `fbpost`");
+		$sql = "SELECT c.item2Rate,c.selectedItems,c.reviewPost,c.logo,c.isselfie FROM businessCustom AS c WHERE c.customPlaceId = $placeId LIMIT 1";
 		$result1 = mysql_query($sql) or die(mysql_error());
 		$row = mysql_fetch_object($result1);
 
@@ -109,6 +112,25 @@ switch($_REQUEST['opt']){
 			if($hadTable){
 				$timezone = mysql_fetch_object(mysql_query("SELECT u.timezone FROM businessList as l LEFT JOIN businessUserGroup AS u ON u.gId = l.userGroupId WHERE l.id = $placeId LIMIT 1"));
 				$timezone = $timezone->timezone;
+				$table = 'sharedlink_'.$placeId;
+				$hadTable = $connect->tableIsExist($table);
+				if($hadTable < 1){
+					$sql1 = " CREATE TABLE IF NOT EXISTS `{$table}` (
+					`id` int(11) NOT NULL,
+					  `feedbackId` int(11) NOT NULL,
+					  `fbId` bigint(20) NOT NULL,
+					  `link` varchar(50) NOT NULL,
+					  `pathimg` varchar(200) NOT NULL,
+					  `isshared` tinyint(4) NOT NULL DEFAULT '0',
+					  `ave` double NOT NULL,
+					  `comment` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+					  `datecreated` datetime NOT NULL
+					) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+					$sql2 = "ALTER TABLE `{$table}` ADD PRIMARY KEY (`id`), ADD KEY `feedbackId` (`feedbackId`,`link`), ADD KEY `fbId` (`fbId`);";
+					mysql_query($sql1);
+					mysql_query($sql2);
+					mysql_query("ALTER TABLE `{$table}` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT");
+				}
 				$addhidefield = mysql_query("SHOW COLUMNS FROM `businessplace_$placeId` LIKE 'hideimg'");
 				if(mysql_num_rows($addhidefield) < 1)
 					mysql_query("ALTER TABLE `businessplace_$placeId` ADD `hideimg` TINYINT NOT NULL");
@@ -118,19 +140,24 @@ switch($_REQUEST['opt']){
 				//$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' ORDER BY date DESC LIMIT 4") or die(mysql_error());
 				// DUPLICATE FIX
 				//echo "SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}";
-				$resultFeature =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}") or die(mysql_error());
-				if(mysql_num_rows($resultFeature))
+				$resultFeature =  mysql_query("SELECT b.id, b.rated1, b.rated2, b.rated3, b.rated4, b.rated5, b.rated6, b.rated7, b.aveRate, b.comment, b.userName, b.userId, b.source, b.labelId, b.feedsource, b.photo_url, b.date, b.hideimg, b.feature,s.link,s.isshared FROM businessplace_$placeId as b LEFT JOIN sharedlink_$placeId AS s ON s.feedbackId = b.id INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}") or die(mysql_error());
+				//echo "SELECT b.id, b.rated1, b.rated2, b.rated3, b.rated4, b.rated5, b.rated6, b.rated7, b.aveRate, b.comment, b.userName, b.userId, b.source, b.labelId, b.feedsource, b.photo_url, b.date, b.hideimg, b.feature,s.link FROM businessplace_$placeId as b LEFT JOIN sharedlink_1814 AS s ON s.feedbackId = b.id AND s.isshared = 1  INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 1 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT 15";
+					//	die();
+				if(mysql_num_rows($resultFeature)){
 					$result = $resultFeature;
-				else{
+				     while($rowrate = mysql_fetch_object($result)){
+					   include('reviewshtml.php');
+				    }
+				}else{
 					// DUPLICATE FIX
-					$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}") or die(mysql_error());
+					$result =  mysql_query("SELECT b.id, b.rated1, b.rated2, b.rated3, b.rated4, b.rated5, b.rated6, b.rated7, b.aveRate, b.comment, b.userName, b.userId, b.source, b.labelId, b.feedsource, b.photo_url, b.date, b.hideimg, b.feature,s.link,s.isshared FROM businessplace_$placeId as b LEFT JOIN sharedlink_$placeId AS s ON s.feedbackId = b.id INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}") or die(mysql_error());
 					//$rateResult =  mysql_query("SELECT * FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' ORDER BY date DESC LIMIT 4");
 					//$rateResult = mysql_query("SELECT * FROM (SELECT * FROM  `businessplace_1353` WHERE  `source` =  'fb' ORDER BY id DESC) AS output_name GROUP BY  `userId` ORDER BY DATE DESC");
-					$result = $rateResult;
+					while($rowrate = mysql_fetch_object($result)){
+					   include('reviewshtml.php');
+				    }
 				}
-				while($rowrate = mysql_fetch_object($result)){
-				   include('reviewshtml.php');
-			   }
+				
 			}
 			if(count($imagesArray) > 4 ){
 				for($j=4; $j< count($imagesArray); $j++){
@@ -140,6 +167,14 @@ switch($_REQUEST['opt']){
 					}
 				}	
 			}
+			if($hadTable){
+				 if(mysql_num_rows($resultFeature) > 0 && mysql_num_rows($resultFeature) < 13){
+					$result =  mysql_query("SELECT b.id, b.rated1, b.rated2, b.rated3, b.rated4, b.rated5, b.rated6, b.rated7, b.aveRate, b.comment, b.userName, b.userId, b.source, b.labelId, b.feedsource, b.photo_url, b.date, b.hideimg, b.feature,s.link,s.isshared FROM businessplace_$placeId as b LEFT JOIN sharedlink_$placeId AS s ON s.feedbackId = b.id INNER JOIN (SELECT Userid, MAX(Date) as Date FROM businessplace_$placeId WHERE feature = 0 AND source = 'fb' GROUP BY UserId) AS MAX USING (Userid, Date) ORDER BY date DESC LIMIT {$offset}") or die(mysql_error());
+					while($rowrate = mysql_fetch_object($result)){
+						include('reviewshtml.php');
+					}
+				 }
+			 }
 	break;
 	case 'contactus':
 		$sql = "SELECT p.email as pemail, u.email  FROM businessProfile AS p

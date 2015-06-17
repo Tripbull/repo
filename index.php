@@ -98,16 +98,16 @@ echo date_default_timezone_get();*/
 						<div class="left-content fl">
 							<div class="left-header">Dashboard</div>			
 							<ul class="left-menu" data-defaults="true" data-role="listview">
-								<li ><a href="#" >Help<span class="listview-arrow-default"></span></a></li>
+								<!--<li ><a href="#" >Help<span class="listview-arrow-default"></span></a></li>-->
 								<li ><a href="#">User Admin<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="#">Global Settings<span class="listview-arrow-default"></span></a></li>
-								<li ><a href="#">Send Emails<span class="listview-arrow-default"></span></a></li>
+								<!--<li ><a href="#">Send Emails<span class="listview-arrow-default"></span></a></li>-->
 								<li ><a href="#">Subscription<span class="listview-arrow-default"></span></a></li>
 							</ul>	
 							<ul class="addnew-loc" data-role="listview">
-							    <li><a href="#"><img src="images/template/plus.png" alt="" class="ui-li-icon ui-corner-none">Add a new location / business &amp; press enter...</a></li>
+							    <li><a href="#"><img src="images/template/plus.png" alt="" class="ui-li-icon ui-corner-none">Add a new campaign &amp; press enter...</a></li>
 							</ul>
-                            <span class="text-loc hide"><input type="text" name="text-6" id="text-6" value="" placeholder="Add a new location / business &amp; press enter..."></span>			
+                            <span class="text-loc hide"><input type="text" name="text-6" id="text-6" value="" placeholder="Add a new campaign &amp; press enter..."></span>			
 						</div>
 						<div class="right-content right-bgblue fr">
 							<div class="right-header"></div>
@@ -127,10 +127,10 @@ echo date_default_timezone_get();*/
 								<ul class="right-menu" data-role="listview"><li ><a href="sendemail.html" data-prefetch="true">Send Emails<span class="listview-arrow-default"></span></a></li></ul>
 							</section>	
 							<section class="right-menu-plan hide">
-								<ul class="plan-page" data-role="listview"><li ><a href="#" data-prefetch="true">Plan &amp; Locations<span class="listview-arrow-default"></span></a></li><li ><a href="#" data-prefetch="true">Transactions<span class="listview-arrow-default"></span></a></li><li ><a href="#" data-prefetch="true">Activity<span class="listview-arrow-default"></span></a></li></ul>
+								<ul class="plan-page" data-role="listview"><li ><a href="#" data-prefetch="true">Plan &amp; Campaign<span class="listview-arrow-default"></span></a></li><li ><a href="#" data-prefetch="true">Transactions<span class="listview-arrow-default"></span></a></li><li ><a href="#" data-prefetch="true">Activity<span class="listview-arrow-default"></span></a></li></ul>
 							</section>	
 							<section class="right-menu-loc hide">
-								<ul class="right-menu-loc" data-role="listview"><li ><a href="#" id="collectFeedback" data-prefetch="false">Collect Feedback / Reviews<span class="listview-arrow-default"></span></a></li><li><a href="#" id="manageFeedback" data-prefetch="true">Manage Feedback / Reviews<span class="listview-arrow-default"></span></a></li><li><a href="#" id="review-widget" data-prefetch="true">Review Widget<span class="listview-arrow-default"></span></a></li><li ><a href="#" id="setup-custom" data-prefetch="false">Setup<span class="listview-arrow-default"></span></a></li><li id="visit-tabluu-page"><a href="#" target="_blank" class="link-visit-page" data-prefetch="false">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li><li ><a href="#" id="page-stat" data-prefetch="false">Statistics<span class="listview-arrow-default"></span></a></li><li ><a href="#" id="change-icon" data-prefetch="false">Change Status<span class="listview-arrow-default"></span></a></li><li ><a href="#" id="del-place" data-prefetch="false">Delete<span class="listview-arrow-default"></span></a></li></ul>
+								<ul class="right-menu-loc" data-role="listview"><li ><a href="#" id="collectFeedback" data-prefetch="false">Collect Feedback / Selfie<span class="listview-arrow-default"></span></a></li><li><a href="#" id="manageFeedback" data-prefetch="true">Manage Feedback / Selfie<span class="listview-arrow-default"></span></a></li><li><a href="#" id="review-widget" data-prefetch="true">Review / Selfie Widget<span class="listview-arrow-default"></span></a></li><li ><a href="#" id="setup-custom" data-prefetch="false">Setup<span class="listview-arrow-default"></span></a></li><li id="visit-tabluu-page"><a href="#" target="_blank" class="link-visit-page" data-prefetch="false">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li><li ><a href="#" id="page-stat" data-prefetch="false">Statistics<span class="listview-arrow-default"></span></a></li><li ><a href="#" id="change-icon" data-prefetch="false">Change Status<span class="listview-arrow-default"></span></a></li><li ><a href="#" id="del-place" data-prefetch="false">Delete<span class="listview-arrow-default"></span></a></li></ul>
 							</section>								
 						</div>
 					</div>					

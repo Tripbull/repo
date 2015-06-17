@@ -7,7 +7,11 @@ $connect->db_connect();
 $imgrotate = new fucn();
 $nice = strtolower($_REQUEST['nicename']);
 */
-$sql = "SELECT p.profilePlaceId, p.businessName, p.category, p.longitude, p.latitude, p.address, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.linkedinURL, p.twitterURL, p.showmap, p.booknowlabel, p.booknow,p.email as pemail, l.subscribe, u.productId,u.state,u.email, d.description, o.opening, c.item2Rate,c.selectedItems,c.reviewPost,c.logo FROM businessProfile AS p
+$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'isselfie'") or die(mysql_error());
+if(mysql_num_rows($addnewfield) < 1)
+	mysql_query("ALTER TABLE `businessCustom`  ADD `isselfie` TINYINT NOT NULL DEFAULT '0'  AFTER `fbpost`");
+
+$sql = "SELECT p.profilePlaceId, p.businessName, p.category, p.longitude, p.latitude, p.address, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.linkedinURL, p.twitterURL, p.showmap, p.booknowlabel, p.booknow,p.email as pemail, l.subscribe, u.productId,u.state,u.email, d.description, o.opening, c.item2Rate,c.selectedItems,c.reviewPost,c.logo,c.isselfie FROM businessProfile AS p
 LEFT JOIN businessList AS l ON l.id = p.profilePlaceId
 LEFT JOIN businessDescription AS d ON d.descPlaceId = l.id
 LEFT JOIN businessOpeningHours AS o ON o.openingPlaceId = p.profilePlaceId
@@ -121,7 +125,12 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 		?>
 		<div class="left">
 			<div style="text-align:center;"><img class="resizeme" src="<?php echo ($logo != '' ? ($logo->dLogo == "images/desktop_default.png" ? $path.'images/default-logo.png' : $path.$logo->dLogo) : $path.'images/default-logo.png') ?>" alt="Merchant Logo" align="center" />
-			<div class="follow"> <?php if($hadTable) echo $follow->followTotal;?> fans</div>
+			<?php
+			if($row->isselfie == 0 && $hadTable)
+				echo '<div class="follow">'.$follow->followTotal .' fans</div>';
+			else
+				echo '<div class="follow"></div>';
+			?>
 			</div>
 		</div>
 		<div class="right">
@@ -172,8 +181,19 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 			 <div style="float:right;padding-right:10px;">
 				<!--<div style="width:120px;float:right;padding-right:5px;"><?php //echo "<span class=\"stargrey2\"><span class=\"staryellow2\" style=\"$style\"></span></span>"?></div> -->
 					<div style="clear:both;text-align:right;">
-					<div style="color: #777;padding:2px 0;font-size:18px"><?php echo round($rowAvg->totalReviews,1)?> out of 5</div>
-					<a href="<?=$path?>baseshared.php?id=<?=$placeId ?>" class="fancybox fancybox.iframe" style="font-weight:normal;text-decoration:none;color: #00AEEF;font-size:14px;"><?php echo $rowAvg->totalAvg; ?> reviews</a></div>
+					<?php
+					if($row->isselfie == 0)
+						echo '<div style="color: #777;padding:2px 0;font-size:18px">'.round($rowAvg->totalReviews,1).' out of 5</div>';
+					if($row->isselfie == 0){
+					?>
+					<a href="<?=$path?>baseshared.php?id=<?=$placeId ?>" class="fancybox fancybox.iframe" style="font-weight:normal;text-decoration:none;color: #00AEEF;font-size:14px;"><?php echo $rowAvg->totalAvg .' reviews' ?> </a>
+					<?php
+					}else{
+					?>
+					<span style="font-weight:normal;text-decoration:none;color: #00AEEF;font-size:14px;"><?php echo $rowAvg->totalAvg .' selfies' ?></span>
+					<?php
+					}?>
+					</div>
 			</div>
 		<?php
 			}
@@ -191,7 +211,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 				if(mysql_num_rows($latestrev)){
 			?>	
 			<div class="reviews">
-				<h1 style="color: #ccc;font-size: 10px;font-weight: bold;">Latest reviews:</h1>
+				<h1 style="color: #ccc;font-size: 10px;font-weight: bold;">Latest <?php echo ($row->isselfie == 1 ? 'selfies' : 'reviews') ?>:</h1>
 				<div class="clear" style="height:10px"></div>
 				<?php
 				while($rev = mysql_fetch_object($latestrev)){
@@ -269,7 +289,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 					echo '<li style="'.$widthmenu.'"><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="fancybox fancybox.iframe"><div class="menupadding">Map</div></a></li>';	
 
 				if($row->booknow)
-					echo '<li style="'.$widthmenu.'"><a href="'.$booksite.'" target="_blank"><div class="menupadding">' . $row->booknowlabel . '</div></a></li>';
+					echo '<li style="'.$widthmenu.'"><a href="'.$booksite.'" target="_blank"><div class="menupadding">' . ($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</div></a></li>';
 			?>
 		</ul>
 	</div>
@@ -326,8 +346,19 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 						?>
 						 <div style="margin-top:5px;">
 						 <!--<?php //echo "<span class=\"stargrey2\"><span class=\"staryellow2\" style=\"$style\"></span></span>"?><div style="font-size:12px;">-->
-						 <div style="color: #777;padding:2px 0;font-size:18px"><?php echo round($rowAvg->totalReviews,1)?> out of 5</div>
-						 <a href="<?=$path?>baseshared.php?id=<?=$placeId ?>" class="fancybox fancybox.iframe" style="font-weight:normal;color:#00AEEF;text-decoration:none;font-size:14px"><?php echo $rowAvg->totalAvg; ?> selfie reviews</a></div>
+						  <?php
+						if($row->isselfie == 0){
+							echo '<div style="color: #777;padding:2px 0;font-size:18px">'.round($rowAvg->totalReviews,1). 'out of 5</div>';
+						?>
+							 <a href="<?=$path?>baseshared.php?id=<?=$placeId ?>" class="fancybox fancybox.iframe" style="font-weight:normal;color:#00AEEF;text-decoration:none;font-size:14px"><?php echo $rowAvg->totalAvg .' reviews'; ?></a>
+						<?php
+						}else{
+						?>
+						   <span style="font-weight:normal;color:#00AEEF;text-decoration:none;font-size:14px"><?php echo $rowAvg->totalAvg .' selfies'?></span>
+						 <?php
+						 }
+						 ?>
+						 </div>
 						</div>
 						<?php
 						}
@@ -359,17 +390,17 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 					  <div class="MerchantLinks" style="width:<?php echo $n ?>px">
 					  <?php
 					if($row->booknow && $row->showmap && $row->contactNo)
-						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$booksite.'"  class="FRight" target="_blank">' . $row->booknowlabel . '</a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
+						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$booksite.'"  class="FRight" target="_blank">' . ($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
 					else if($row->showmap && $row->contactNo)
 						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
 					else if($row->booknow && $row->contactNo)
-						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$booksite.'"  class="FRight" target="_blank">' . $row->booknowlabel . '</a>';
+						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$booksite.'"  class="FRight" target="_blank">' . ($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</a>';
 					else if($row->booknow && $row->showmap)
-						echo '<a href="'.$booksite.'"  class="FRight" target="_blank">' . $row->booknowlabel . '</a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
+						echo '<a href="'.$booksite.'"  class="FRight" target="_blank">' . ($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
 					else if($row->showmap)
 						echo '<p class="FRight"><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a></p>';
 					else if($row->booknow)
-						echo '<p class="FRight"><a href="'.$booksite.'"  class="FRight" target="_blank">' . $row->booknowlabel . '</a></p>'; 
+						echo '<p class="FRight"><a href="'.$booksite.'"  class="FRight" target="_blank">' .($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</a></p>'; 
 					else if($row->contactNo)
 						echo '<p class="FRight"><a href="tel:'.$row->contactNo.'"  class="FRight" target="_blank">Call Us</a></p>'; 	
 					?>
@@ -404,7 +435,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 		if($row->twitterURL)
 			echo '<li><a href="'. (strstr($row->twitterURL,'http') ? $row->twitterURL : 'http://'.$row->twitterURL) .'"  target="_blank">Twitter Page</a></li>';
 		if($row->booknow)
-			echo '<li><a href="'.(strstr($row->booknow,'http') ? $row->booknow : 'http://'.$row->booknow).'" target="_blank">' . $row->booknowlabel . '</a></li>'; 		
+			echo '<li><a href="'.(strstr($row->booknow,'http') ? $row->booknow : 'http://'.$row->booknow).'" target="_blank">' . ($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</a></li>'; 		
 		if($row->contactNo)	
 			echo '<li><a href="tel:'.$row->contactNo.'" target="_blank">Call Us</a></li>'
 		?>

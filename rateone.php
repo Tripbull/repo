@@ -45,6 +45,7 @@ $connect->db_disconnect();
 	<link rel="Shortcut Icon" href="http://www.tabluu.com/blog/wp-content/themes/Tabluu%20Theme%20V1/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
+	<div class="hide top-button-selfie"><div style="margin:13px auto 0;text-align:center;"><span class="btn-take-isselfie">Your Selfie Now!</span></div></div>
 	<div style="position:absolute;opacity:0;overflow:hidden;">
 		<div style="position:absolute;font-family:myriadpro;">.</div>
 		<div style="position:absolute;font-family:Lato-Light;">.</div>
@@ -57,10 +58,11 @@ $connect->db_disconnect();
 		<div class="content-wrap">
 			<div role="main" class="ui-content">
 				<div class="ratewrap">
-					
+					<div class="hide isselfie">
 					<div class="rate-logo">
 						<img src="images/" alt="" class="loc-logo" />
 					</div>
+					
 					<div class="rate-question">
 						<p class="ratetxt"></p>
 					</div>
@@ -68,28 +70,29 @@ $connect->db_disconnect();
 						<div class="rate-wrapstar">
 							<div class="rate-star starRate1">
 								<img src="images/template/blankstar.png" width="" class="imgrate1" alt="" />
-								<span class="vpoor">Very Poor</span>
+								<span class="vpoor"></span>
 							</div>
 							<div class="rate-star starRate2">
 								<img src="images/template/blankstar.png" alt="" class="imgrate2" />
-								<span class="poor">Poor</span>
+								<span class="poor"></span>
 							</div>
 							<div class="rate-star starRate3">
 								<img src="images/template/blankstar.png" alt="" class="imgrate3" />
-								<span class="fair">Fair</span>
+								<span class="fair"></span>
 							</div>
 							<div class="rate-star starRate4">
 								<img src="images/template/blankstar.png" alt="" class="imgrate4" />
-								<span class="good">Good</span>
+								<span class="good"></span>
 							</div>
 							<div class="rate-star starRate5">
 								<img src="images/template/blankstar.png" alt="" class="imgrate5" />
-								<span class="exc">Excellent</span>
+								<span class="exc"></span>
 							</div>
 						</div>
 					</div>
 					<div class="loc-address"><p class="addressname"></p></div>
 					<div class="loc-login"><img src="images/template/logoBelowUI.png" class="ratelogo" alt="" width="103" height="30" /></div>
+					<div>
 				</div>	
 				<input type="hidden" id="nicename" name="nicename" value="<?php echo $_REQUEST['p']?>" />
 				<form id="frmtakeselfie" style="visibility:hidden;height:0px" action="setPhoto.php" method="post" enctype="multipart/form-data" >

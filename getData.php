@@ -445,8 +445,13 @@ switch($opt){
 			mysql_query("INSERT INTO businessImages (placeId,path,name) VALUES($placeId,'".$row->fbImg."','fbImg'),($placeId,'".$row->webImg."','webImg'),($placeId,'".$row->webImg2."','webImg2'),($placeId,'".$row->webImg3."','webImg3'),($placeId,'".$row->webImg4."','webImg4'),($placeId,'".$row->webImg5."','webImg5'),($placeId,'".$row->webImg6."','webImg6'),($placeId,'".$row->webImg7."','webImg7'),($placeId,'".$row->webImg8."','webImg8')") or die(mysql_error());
 			$imagesArray['fbImg'] = $row->fbImg;$imagesArray['webImg'] = $row->webImg;$imagesArray['webImg2'] = $row->webImg2;$imagesArray['webImg3'] = $row->webImg3;$imagesArray['webImg4'] = $row->webImg4;$imagesArray['webImg5'] = $row->webImg5;$imagesArray['webImg6'] = $row->webImg6;$imagesArray['webImg7'] = $row->webImg7;$imagesArray['webImg8'] = $row->webImg8; 
 		}
-		
-		$sql = "SELECT p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.longitude,p.latitude, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.linkedinURL, p.twitterURL, p.showmap, p.email, p.booknowlabel, p.booknow, l.subscribe,l.label, g.email as gmail, d.description, o.opening, c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.printvalue,c.optsocialpost,v.link FROM businessList AS l
+		$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'isselfie'") or die(mysql_error());
+		if(mysql_num_rows($addnewfield) < 1)
+			mysql_query("ALTER TABLE `businessCustom`  ADD `isselfie` TINYINT NOT NULL DEFAULT '0'  AFTER `fbpost`");
+		$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'taglineselfie'") or die(mysql_error());
+		if(mysql_num_rows($addnewfield) < 1)
+			mysql_query("ALTER TABLE `businessCustom` ADD `taglineselfie` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `fbpost`");	
+		$sql = "SELECT p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.longitude,p.latitude, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.linkedinURL, p.twitterURL, p.showmap, p.email, p.booknowlabel, p.booknow, l.subscribe,l.label, g.email as gmail, d.description, o.opening, c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.printvalue,c.optsocialpost,c.isselfie,c.taglineselfie,v.link FROM businessList AS l
 		LEFT JOIN businessProfile AS p ON p.profilePlaceId = l.id
 		LEFT JOIN businessDescription AS d ON d.descPlaceId = l.id
 		LEFT JOIN businessUsers AS g ON g.userGroupId = l.userGroupId AND permission = 0
@@ -650,7 +655,10 @@ switch($opt){
 	break;
 	case 'getrate':
 		$nice = $_REQUEST['nice'];
-		$sql = "SELECT c.customPlaceId as placeId,p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.city, p.country, p.zip, p.contactNo, p.showmap,c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,g.state,g.productId,g.suspend,l.subscribe,c.optsocialpost FROM businessProfile AS p
+		$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'isselfie'") or die(mysql_error());
+		if(mysql_num_rows($addnewfield) < 1)
+			mysql_query("ALTER TABLE `businessCustom`  ADD `isselfie` TINYINT NOT NULL DEFAULT '0'  AFTER `fbpost`");
+		$sql = "SELECT c.customPlaceId as placeId,p.profilePlaceId, p.businessName, p.nicename, p.category, p.address, p.city, p.country, p.zip, p.contactNo, p.showmap,c.messageBox,c.item2Rate,c.settingsItem,c.selectedItems,c.button,c.backgroundImg,c.reviewPost,c.logo,c.backgroundcolor,c.backgroundFont,c.ratingText,c.fbpost,c.email_alert,c.isselfie,g.state,g.productId,g.suspend,l.subscribe,c.optsocialpost FROM businessProfile AS p
 		LEFT JOIN businessCustom AS c ON c.customPlaceId = p.profilePlaceId
 		LEFT JOIN businessList AS l ON l.id = p.profilePlaceId
 		LEFT JOIN businessUserGroup AS g ON g.gId = l.userGroupId
@@ -691,9 +699,10 @@ switch($opt){
 	break;	
 	case 'getFeedbackUser':
 		$placeId = $_REQUEST['key'];
-		$sql = "SELECT p.nicename,g.timezone,l.setup FROM businessList AS l
+		$sql = "SELECT p.nicename,g.timezone,l.setup,c.isselfie FROM businessList AS l
 		LEFT JOIN businessUserGroup as g ON g.gId = l.userGroupId
 		LEFT JOIN businessProfile AS p ON p.profilePlaceId = l.id
+		LEFT JOIN businessCustom AS c ON c.customPlaceId = l.id
 		WHERE l.id =  $placeId
 		LIMIT 1";
 		$result = mysql_query($sql);
@@ -1338,10 +1347,14 @@ function sendEmail($email,$subject,$body,$cc_email=''){
 function getLocations($userId,$permission){
 	include_once('class/class.main.php');
 	$connect = new db();
-	$sql = "SELECT l.id, l.businessName, l.subscribe, l.setup, l.label, p.nicename, v.link
+	$addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'isselfie'") or die(mysql_error());
+	if(mysql_num_rows($addnewfield) < 1)
+		mysql_query("ALTER TABLE `businessCustom`  ADD `isselfie` TINYINT NOT NULL DEFAULT '0'  AFTER `fbpost`");
+	$sql = "SELECT l.id, l.businessName, l.subscribe, l.setup, l.label, p.nicename, v.link,c.isselfie
 			FROM businessUsers AS u
 			LEFT JOIN businessList AS l ON l.userGroupId = u.userGroupId
 			LEFT JOIN businessProfile AS p ON p.profilePlaceId = l.id
+			LEFT JOIN businessCustom AS c ON c.customPlaceId = l.id
 			LEFT JOIN businessvanitylink AS v ON v.placeId = l.id
 			WHERE u.id = $userId ORDER BY l.id ASC
 			LIMIT 0 , 30";	
@@ -1354,6 +1367,7 @@ function getLocations($userId,$permission){
 			$arrayPlace[$i]['setup'] = $row->setup;
 			$arrayPlace[$i]['label'] = $row->label;
 			$arrayPlace[$i]['nicename'] = $row->nicename;
+			$arrayPlace[$i]['isselfie'] = $row->isselfie;
 			$arrayPlace[$i++]['vlink'] = ($row->link != null ? $row->link : '');
 		}
 	}	
@@ -1376,7 +1390,9 @@ function getLocations($userId,$permission){
 					$tempArray[$j]['setup'] = $val['setup'];
 					$tempArray[$j]['label'] = $val['label'];
 					$tempArray[$j]['nicename'] = $val['nicename'];
-					$tempArray[$j++]['vlink'] = $val['vlink'];	
+					$tempArray[$j]['isselfie'] = $val['isselfie'];
+					$tempArray[$j++]['vlink'] = $val['vlink'];
+					
 				}
 			}	
 			$array = $tempArray;			

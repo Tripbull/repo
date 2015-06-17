@@ -20,20 +20,20 @@
 				<div role="main" class="ui-content">
 					<div class="main-wrap">
 						<div class="left-content fl">
-							<div class="left-header">Collect Feedback / Reviews</div>			
+							<div class="left-header">Collect Feedback / Selfie</div>			
 							<ul class="feedback-left-menu" data-role="listview">
-								<li ><a href="#">Tablet "On the Spot" Feedback<span class="listview-arrow-default"></span></a></li>
+								<li ><a href="#">On the Spot<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="#" class="qrcode">Messages, QR Codes &amp; Mini Links<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Send Email Invitations<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="#">Photo Booth (Tablet or Notebook)<span class="listview-arrow-default"></span></a></li>
-								<!--<li ><a href="#">Website Widget<span class="listview-arrow-default"></span></a></li>-->
+								<li ><a href="#">Website Feedback Widget<span class="listview-arrow-default"></span></a></li>
 							</ul>							
 						</div>
 						<div class="right-content bgwhite fr">
-							<div class="right-header">Collect Feedback / Reviews</div>
+							<div class="right-header">Collect Feedback / Selfie</div>
 							<section class="tellafriend hide">
 								<!--<iframe src="http://www.tabluu.com/tellafriend/index.php" width="600" height="600" scrolling="auto" frameborder="0" style="border:0px #FFFFFF" name="frame share contacts" id="tellFrame" marginheight="0"></iframe>-->
-								<p class="font-16">Note: Send out feedback / review invitations by copying &amp; pasting the below subject / message to your email.</p>
+								<p class="font-16 fnoted bgrey" style="padding:10px">Note: Send out feedback / review invitations by copying &amp; pasting the below subject / message to your email.</p>
 								<div class="clear" style="padding-top:1em"></div>
 								<p class="font-17 fl">Subject:</p>
 								<div class="clear" style="padding-top:0.5em"></div>
@@ -43,6 +43,20 @@
 								<div class="clear" style="padding-top:0.5em"></div>
 								<div>
 									<textarea name="bbcode_field" id="textarea-invite" style="height:400px;width:100%;max-height: 900px;"></textarea>
+								</div>
+								<div class="hide emailselfie">
+								<div class="clear" style="padding-top:1em"></div>
+								<p class="font-16 fnoted2 bgrey" style="padding:10px">Note: Send out feedback / review invitations by copying &amp; pasting the below subject / message to your email.</p>
+								<div class="clear" style="padding-top:1em"></div>
+								<p class="font-17 fl">Subject:</p>
+								<div class="clear" style="padding-top:0.5em"></div>
+								<input type="text" data-clear-btn="false" name="invitxtsubject2" id="invitxtsubject2" value="You're invited to give Tokyo Cafe a review!" placeholder="Subject...">
+								<div class="clear" style="padding-top:1em"></div>
+								<p class="font-17 fl">Message:</p>
+								<div class="clear" style="padding-top:0.5em"></div>
+								<div>
+									<textarea name="bbcode_field" id="textarea-invite2" style="height:400px;width:100%;max-height: 900px;"></textarea>
+								</div>
 								</div>
 							</section>	
 							<section class="feedback-weblink hide">									
@@ -62,8 +76,8 @@
 							</section>
 							<section class="survey hide">
 								<ul class="feedback-right-weblink" data-role="listview">
-									<li><a href="onspot.html">Survey<span class="listview-arrow-default"></span></a></li>
-									<li><a href="onspot.html">Check Out Counters / Anywhere<span class="listview-arrow-default"></span></a></li>
+									<li><a href="onspot.html">Handheld Tablet<span class="listview-arrow-default"></span></a></li>
+									<li><a href="onspot.html">Check Out Counters<span class="listview-arrow-default"></span></a></li>
 								</ul>	
 							</section>
 							<section class="feedback-widget hide">	

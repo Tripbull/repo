@@ -29,8 +29,16 @@
 			<a href="login.html" class="Button Button11 WhiteButton comment"><strong>Comment</strong><span></span></a>
 		</div>-->
 		<p class="description sysPinDescr fblink"><a href="https://www.facebook.com/<?php echo $rowrate->userId ?>" target="_blank"><?php echo $fbname; ?></a></p>
-		<div style="text-align:center;"><img class="pinImage" src="<?php echo $fbsrc; ?>" alt="Selfie"/></div>
+		<div style="text-align:center;">
+			<?php
+			if($rowrate->source == 'fb' && $rowrate->link != '' && $rowrate->isshared == 1)
+				echo '<a href="'.$path.'showupSharedFb.php?link='.$rowrate->link.'" class="sharedpage fancybox.iframe"><img class="pinImage" src="'.$fbsrc.'" alt="Selfie"/></a>';
+			else
+				echo '<img class="pinImage" src="'.$fbsrc.'" alt="Selfie"/>';
+			?>
+		</div>
 		<?php
+			if($row->isselfie == 0){
 				$ave = explode(".",$rowrate->aveRate);
 				$style='';
 					if((int)$rowrate->aveRate == 0)
@@ -153,6 +161,10 @@
 			</p> 
 			<p style="color:#777;font-weight: bold;text-align:left;"><?php echo $rowrate->comment; ?></p>
 		</center>
+		<?php
+		}else
+			echo '<div style="padding:5px;"></div>'
+		?>
 	</div>
 <?php
 //}

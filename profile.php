@@ -30,7 +30,7 @@ foreach($time_zones as $zones){
 				<div role="main" class="ui-content">
 					<div class="main-wrap">
 						<div class="left-content fl">
-							<div class="left-header">Business Web Page</div>			
+							<div class="left-header">Tabluu Page</div>			
 							<ul class="profile-left-menu2" data-role="listview">
 								<li ><a href="#">Profile<span class="listview-arrow-default"></span></a></li>
 							</ul>							
@@ -98,7 +98,7 @@ foreach($time_zones as $zones){
 							<section class="desc-section hide">
 							   <div class="clear"></div>
 							    <div class="clear" style="padding-top:0.2em"></div>
-								<p class="font-17 fl">Description of your product or service (up to 300 words)</p>
+								<p class="font-17 fl">Description of your product or campaign (up to 300 words)</p>
 								 <div class="clear" style="padding-top:1.4em"></div>
 								<div>
 									<textarea name="bbcode_field" id="textarea-desc" style="height:400px;width:100%;max-height: 900px;"></textarea>

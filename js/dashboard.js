@@ -1,7 +1,7 @@
-var curClick=0,locId=0,frmpagemanage=0,setupclickmenu=0,defaultSetup=0,noPhoto = 'images/template/no-photo.gif',loadingPhoto = 'images/template/no-photo-tran.gif',isprofileupdated=0,reviewQuestion=[],feedbackArray=[],featureArray=[],inviteEmailvisited=0,isAdminCreatedLocation=0,lab='',vanitylinkupdate=0,newvanitylink='';
+var curClick=0,locId=0,frmpagemanage=0,setupclickmenu=0,defaultSetup=0,noPhoto = 'images/template/no-photo.gif',loadingPhoto = 'images/template/no-photo-tran.gif',isprofileupdated=0,reviewQuestion=[],feedbackArray=[],featureArray=[],inviteEmailvisited=0,isAdminCreatedLocation=0,lab='',vanitylinkupdate=0,newvanitylink='',selfieonly = 0,bgwizard=0;
 var locArray=[],userArray=[],customArray=[],viewOnce=0,geocoder,lat=0,lng=0,domainFile="http://tabluu.com";chargifydomain = 'https://tabluu.chargify.com';
 var locDefault = '',placeId=0,placename='',keyId=0,loader='',activeLocLength=1,isfocus=0,t=0,comp_id_old=0,locname='',arraylabel=[];
-var online ='images/template/active.png',onlineBg='images/template/activeOnline.png',offline ='images/template/inactive.png',offlineBg='images/template/activeOffline.png',imagesArray=[],txtdescription='',txtimg='',product_plan_array=[],component_array=[],transac=[],activity_array=[],issetup = 0;
+var online ='images/template/active.png',onlineBg='images/template/activeOnline.png',offline ='images/template/inactive.png',offlineBg='images/template/activeOffline.png',imagesArray=[],txtdescription='',txtimg='',product_plan_array=[],component_array=[],transac=[],activity_array=[],issetup = 0,postwizard=0,isselfie=0;
 //live mode chargify ids
 var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619,lite = 3700318;
 //live component chargify ids
@@ -36,46 +36,87 @@ $(document).ready(function(){
 
 	function wizardAlert(whatsetup){
 		//showLoader();
+		var steps = 7;//(selfieonly == 1 ? 7 : 7);
 		if(whatsetup == 1){
-			var title = 'Setup Wizard - Step 1 / 7';
+			var title = 'Setup Wizard - Step 1 / '+ steps;
 			var body = '<p>Please set your correct time zone.</p>';
 			var redirect = "settings.html";	
         }else if(whatsetup == 2){
-			var title = 'Setup Wizard - Step 2 / 7';
+			var title = 'Setup Wizard - Step 2 / '+ steps;
 			var body = '<p>Please add a new location / business.</p>';
 			var redirect = "index.html";
 			$('.addnew-loc').hide();
 			$('.text-loc').show();
-			//$('#text-6').val(' ');
         }else if(whatsetup == 3){
-			var title = 'Setup Wizard - Step 3 / 7';
+			var title = 'Setup Wizard - Step 3 / '+ steps;
 			var body = '<p>Please complete your business profile.</p>';
 			var redirect = "profile.html";
         }else if(whatsetup == 4){
-			var title = 'Setup Wizard - Step 4 / 7';
+			var title = 'Setup Wizard - Step 4 / '+ steps;
 			var body = '<p style="text-align:left;">Please choose the questions you will like to ask your customers.</p>'
 						+ '<p style="text-align:left;padding-bottom: 7px">Don\'t forget to flick the switch "On"</p>';
 			var redirect = "setup.html";
 		}else if(whatsetup == 5){
 			curClick = 0;
-			var title = 'Setup Wizard - Step 5 / 7';
+			var step = (customArray.settingsItem == 0 ? 5 : 4);
+			var title = 'Setup Wizard - Step '+step+' / '+ steps;
 			var body = '<p style="text-align:left;">Please upload a logo for your business.</p>';
 			var redirect = "uic.html";
         }else if(whatsetup == 6){
-			curClick = 0;
-			var title = 'Setup Wizard - Step 6 / 7';
-			var body = '<p style="text-align:left;">Please upload at least one image of your business, product or service.</p>'
-						+'<p>Upload the best image first as it will be used for posting to the social media in case your customer does not take a selfie or photo.</p>';
-			var redirect = "profile.html";
-			curClick = 5;
+			if(selfieonly == 0){
+				var title = 'Setup Wizard - Step 6 / '+ steps;
+				var body = '<p style="text-align:left;">Please upload at least one image of your business, product or service.</p>'
+							+'<p>Upload the best image first as it will be used for posting to the social media in case your customer does not take a selfie or photo.</p>';
+				var redirect = "profile.html";
+				curClick = 5;
+			}else if(selfieonly == 1){
+				bgwizard = 1;
+				var title = 'Setup Wizard - Step 5 / '+ steps;
+				var body = '<p>Please upload a background image for your "selfie only" campaign.</p>';
+				var redirect = "uic.html";
+				curClick = 1;
+				places = locId.split('|');
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=createTable&case=1&set=1',success:function(lastId){
+				}});
+                var temp = ['How about our food?_Food'];
+				$.ajax({type: "POST",url:"setData.php",contentType: "application/x-www-form-urlencoded;charset=UTF-8",cache: false,data:'placeId='+places[0]+'&opt=setcustom&case=9&check='+temp,success:function(lastId){
+				}})
+				temp = ['Food'];
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=setcustom&case=8&check='+temp,success:function(lastId){
+				}})
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=optsocialpost&placeId='+places[0]+'&val=2',success:function(result){}});
+				$.box_Dialog(body, {
+					'type':     'question',
+					'title':    '<span class="color-white">'+title+'<span>',
+					'center_buttons': true,
+					'show_close_button':false,
+					'overlay_close':false,
+					'buttons':  [{caption: 'okay',callback:function(){
+						diabledUICMenu(1);
+					}}]	
+				});	
+				//diabledUICMenu(1);
+				return;
+			}
         }else if(whatsetup == 7){
-			var title = 'Setup Wizard - Step 7 / 7';
-			var body = '<p>Get your customers to give you<br/>"X" Selfies now!</p>'
+			var title = 'Setup Completed!';
+			var body = '';
+			if(selfieonly == 0){
+				var title = 'Setup Wizard - Step 7 / '+ steps;
+				body = '<p>Get your customers to give you<br/>"X" Selfies now!</p>'
 			           + '<p><b>Print 20 "Post your \'X\' Selfie" messages & display them at...</b></p>'
 					   + '<p>dinning tables,waiting areas, lobbies, pool side tables, hotel rooms, function rooms... & all other <b>"chilling out" spots</b> of your business.</p>'
+			}else		   
+				body = '<p>Congratulations! You have completed the setup. You may start your campaign now.</p>';	   
 			curClick = 0;
 			var redirect = "weblink.html";
 			isdonewizard = 1;
+			//$( ":mobile-pagecontainer" ).pagecontainer( "change",redirect,{transition: "flip"});
+        }else if(whatsetup == 8){
+			var title = 'Setup Wizard - Step 6 / '+ steps;
+			var body = '<p>Please enter the details for your Selfie Campaign.</p>';	   
+			curClick = 0;postwizard=1;
+			var redirect = "fbpost.html";
 			//$( ":mobile-pagecontainer" ).pagecontainer( "change",redirect,{transition: "flip"});
         }
 		//if(whatsetup != 6){
@@ -103,6 +144,10 @@ $(document).ready(function(){
 				placename  = customArray.businessName + ($.trim(lab) != '' ? ' ('+lab+')' : '');
 				lab = '';
 				hideLoader();var j=0;
+				if(customArray.taglineselfie != '')
+					var arraytagline =  $.parseJSON(customArray.taglineselfie);
+				if(selfieonly == 1)
+					customArray.settingsItem = 1;
 				if(customArray.webImg != '')
 					j++;
 				if(customArray.webImg2 != '')
@@ -129,9 +174,13 @@ $(document).ready(function(){
 				}else if(customArray.logo == ''){
 					uicwizardsetup = 1;questionwizardsetup=0;
 					wizardAlert(5);
-				}else if(j == 0){
-					profilewizardwebImg = 1;profilewizardsetup=0;
+				}else if((j == 0 && selfieonly == 0) || (selfieonly == 1 && customArray.backgroundImg == '')){
+					if(selfieonly == 0)
+						profilewizardwebImg = 1;
+					profilewizardsetup=0;bgwizard = 1;
 					wizardAlert(6);
+				}else if(selfieonly == 1 && arraytagline.txtoccation == ''){
+					wizardAlert(8);
 				}else if(locOption[2] < 1){
 					issetup = 1;uicwizardsetup = 0;
 					wizardAlert(7);
@@ -158,7 +207,11 @@ $(document).ready(function(){
 							customArray =  $.parseJSON(result);
 							placename  = customArray.businessName + ($.trim(lab) != '' ? ' ('+lab+')' : '');
 							lab = '';
+							if(customArray.taglineselfie != '')
+								var arraytagline =  $.parseJSON(customArray.taglineselfie);
 							hideLoader();var j=0;
+							if(selfieonly == 1)
+								customArray.settingsItem = 1;
 							if(customArray.webImg != '')
 								j++;
 							if(customArray.webImg2 != '')
@@ -185,9 +238,13 @@ $(document).ready(function(){
 							}else if(customArray.logo == ''){
 								uicwizardsetup = 1;questionwizardsetup = 0;
 								wizardAlert(5);
-							}else if(j == 0){
-								profilewizardwebImg = 1;profilewizardsetup=0;
+							}else if((j == 0 && selfieonly == 0) || (selfieonly == 1 && customArray.backgroundImg == '')){
+								if(selfieonly == 0)
+									profilewizardwebImg = 1;
+								profilewizardsetup=0;bgwizard = 1;
 								wizardAlert(6);
+							}else if(selfieonly == 1 && arraytagline.txtoccation == ''){
+								wizardAlert(8);
 							}else if(locArray[0].setup < 1){
 								issetup = 1;uicwizardsetup = 0;
 								wizardAlert(7);
@@ -253,7 +310,7 @@ $(document).ready(function(){
 					else if(customArray.nicename == "")
 						alertBox('setup incomplete','Go to Setup > Your Tabluu Page > Create Your Tabluu Page');
 					else if(customArray.subscribe < 1)
-						alertBox('this location is offline','Please change the status to online');
+						alertBox('this campaign is offline','Please change the status to online');
 					else if(customArray.settingsItem < 1)
 						alertBox('settings not locked','To lock, flick the switch "on". Setup > What Questions to Ask');
 					else
@@ -261,7 +318,7 @@ $(document).ready(function(){
 			  }});
 			
 			}else
-				alertBox('this location is offline','Please change the status to online');
+				alertBox('this campaign is offline','Please change the status to online');
 		}
 	function feedbackpage(s){
 			places = locId.split('|');
@@ -296,7 +353,7 @@ $(document).ready(function(){
 					else if(customArray.nicename == "")
 						alertBox('setup incomplete','Go to Setup > Your Tabluu Page > Create Your Tabluu Page');
 					else if(customArray.subscribe < 1)
-						alertBox('this location is offline','Please change the status to online');
+						alertBox('this campaign is offline','Please change the status to online');
 					else if(customArray.settingsItem < 1)
 						alertBox('settings not locked','To lock, flick the switch "on". Setup > What Questions to Ask');
 					else
@@ -304,7 +361,7 @@ $(document).ready(function(){
 			  }});
 			
 			}else
-				alertBox('this location is offline','Please change the status to online');
+				alertBox('this campaign is offline','Please change the status to online');
 		}	
     function googleAnalytic(){
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -386,33 +443,33 @@ $(document).ready(function(){
 			if(status[1] > 0)
 				$( ":mobile-pagecontainer" ).pagecontainer( "change", "statistic.html",{ });
 			else
-				alertBox('this location is offline','Please change the status to online');
+				alertBox('this campaign is offline','Please change the status to online');
 		});
 		$("#setup-custom").click(function () {  // going to setup page
 			var status = locId.split('|');
 			if(status[1] > 0){
 				getData('getCustom');
 			}else
-				alertBox('this location is offline','Please change the status to online');
+				alertBox('this campaign is offline','Please change the status to online');
 		});	
 		$("#change-icon").click(function () {  // delete place
 			var icon = locId.split('|');
 			if(userArray.permission < 2 ){
 				if(icon[1] > 0){
-					defaulAlertBox('confirm','please confirm','Make this location offline?',3);	
+					defaulAlertBox('confirm','please confirm','Make this campaign offline?',3);	
 				}else{
 					var subs=0,curActive = parseInt(userArray.addLoc) + 1;
 					if( parseInt(curActive) >= parseInt(activeLocLength) ){
-						defaulAlertBox('confirm','please confirm','Make this location online?',2);
+						defaulAlertBox('confirm','please confirm','Make this campaign online?',2);
 					}else
-						defaulAlertBox('confirm','insufficent location subscriptions','Please subscribe to more locations...',4);
+						defaulAlertBox('confirm','insufficent campaign subscriptions','Please subscribe to more locations...',4);
 				}
 			}else
 				defaulAlertBox('alert','invalid request','Please contact your administrator(s) for this request.',1);
 		});	
 			$("#del-place").click(function () {  // delete place
 		if(userArray.permission < 2 )
-			defaulAlertBox('confirm','please confirm','Delete this location?',1);
+			defaulAlertBox('confirm','please confirm','Delete this campaign?',1);
 		else
 			defaulAlertBox('alert','invalid request','Please contact your administrator(s) for this request.',1);
 	});	
@@ -439,7 +496,7 @@ $(document).ready(function(){
                 var rows = locArray.length; //get total length of location
                 if(user.productId == everFree){
                     if(rows > 0){
-                        defaulAlertBox('alert','no access',"Please upgrade to basic plan & above to add more locations.");
+                        defaulAlertBox('alert','no access',"Please upgrade to basic plan & above to add more campaign.");
                     }else{
                         _setBusinessName(name);
                     }
@@ -607,21 +664,26 @@ $(document).ready(function(){
 			$( '.main-wrap .left-content' ).css( {"max-width":'100%'} );
 		}
 		$('.right-menu-help').hide();$('.right-menu-admin').hide();$('.right-menu-send').hide();$('.right-menu-plan').hide();$('.right-menu-loc').hide();$('.right-menu-settings').hide();
+		//if(row == 0){
+			//$('.right-menu-help').show();
 		if(row == 0){
-			$('.right-menu-help').show();
-		}else if(row == 1){
 			$('.right-menu-admin').show();
-		}else if(row == 2){
+		}else if(row == 1){
 			$('.right-menu-settings').show();	
-		}else if(row == 3){
-			$('.right-menu-send').show();
-		}else if(row == 4){
+		//}else if(row == 3){
+			//$('.right-menu-send').show();
+		}else if(row == 2){
 			$('.right-menu-plan').show();
-		}else if(row > 4){
+		}else if(row > 2){
 			$('#visit-tabluu-page').hide();
 			placeId= locId;
-			var index = row - 5;
-			//$('.link-visit-page').attr('href','tabluu.com/'+newvanitylink);
+			var index = row - 3;
+			isselfie = locArray[index].isselfie;
+			if(locArray[index].isselfie == 1)
+				diabledTab('.right-menu-loc .right-menu-loc',[5]);
+			else
+				diabledTab('.right-menu-loc .right-menu-loc',[]);	
+			
 			if(locArray[index].nicename){
 				if(newvanitylink != ''){
 					locArray[index].vlink = newvanitylink;
@@ -637,7 +699,8 @@ $(document).ready(function(){
 		}
 	}
 	function DashMenu(){
-		locDefault = '<li ><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">Help<span class="listview-arrow-default listview-arrow-active"></span></a></li><li><a href="#">User Admin<span class="listview-arrow-default"></span></a></li><li ><a href="#">Global Settings<span class="listview-arrow-default"></span></a></li><li ><a href="#">Send Emails<span class="listview-arrow-default"></span></a></li><li ><a href="#">Subscriptions<span class="listview-arrow-default"></span></a></li>';
+		/*locDefault = '<li ><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">Help<span class="listview-arrow-default listview-arrow-active"></span></a></li><li><a href="#">User Admin<span class="listview-arrow-default"></span></a></li><li ><a href="#">Global Settings<span class="listview-arrow-default"></span></a></li><li ><a href="#">Send Emails<span class="listview-arrow-default"></span></a></li><li ><a href="#">Subscriptions<span class="listview-arrow-default"></span></a></li>'; */
+		locDefault = '<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">User Admin<span class="listview-arrow-default"></span></a></li><li ><a href="#">Global Settings<span class="listview-arrow-default"></span></a></li><li ><a href="#">Subscriptions<span class="listview-arrow-default"></span></a></li>';
 		if(locArray.length){ // had location already
 			activeLocLength=1;arraylabel=[];
 			for(var i in locArray){
@@ -648,13 +711,14 @@ $(document).ready(function(){
 					activeLocLength++;
 				if($.trim(locArray[i].label) != '')
 					arraylabel.push(encodequote(locArray[i].label));	
-				locDefault = locDefault + '<li><a href="#" class="'+locArray[i].id+'|'+locArray[i].subscribe+'|'+locArray[i].setup+'"><img src="'+icon+'" alt="" class="ui-li-icon ui-corner-none">'+locArray[i].name+' '+(locArray[i].label != '' ? '('+decodequote(locArray[i].label)+')' : '')+'<span class="listview-arrow-default"></span></a></li>';
-			}	
+				locDefault = locDefault + '<li><a href="#" class="'+locArray[i].id+'|'+locArray[i].subscribe+'|'+locArray[i].setup+'"><img src="'+icon+'" alt="" class="ui-li-icon ui-corner-none">'+(locArray[i].isselfie == 1 ? '&lt;SELFIE ONLY&gt; ' : '')+locArray[i].name+' '+(locArray[i].label != '' ? '('+decodequote(locArray[i].label)+')' : '')+'<span class="listview-arrow-default"></span></a></li>';
+			}
 			$('.left-menu').html('<ul class="left-menu" data-role="listview">'+locDefault+'</ul>');
 			$(".left-menu").on ('click', ' > li', function (event){
 				var row = $(this).index();
 				var clas = $(this).find( "a" ).attr("class");
-				placename  = $( this ).text();
+				var str = $( this ).text();
+				placename  = $.trim(String(str).replace('<SELFIE ONLY>','')); 
 				var id = clas.split(' ');
 				locId = id[0];
 				$( ".right-header" ).html( placename );
@@ -676,7 +740,8 @@ $(document).ready(function(){
 			$(".left-menu").on ('click', ' > li', function (event){
 				var row = $(this).index();
 				var clas = $(this).find( "a" ).attr("class");
-				placename  = $( this ).text();
+				var str = $( this ).text();
+				placename  = $.trim(String(str).replace('<SELFIE ONLY>','')); 
 				var id = clas.split(' ');
 				locId = id[0];
 				$( ".right-header" ).html( placename );		
@@ -831,15 +896,30 @@ $(document).ready(function(){
 		break;	
 	  }
 	}
+	function setSelfies(id){
+		$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+id+'&opt=selfieonly',success:function(lastId){
+		}});	
+	}
 	function setData(s){
 	 switch(s.opt){
 		case 'setLoc':
 			showLoader();
 			$('#text-6').val('');
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'key='+s.userId+'&opt='+s.opt+'&groudId='+userArray.userGroupId+'&subscribe='+s.subs+'&name='+s.name+'&label='+s.label,async: false,success:function(lastId){
-				hadError(lastId);
 				newplaceId = lastId +'|'+s.subs+'|'+0;
 				newentryloc = 1;
+				
+				if(userArray.productId == enterprise || userArray.productId == enterprise12 || userArray.productId == enterprise24){
+					$.box_Dialog('<p>Please select the type of campaing you wish to run.</p>', {
+						'type':     'question',
+						'title':    '<span class="color-gold">Select your campaign type...</span>',
+						'center_buttons': true,
+						'show_close_button':false,
+						'overlay_close':false,
+						'buttons':  [{caption: 'feedback',callback:function(){setTimeout(function(){selfieonly = 0;hadError(lastId);},400)}},{caption: 'selfie only',callback:function(){selfieonly = 1;setSelfies(lastId);setTimeout(function(){hadError(lastId);},400)}}]
+					});
+				}else
+					hadError(lastId);
 				//window.open('http://tabluu.com/blog/tabluu-general/how-do-i-setup-tabluu-2', '_blank');
 			}});
 		break;
@@ -1336,7 +1416,7 @@ $(document).ready(function(){
 					else if(customArray.nicename == "")
 						alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 					else if(customArray.subscribe < 1)
-						alertBox('this location is offline','Please change the status to online');
+						alertBox('this campaign is offline','Please change the status to online');
 					else if(customArray.settingsItem < 1)
 						alertBox('settings not locked','To lock, flick the switch "on". Setup > What Questions to Ask');
 					else{
@@ -1423,7 +1503,9 @@ $(document).ready(function(){
 	function wizardstep7(){
 		showLoader();
 		var placeId = locId.split('|');
-		window.open('http://tabluu.com/blog/tabluu/almost-there','_blank');
+		if(selfieonly === 0)
+			window.open('http://tabluu.com/blog/tabluu/almost-there','_blank');
+		selfieonly = 0;bgwizard=0;postwizard=0;
 		$.ajax({type: "POST",url:"getData.php",cache: false,async: true,data:'key='+placeId[0]+'&opt=getFeedbackUser',success:function(result){
 			hideLoader();
 			customArray =  $.parseJSON(result);
@@ -1434,19 +1516,19 @@ $(document).ready(function(){
 				$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+placeId[0]+'&opt=wizardsetupdone',success:function(result){
 					newplaceId = placeId[0] +'|'+placeId[1]+'|'+1;
 				}});
-				//diabledMenu(1);
+				getData('getUser');
 				isdonewizard = 0;
-				
 				curClick = 0;
 			}else{
 				emailwizardsetup = 0;
-				//diabledMenu(0);
 			}	
 		}});
 	}
 	
 	$(document).on('pageshow','#weblink', function () {
-		
+		if(customArray.isselfie == 1){
+					diabledTab('.weblink-left-menu',[1]);
+				}
 	
 	});
 	function codes(str){
@@ -1605,7 +1687,7 @@ $(document).on("pagebeforechange", function (e, data) {
 				var off = $("select#flipsetting");off[0].selectedIndex = 0;off.flipswitch("refresh");			
 				alertBox('please select questions','Please check 1 to 7 questions (just click or touch a question to check it).');
 			}else if($('#flipsetting').val() > 0){
-					$.box_Dialog('All feedback data for this location will be deleted.', {'type':'confirm','title': '<span class="color-gold">warning!<span>','center_buttons': true,'show_close_button':false,'overlay_close':false,'buttons':  [
+					$.box_Dialog('All feedback data for this campaign will be deleted.', {'type':'confirm','title': '<span class="color-gold">warning!<span>','center_buttons': true,'show_close_button':false,'overlay_close':false,'buttons':  [
 					{caption: 'yes', callback: function() {
 							customArray.settingsItem = 0;
 							 checkboxQuestion();
@@ -1742,7 +1824,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		var j=0;
 		if(customArray.city != ''){
 			$('#txtcity').val(customArray.city);
-		}		
+		}
 		if(customArray.fbImg != '')
 			j++;
 		if(customArray.webImg != '')
@@ -1768,11 +1850,11 @@ $(document).on("pagebeforechange", function (e, data) {
 				addli = '<li ><a href="#" id="create-page" data-prefetch="true">Create Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
 			else
 				addli = '<li ><a href="'+domainpath+newnice+'" class="link-visit-page" target="_blank">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-				var newli = '<ul class="profile-left-menu1" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li><a href="profile.html" data-prefetch="true" class="vanity">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';
+				var newli = '<ul class="profile-left-menu1" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li><a href="profile.html" data-prefetch="true" class="vanity">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Images<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';
 		}else{
 			if(customArray.nicename != "")
 				addli = '<li ><a href="'+domainpath+newnice+'" class="link-visit-page" target="_blank" >Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-			var newli = '<ul class="profile-left-menu1" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li><a href="profile.html" data-prefetch="true" class="vanity">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';	
+			var newli = '<ul class="profile-left-menu1" id="setup-profile-menu" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li><a href="profile.html" data-prefetch="true" class="vanity">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Images<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';	
 				
 		}
 			$('.profile-left-menu1').html(newli);
@@ -1884,6 +1966,8 @@ $(document).on("pagebeforechange", function (e, data) {
 			if(row == 0){
 				createProfileMenu1();
 				$('.panel-profile').show();
+				if(customArray.isselfie == 1)
+					diabledTab('.panel-profile .profile-left-menu1',[2]);
 			}else if(row == 1){
 				/*$.ajax({url:"getData.php",cache: false,data:'placeId='+places[0]+'&opt=getImages&',async: false,success:function(result){
 					hideLoader();
@@ -1894,11 +1978,19 @@ $(document).on("pagebeforechange", function (e, data) {
 				}});*/
 				$( '#setup .right-content' ).addClass("right-bgblue");
 				$('.panel-UIC').show();
+				if(customArray.isselfie == 1)	
+					diabledTab('.panel-UIC .right-menu',[2,3,4]);
 			}else if(row == 2){
-				 checkboxQuestion();
-				$('.panel-question').show();
+				if(customArray.isselfie == 1){
+					alertBox('section disabled','You are running a "selfie only" campaign and it is not required to setup up this section.');
+				}else{
+					checkboxQuestion();
+					$('.panel-question').show();
+				}
 			}else if(row == 3){
 				$('.panel-postFB').show();
+				if(customArray.isselfie == 1)
+					diabledTab('.panel-postFB .right-menu',[1,2]);
 			}else if(row == 4){
 				if(userArray.productId != enterprise12 && userArray.productId != enterprise24 && userArray.productId != enterprise)
 					 alertBox('no access','Please upgrade to enterprise plan & above to access this feature');
@@ -1932,6 +2024,8 @@ $(document).on("pagebeforechange", function (e, data) {
 	$(document).on('pageshow','#setup', function () {
 		if(newvanitylink != "")
 			$('.link-visit-page').attr('href',domainpath+newvanitylink);
+		if(customArray.isselfie == 1)
+			diabledTab('.setup-left-menu',[2,4]);	
 	});
 	
 	var rateName=[],tagName=[],noAswer=0;
@@ -2408,11 +2502,11 @@ $(document).on("pagebeforechange", function (e, data) {
 			if(customArray.nicename == "")
 				createPage2();
 				addli = '<li '+clas+'><a href="'+domainpath+newnice+'" class="link-visit-page" target="_blank">Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>'
+				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>'
 		}else{
 			if(customArray.nicename != "")
 				addli = '<li '+clas+'><a href="'+domainpath+newnice+'" target="_blank" class="link-visit-page" >Visit Your Tabluu Page<span class="listview-arrow-default"></span></a></li>';
-				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas )+'><a href="profile.html"  data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images of Products &amp; Services<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';
+				var newli = '<ul class="profile-left-menu2" id="setup-profile-menu" data-role="listview"><li '+(profilewizardsetup == 1 ? '' : clas )+'><a href="profile.html"  data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html"  data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#"  data-prefetch="true" class="addlogo">Your Custom Tabluu URL<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="#" data-prefetch="true" class="addlogo">Logo<span class="listview-arrow-default"></span></a></li><li '+(profilewizardwebImg == 1 ? '' : clas)+'><a href="profile.html" data-prefetch="true">Images<span class="listview-arrow-default"></span></a></li><li '+clas+'><a href="profile.html" data-prefetch="true">Map (Marker & Display)<span class="listview-arrow-default"></span></a></li>'+addli+'</ul>';
 		}
 		
 			$('.profile-left-menu2').html(newli);
@@ -2595,13 +2689,14 @@ $(document).on("pagebeforechange", function (e, data) {
 		
 		function showHideMenuProfile(row){
 			curClick = row;
-			console.log(row)
 			if($( window ).width() <= 600){
 				$( '.main-wrap .left-content' ).hide();
 				$( '.main-wrap .right-content' ).show();
 				$( '.main-wrap .right-content' ).css( {"max-width":'100%'} );
 			}
 			$('.pro-section').hide();$('.desc-section').hide();$('.open-section').hide();$('.photo-section').hide();$('.map-section').hide();$('.pro-vanity').hide();
+			if(customArray.isselfie == 1)
+				diabledTab('#profile .profile-left-menu2',[2]);
 			if(row == 0){
 				$('.pro-section').show();
 			}else if(row == 1){
@@ -2870,7 +2965,6 @@ $(document).on("pagebeforechange", function (e, data) {
 		});	
 		
 		
-		
 		function setTitleDesc(){
 			txtdescription='';txtimg='';
 			$.box_Dialog('<input type="text" value="" name="txtimg" id="txtimg" placeholder="title" style="width:100%;"/><br/><textarea cols="20" rows="3" style="resize:none;width:100%;margin-top:10px;" placeholder="description" name="txtdescription" id="txtdescription"></textarea>', {
@@ -2900,9 +2994,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		});
 		*/
 		function showResponse2(responseText, statusText, xhr, $form)  { 
-			if(profilewizardwebImg == 1){
-				setTimeout(function() {wizardsetup();profilewizardwebImg = 0;},200);
-			}	
+			
 			if(responseText == 'less'){
 				hideLoader();
 				if(customArray.webImg == ''){
@@ -2924,6 +3016,9 @@ $(document).on("pagebeforechange", function (e, data) {
 				}
 				alertBox('incorrect image size','Please upload images products with min width 600px & min height 200px');
 			}else{
+				if(profilewizardwebImg == 1){
+					setTimeout(function() {wizardsetup();profilewizardwebImg = 0;},200);
+				}	
 				if(customArray.webImg == ''){
 					$('#webthumb1').attr('src', responseText);
 					customArray.webImg = responseText;
@@ -3107,7 +3202,79 @@ $(document).on("pagebeforechange", function (e, data) {
 		});	
 		$('#uic .star').click(function(){goHome();});
 	})
-   
+     function diabledUICMenu(s){
+				clas = 'ui-state-disabled';
+				if(s == 1){
+					if(bgwizard == 1){
+						defaultMenuUIC();
+						showHideMenuUIC(curClick);	
+					}	
+					if(bgwizard == 1){
+						diabledTab('#uic .uic-left-menu',[0,2,3,4,5,6,7]);
+					}else{
+						diabledTab('#uic .uic-left-menu',[1,2,3,4,5,6,7]);
+					}
+				}else{
+					if(customArray.isselfie == 1)
+						diabledTab('#uic .uic-left-menu',[2,3,4]);				
+				}
+			}
+			function defaultMenuUIC(){
+			var height = ($( window ).height() / 16) - 5;
+			$( '.ui-content,.left-content,.right-content' ).css( {"min-height":height.toFixed() + 'em'} );
+			if($( window ).width() > 600){
+				$('.uic-left-menu li a').each(function (index) {
+					if(index == curClick){
+						$(this).addClass('ui-btn-active'); 
+						$(this).find( "span" ).addClass("listview-arrow-active");
+					}else{
+						$(this).removeClass("ui-btn-active");
+						$(this).find( "span" ).removeClass("listview-arrow-active");
+					}	
+				}); 			
+			}else{
+				$('.uic-left-menu li a').each(function (index) {
+					$(this).removeClass("ui-btn-active");
+					$(this).find( "span" ).removeClass("listview-arrow-active");
+				});				
+			}
+		}
+		function showHideMenuUIC(row){
+			curClick = row;
+			if($( window ).width() <= 600){
+				$( '.main-wrap .left-content' ).hide();
+				$( '.main-wrap .right-content' ).show();
+				$( '.main-wrap .right-content' ).css( {"max-width":'100%'} );
+			}
+			$('.uic-section-logo').hide();$('.uic-section-img').hide();$('.uic-section-bg').hide();$('.uic-section-fc').hide();$('.uic-section-tbs').hide();$('.uic-section-tb').hide();$('.uic-section-box').hide();
+			if(row == 0){
+				//if(userArray.productId == everFree)
+				//	 alertBox('no access','Please upgrade to basic plan & above to access this feature');
+				//else			
+				$('.uic-section-logo').show();
+			}else if(row == 1){
+				if(userArray.productId == basicID || userArray.productId == basic24 || userArray.productId == basic12 || userArray.productId == everFree){
+					alertBox('no access','Please upgrade to pro plan & above to access this feature');
+				}else		
+					$('.uic-section-img').show();
+			}else if(row == 2){
+				if(userArray.productId == everFree)
+					 alertBox('no access','Please upgrade to basic plan & above to access this feature');
+				else
+					$('.uic-section-bg').show();
+			}else if(row == 3){
+				if(userArray.productId == everFree)
+					 alertBox('no access','Please upgrade to basic plan & above to access this feature');
+				else			
+					$('.uic-section-fc').show();
+			}else if(row == 4){
+				$('.uic-section-tbs').show();
+			}else if(row == 5){
+				$('.uic-section-tb').show();
+			}else if(row == 6){
+				$('.uic-section-box').show();
+			}
+		}		
 	$(document).on('pageshow','#uic', function () { // UIC script start here
 		googleAnalytic();
 	   $('input[type="text"]').textinput({ preventFocusZoom: true });
@@ -3121,21 +3288,8 @@ $(document).on("pagebeforechange", function (e, data) {
 		$( ".right-header" ).html( placename );	
 		defaultMenuUIC();
 		showHideMenuUIC(curClick);
-		
-		function diabledUICMenu(s){
-			clas = 'ui-state-disabled';
-			if(s == 1){
-				$('.uic-left-menu li').each(function (index) {
-					if(index != 0)
-						$(this).addClass(clas);
-				});
-			}else{
-				$('.uic-left-menu li').each(function (index) {
-					$(this).removeClass(clas);
-				});		
-			}
-		}
 		diabledUICMenu(uicwizardsetup);
+		
          function setmessageBox(){
 			var messArray = $.parseJSON(customArray.messageBox);
 			$('.share').html(decodequote(messArray.share));
@@ -3207,7 +3361,7 @@ $(document).on("pagebeforechange", function (e, data) {
             if(typeof(messArray.captureT) != 'undefined')
 				$('#txtbox24').val(decodequote(messArray.captureT));
             if(typeof(messArray.captureB) != 'undefined')
-				$('#txtbox25').val(decodequote(messArray.captureB)); 				
+				$('#txtbox25').val(decodequote(messArray.captureB)); 						
 			setmessageBox();
 		}else
 			$('.follow-loc').html('Be a fan of '+customArray.businessName+'?');
@@ -3249,6 +3403,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			$('#btnfeedbackSelfie').val((typeof(boxArray.btnfeedback) != 'undefined' ? decodequote(boxArray.btnfeedback[0]) : 'no'));
 			$('#btnfeedbackSelfie2').val((typeof(boxArray.btnfeedback) != 'undefined' ? decodequote(boxArray.btnfeedback[1]) : 'yes'));
 			$('#btncapture').val((typeof(boxArray.btncapture) != 'undefined' ? decodequote(boxArray.btncapture[0]) : 'okay'));
+			$('#btncampaign').val((typeof(boxArray.btncampaign) != 'undefined' ? decodequote(boxArray.btncampaign[0]) : 'Your Selfie Now!'));
 		}	
 		if(customArray.logo != ''){ 
 			var logoArray = $.parseJSON(customArray.logo);
@@ -3351,7 +3506,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			showLoader();
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'placeId='+places[0]+'&opt=setcustom&case=6&'+$('#frmUIC2').serialize(),success:function(lastId){
 				customArray.button =
-				JSON.stringify({"btntake":[$('#btnTakeSelfie').val()],"btncapture":[$('#btncapture').val()],"btnfeedback":[$('#btnfeedbackSelfie').val(),$('#btnfeedbackSelfie2').val()],"share":[$('#txtshare1').val(),$('#txtshare2').val()],"comment":[$('#txtrecommend1').val(),$('#txtrecommend2').val()],"leave":[$('#txtleave1').val(),$('#txtleave2').val()],"allow":[$('#txtallow1').val(),$('#txtallow2').val()],"logout":[$('#txt-logout').val()],"follow":[$('#follow-no').val(),$('#follow-yes').val()],"nxt":[$('#txtnxt').val()],"photo":[$('#txtphoto1').val(),$('#txtphoto2').val()],"option":[$('#txtoption1').val(),$('#txtoption2').val(),$('#txtoption3').val()],"pass":[$('#txtpass1').val(),$('#txtpass2').val()],"cambtnoption":[$('#btncam1').val(),$('#btncam2').val(),$('#btncam3').val(),$('#btncam4').val()]});
+				JSON.stringify({"btncampaign":[$('#btncampaign').val()],"btntake":[$('#btnTakeSelfie').val()],"btncapture":[$('#btncapture').val()],"btnfeedback":[$('#btnfeedbackSelfie').val(),$('#btnfeedbackSelfie2').val()],"share":[$('#txtshare1').val(),$('#txtshare2').val()],"comment":[$('#txtrecommend1').val(),$('#txtrecommend2').val()],"leave":[$('#txtleave1').val(),$('#txtleave2').val()],"allow":[$('#txtallow1').val(),$('#txtallow2').val()],"logout":[$('#txt-logout').val()],"follow":[$('#follow-no').val(),$('#follow-yes').val()],"nxt":[$('#txtnxt').val()],"photo":[$('#txtphoto1').val(),$('#txtphoto2').val()],"option":[$('#txtoption1').val(),$('#txtoption2').val(),$('#txtoption3').val()],"pass":[$('#txtpass1').val(),$('#txtpass2').val()],"cambtnoption":[$('#btncam1').val(),$('#btncam2').val(),$('#btncam3').val(),$('#btncam4').val()]});
 				hideLoader();
 				alertBox('successful','Update completed.');
 			}});	
@@ -3362,6 +3517,7 @@ $(document).on("pagebeforechange", function (e, data) {
 			var logoArray = $.parseJSON(responseText);			
 			$('#backgroundthumb').attr('src', logoArray.bckimage);
 			customArray.logo = responseText;
+			wizardsetup();
 
 		}			
 		function showResponse(responseText, statusText, xhr, $form)  { 
@@ -3485,62 +3641,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		  }		
 		});	
 
-		function defaultMenuUIC(){
-			var height = ($( window ).height() / 16) - 5;
-			$( '.ui-content,.left-content,.right-content' ).css( {"min-height":height.toFixed() + 'em'} );
-			if($( window ).width() > 600){
-				$('.uic-left-menu li a').each(function (index) {
-					if(index == curClick){
-						$(this).addClass('ui-btn-active'); 
-						$(this).find( "span" ).addClass("listview-arrow-active");
-					}else{
-						$(this).removeClass("ui-btn-active");
-						$(this).find( "span" ).removeClass("listview-arrow-active");
-					}	
-				}); 			
-			}else{
-				$('.uic-left-menu li a').each(function (index) {
-					$(this).removeClass("ui-btn-active");
-					$(this).find( "span" ).removeClass("listview-arrow-active");
-				});				
-			}
-		}
-		function showHideMenuUIC(row){
-			curClick = row;
-			if($( window ).width() <= 600){
-				$( '.main-wrap .left-content' ).hide();
-				$( '.main-wrap .right-content' ).show();
-				$( '.main-wrap .right-content' ).css( {"max-width":'100%'} );
-			}
-			$('.uic-section-logo').hide();$('.uic-section-img').hide();$('.uic-section-bg').hide();$('.uic-section-fc').hide();$('.uic-section-tbs').hide();$('.uic-section-tb').hide();$('.uic-section-box').hide();
-			if(row == 0){
-				//if(userArray.productId == everFree)
-				//	 alertBox('no access','Please upgrade to basic plan & above to access this feature');
-				//else			
-				$('.uic-section-logo').show();
-			}else if(row == 1){
-				if(userArray.productId == basicID || userArray.productId == basic24 || userArray.productId == basic12 || userArray.productId == everFree){
-					alertBox('no access','Please upgrade to pro plan & above to access this feature');
-				}else		
-					$('.uic-section-img').show();
-			}else if(row == 2){
-				if(userArray.productId == everFree)
-					 alertBox('no access','Please upgrade to basic plan & above to access this feature');
-				else
-					$('.uic-section-bg').show();
-			}else if(row == 3){
-				if(userArray.productId == everFree)
-					 alertBox('no access','Please upgrade to basic plan & above to access this feature');
-				else			
-					$('.uic-section-fc').show();
-			}else if(row == 4){
-				$('.uic-section-tbs').show();
-			}else if(row == 5){
-				$('.uic-section-tb').show();
-			}else if(row == 6){
-				$('.uic-section-box').show();
-			}
-		}
+
 		$( window ).resize(function() { // when window resize
 		
 		var height = ($( window ).height() / 16) - 5;
@@ -4116,14 +4217,14 @@ $(document).on('pageshow','#plan', function () {
 				$('#lblperLoc').hide();
 			}
 			var costperloc =  parseFloat(getPriceComponent());
-			$('#lblperLoc').html('Cost per subscribed location: $'+seCommas(parseFloat(costperloc)));
+			$('#lblperLoc').html('Cost per subscribed campaign: $'+seCommas(parseFloat(costperloc)));
 			if(userArray.addLoc > 0){
 				$('#lblcostLoc').show();
-				$('#lblcostLoc').html('Total cost of all subscribed locations: $'+seCommas(parseFloat(costperloc) * parseFloat(userArray.addLoc)));
+				$('#lblcostLoc').html('Total cost of all subscribed campaigns: $'+seCommas(parseFloat(costperloc) * parseFloat(userArray.addLoc)));
 			}	
-			$('#lblExpired').html('Expiration date (plan & locations): '+userArray.expiration);
+			$('#lblExpired').html('Expiration date (plan & campaigns): '+userArray.expiration);
 			currPlaceAvail = parseInt(userArray.addLoc) + 1;
-			$('#lblTotalSubs').html('Total # of locations: '+ currPlaceAvail);
+			$('#lblTotalSubs').html('Total # of campaigns: '+ currPlaceAvail);
 			$('#label7').html('Free: 1');
 			$('#label8').html('Subscribed: '+ userArray.addLoc);
 			if(userArray.subscription_id != 0){
@@ -4291,7 +4392,7 @@ $(document).on('pageshow','#plan', function () {
 					$('#lblPlan').html('Current plan: '+product_plan_array.response[i].name+' ($'+currentPlanprice+')');
 					if(userArray.addLoc > 0){
 						$('#lblTotal').show();
-						$('#lblTotal').html('Total (plan + subscribed locations) = '+' $'+seCommas(parseFloat(currentPlanprice) + parseFloat(getPriceComponent()) * parseFloat(userArray.addLoc))+'');
+						$('#lblTotal').html('Total (plan + subscribed campaigns) = '+' $'+seCommas(parseFloat(currentPlanprice) + parseFloat(getPriceComponent()) * parseFloat(userArray.addLoc))+'');
 					}	
 				}	
 			}
@@ -4312,7 +4413,7 @@ $(document).on('pageshow','#plan', function () {
 				userArray =  result.response;
 				currPlaceAvail = parseInt(userArray.addLoc) + 1;
 				$('#submit-planremove').show();
-				$('#lblTotalSubs').html('Total # of locations: '+ currPlaceAvail);
+				$('#lblTotalSubs').html('Total # of campaigns: '+ currPlaceAvail);
 				$('#label7').html('Free: 1');
 				$('#label8').html('Subscribed: '+ userArray.addLoc);
 				$('#submit-planremove').hide();
@@ -4335,7 +4436,7 @@ $(document).on('pageshow','#plan', function () {
    
    function upgradePlan(textplan,productID){
 
-		$.box_Dialog('Change your plan to '+$.trim(textplan)+'?<p>Please take note that all your current & future subscribed locations will also be changed to the new plan.</p>', {'type':'confirm','title': '<span class="color-gold">upgrade your plan?<span>','center_buttons': true,'show_close_button':false,'overlay_close':false,'buttons':  [{caption: 'yes', callback: function()
+		$.box_Dialog('Change your plan to '+$.trim(textplan)+'?<p>Please take note that all your current & future subscribed campaigns will also be changed to the new plan.</p>', {'type':'confirm','title': '<span class="color-gold">upgrade your plan?<span>','center_buttons': true,'show_close_button':false,'overlay_close':false,'buttons':  [{caption: 'yes', callback: function()
 		{
 			showLoader();
 			comp_id_old = getCurrentComponentId();	
@@ -4344,8 +4445,8 @@ $(document).on('pageshow','#plan', function () {
 				if(result.code == 200){
 					userArray =  result.response;
 					$('#lblPlan').html('Current plan: '+textplan);
-					$('#lblExpired').html('Expiration date (plan & locations): '+userArray.expiration);
-					$('#lblperLoc').html('Cost per subscribed location: $'+seCommas(parseFloat(getPriceComponent())));
+					$('#lblExpired').html('Expiration date (plan & campaigns): '+userArray.expiration);
+					$('#lblperLoc').html('Cost per subscribed campaign: $'+seCommas(parseFloat(getPriceComponent())));
 					product_plan_array = [];
 					getProductId();
 					alertBox('plan updated','Your plan now is '+textplan);
@@ -4564,7 +4665,7 @@ $(document).on('pageshow','#plan', function () {
 			});
 			$( '.main-wrap .right-content' ).show();
 			$( '.main-wrap .left-content' ).hide();
-			$( '.main-wrap .right-content' ).css( {"max-width":'100%'} );		
+			$( '.main-wrap .right-content' ).css( {"max-width":'100%'} );
 		}	
 	});	
 	$('.plan-right-menu').on('click', ' > li', function () {
@@ -5183,7 +5284,7 @@ $(document).on('pageinit','#onspot', function () {
 					$(this).find( "span" ).addClass("listview-arrow-active");
 				}else{
 					$(this).find( "a" ).removeClass('ui-btn-active'); 
-					$(this).find( "span" ).removeClass("listview-arrow-active");				
+					$(this).find( "span" ).removeClass("listview-arrow-active");
 				}
 			});	
 		}else{
@@ -5209,6 +5310,9 @@ $(document).on('pageshow','#onspot', function () {
 		hideLoader();
 		customArray =  $.parseJSON(result);
 		onspotbackMenu(curClick);	
+		if(customArray.isselfie == 1){
+			diabledTab('.onspot-left-menu',[1]);
+		}
 	}});
 	
 });	
@@ -5348,19 +5452,11 @@ $(document).on('pageinit','#feedback', function () {
 				alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 			}else{
 				$(".feedback-weblink").show();
+				if(customArray.isselfie == 1){
+					diabledTab('.feedback-weblink .feedback-right-weblink',[1]);
+				}	
 			}
 		}else if(row == 2){
-			/*if(iframeisload == 0){
-				showLoader();
-				$("#tellFrame").attr("src", "https://tabluu.com/tellafriend/index.php?placeId="+placeId[0]+(emailwizardsetup == 1 ? '&wizard=1' : ''));
-				if(customArray.nicename == ''){	
-					alertBox('setup incomplete','Go to Setup > Your Tabluu (Business) Page');
-				}else{
-					$("#tellFrame").show();
-					$('#tellFrame').load(function(){hideLoader();getEmailSent();});
-					iframeisload=1;
-				}
-			} */
 			if(customArray.nicename == ''){	
 					alertBox('setup incomplete','Go to Setup > Your Tabluu Page');
 			}else{
@@ -5371,29 +5467,58 @@ $(document).on('pageinit','#feedback', function () {
 						style: "minified/jquery.sceditor.default.min.css",
 						toolbar: "",
 						width: '100%',
+						height: 280,
 						resizeEnabled:false
 					});
 				});
 				//getEmailSent();
-				var subject = "You're invited to give "+placename+" a review!";
-				$('#invitxtsubject').val(subject);
 				var nice = 'https://tabluu.com/'+customArray.nicename+'=e';
-				var message = '<p>Dear Customer,</p>'
-						+'<div style="clear:both;"></div>'
-						+'<p>Thank you for patronizing our business recently.</p>'
-						+'<p>We hope you had a pleasant experience.</p>'
-						+'<div style="clear:both;"></div>'
-						+'<p>Please help us improve by giving us a review using the link'
-						+' below:</p>'
-						+'<p><a href="'+nice+'">'+nice+'</a> (And because it\'s'
-						+" powered by Tabluu, we'll ask you for your selfie! :D).</p>"
-						+'<div style="clear:both;"></div>'
-						+'<p>Don\'t be shy! Please say a big "yeahhh!" for the camera.</p>'
-						+'<div style="clear:both;"></div>'
-						+'Thank you!<br/>'
-						+ placename;
-				//$('#invitxtmesge').val(message);
-				$('#textarea-invite').sceditor('instance').val(message);
+					var subject = "You're invited to give "+placename+" a review!";
+					$('.fnoted').html('Sample email for feedback invitation:');
+					var message = '<p>Dear Customer,</p>'
+							+'<div style="clear:both;"></div>'
+							+'<p>Thank you for patronizing our business recently.</p>'
+							+'<p>We hope you had a pleasant experience.</p>'
+							+'<div style="clear:both;"></div>'
+							+'<p>Please help us improve by giving us a review using the link'
+							+' below:</p>'
+							+'<p><a href="'+nice+'">'+nice+'</a> (And because it\'s'
+							+" powered by Tabluu, we'll ask you for your selfie! :D).</p>"
+							+'<div style="clear:both;"></div>'
+							+'<p>Don\'t be shy! Please say a big "yeahhh!" for the camera.</p>'
+							+'<div style="clear:both;"></div>'
+							+'Thank you!<br/>'
+							+ placename;
+				$('#invitxtsubject').val(subject);
+				$('#textarea-invite').sceditor('instance').val(message);				
+				if(customArray.isselfie == 1){
+					$('.emailselfie').show();
+					$(function() {
+						$("#textarea-invite2").sceditor({
+							plugins: "xhtml",
+							style: "minified/jquery.sceditor.default.min.css",
+							toolbar: "",
+							width: '100%',
+							height: 200,
+							resizeEnabled:false
+						});
+					});
+					var subject = "Celebrate Christmas with a Selfie!";
+					$('.fnoted2').html('Sample email for "selfie" invitation:');
+					var message = '<p>Hi There!</p>'
+							+'<div style="clear:both;"></div>'
+							+'<p>Celebrate this year\'s Christmas with a selfie. Just click on the the link below join millions worldwide in wishing world peace happiness this holiday festive season.</p>'
+							+'<div style="clear:both;"></div>'
+							+' Click here:</p>'
+							+'<p><a href="'+nice+'">'+nice+'</a>'
+							+'<div style="clear:both;"></div>'
+							+'<p>Merry Christmas!</p>'
+							+ placename;
+					$('#invitxtsubject2').val(subject);
+					$('#textarea-invite2').sceditor('instance').val(message);		
+					//$('#textarea-invite2').sceditor('instance').focus(function(e) {});
+				}
+				
 			}
 			$( '#feedback .right-content' ).removeClass("right-bgblue");
 			$( '#feedback .right-content' ).addClass("bgwhite");
@@ -5443,7 +5568,7 @@ $(document).on('pageinit','#feedback', function () {
 	}
 	
 	function feedbackActiveMenu(){
-		$( "#feedback .left-header" ).html('Collect Feedback / Reviews');
+		$( "#feedback .left-header" ).html('Collect Feedback / Selfie');
 	    $( "#feedback .right-header" ).html( placename );
 		if($( window ).width() > 600){
 			$('#feedback .feedback-left-menu li').each(function (index) {
@@ -5471,13 +5596,17 @@ $(document).on('pageshow','#feedback', function () {
 	$("#tellFrame").hide();
 	$( '.ui-content,.left-content,.right-content').css( {"min-height":height.toFixed() + 'em'} );
 	$('#feedback .ui-content').css({"background-color":'#E6E7E8'})
-	$( "#feedback .left-header" ).html('Collect Feedback / Reviews');
+	$( "#feedback .left-header" ).html('Collect Feedback / Selfie');
 	$( "#feedback .right-header" ).html( placename );
 	var placeId = locId.split('|');
 	showLoader();
 	$.ajax({type: "POST",url:"getData.php",cache: false,data:'key='+placeId[0]+'&opt=getFeedbackUser',success:function(result){
 		customArray =  $.parseJSON(result);
 		hideLoader();
+		if(customArray.isselfie == 1){
+			diabledTab('.feedback-left-menu',[4]);
+			diabledTab('.survey .feedback-right-weblink',[1]);
+		}	
 	  }});	
 	showFeedbackMenu(curClick);
 });
@@ -5554,7 +5683,8 @@ $(document).on('pageshow','#reviews', function () {
 			+'</div>'
 		+'</div>'
 		+'<div class="clear"></div>'
-		+'<div class="divwrap">'
+		if(isselfie == 0){
+		t= t +'<div class="divwrap">'
 			+'<table cellspacing="0">'
 				+'<tr>'
 					+'<th class="areas noborderleft padLeft-5 c1">Areas</th>'
@@ -5615,6 +5745,45 @@ $(document).on('pageshow','#reviews', function () {
 			+'<div class="c1 bottomborder comment" style="padding:5px;background-color:#c7e6f5;">Comment</div>'
 			+'<p class="padLeft-5 comment">'+feedbackArray[i].comment+'</p>'
 		+'</div>';
+		}else{
+			t= t +'<div class="divwrap">'
+			+'<table cellspacing="0">'
+				+'<tr>'
+					+'<th class="areas noborderleft padLeft-5 c1">Manage</th>'
+					+'<th class="date c1">Date</th>'
+				+'</tr>';
+				for(var j in reviewQuestion){
+					var rated=0;
+					if(j == 0)
+						rated = feedbackArray[i].rated1;
+					else if(j == 1)
+						rated = feedbackArray[i].rated2;
+					else if(j == 2)
+						rated = feedbackArray[i].rated3;
+					else if(j == 3)
+						rated = feedbackArray[i].rated4;
+					else if(j == 4)
+						rated = feedbackArray[i].rated5;
+					else if(j == 5)
+						rated = feedbackArray[i].rated6;
+					else if(j == 6)
+						rated = feedbackArray[i].rated7;		
+					t = t + '<tr>'
+					t = t +'<td rowspan="'+reviewQuestion.length+'" style="vertical-align: middle">'
+						+'<div style="padding-top:5px;"><fieldset id="removePhoto" data-role="controlgroup" data-iconpos="left" data-corners="false"><div class="ui-controlgroup-controls"><div class="ui-checkbox"><label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-first-child ui-last-child" for="feature-'+feedbackArray[i].id+'">Feature</label><input id="feature-'+feedbackArray[i].id+'" type="checkbox" name="feature-'+feedbackArray[i].id+'" value="'+feedbackArray[i].id+'" '+(feedbackArray[i].feature == 1 ? 'checked="checked"' : '')+'><label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-first-child ui-last-child" for="hideImg-'+feedbackArray[i].id+'">Hide Image</label><input id="hideImg-'+feedbackArray[i].id+'" type="checkbox" name="hideImg-'+feedbackArray[i].id+'" value="'+feedbackArray[i].id+'" '+(feedbackArray[i].hideimg == 1 ? 'checked="checked"' : '')+'></div></div></fieldset></div>'
+						+'</td>';
+						var created = feedbackArray[i].created.split('-');
+						var day = created[2].split(' ');
+						t = t +'<td rowspan="'+(reviewQuestion.length < 2 ? 2 : 1)+'" style="vertical-align: middle">'
+							+'<div style="padding:5px 5px 0px 5px;white-space:nowrap;display: table-cell;vertical-align: middle;">'+day[0]+' '+month[parseInt(created[1])]+' '+created[0]+'</p></div>'
+							+'</td>';
+					+'</tr>';
+					}
+				t= t +'</table>'
+			+'</div>'
+			+'<div class="divwrap" style="padding-bottom:10px;">'
+			+'</div>';
+			}
 		}
 		t= t+'<div class="nextpage'+page+'"></div>';
 		if(tabSelect == 0){
@@ -5647,6 +5816,68 @@ $(document).on('pageshow','#reviews', function () {
 				}});
 			}
 		});
+		resizePhoto('.fbImg'+counter,150,150);
+		resizePhoto('.selfImg'+counter,300,300);
+	}
+		function showHTMLNOTSharedselfie(){
+		var t = '';counter++;
+		for(var i in feedbackArray){
+		t = t + '<div class="divwrap" style="padding-top:5px;margin-top:10px;">'
+			+'<div class="wrapProfileImg">'
+				+'<div class="iconProfile">'
+					+'<div class="wrapImg fbImg'+counter+'"><img src="https://graph.facebook.com/'+feedbackArray[i].fbId+'/picture?type=large" /></div>'
+					+'<div class="profilename"><a href="https://www.facebook.com/'+feedbackArray[i].fbId+'" style="text-decoration:none;" target="_blank">'+feedbackArray[i].name+'</a></div>'
+				+'</div>'
+				+'<div class="imgSelfie">'
+					+'<div class="wrapImg2 selfImg'+counter+'"><img src="'+feedbackArray[i].url+'" /></div>'
+				+'</div>'
+			+'</div>'
+		+'</div>'
+		+'<div class="clear"></div>'
+			t= t +'<div class="divwrap">'
+			+'<table cellspacing="0">'
+				+'<tr>'
+					+'<th class="date c1">Date</th>'
+				+'</tr>';
+				for(var j in reviewQuestion){
+					var rated=0;
+					if(j == 0)
+						rated = feedbackArray[i].rated1;
+					else if(j == 1)
+						rated = feedbackArray[i].rated2;
+					else if(j == 2)
+						rated = feedbackArray[i].rated3;
+					else if(j == 3)
+						rated = feedbackArray[i].rated4;
+					else if(j == 4)
+						rated = feedbackArray[i].rated5;
+					else if(j == 5)
+						rated = feedbackArray[i].rated6;
+					else if(j == 6)
+						rated = feedbackArray[i].rated7;		
+					t = t + '<tr>'
+						var created = feedbackArray[i].created.split('-');
+						var day = created[2].split(' ');
+						t = t +'<td rowspan="'+(reviewQuestion.length < 2 ? 2 : 1)+'" style="vertical-align: middle">'
+							+'<div style="padding:5px 5px 0px 5px;white-space:nowrap;display: table-cell;vertical-align: middle;">'+day[0]+' '+month[parseInt(created[1])]+' '+created[0]+'</p></div>'
+							+'</td>';
+					+'</tr>';
+					}
+				t= t +'</table>'
+			+'</div>'
+			+'<div class="divwrap" style="padding-bottom:10px;">'
+			+'</div>';
+			
+		}
+		t= t+'<div class="nextpage'+page+'"></div>';
+		if(tabSelect == 3){ // next page load
+			$('.nextpage'+(page < 1 ? 0 : page-1)).html(t);
+			page++;
+		}else{
+			page++;
+			$('#notshared').html(t);
+		}
+		
 		resizePhoto('.fbImg'+counter,150,150);
 		resizePhoto('.selfImg'+counter,300,300);
 	}
@@ -5706,7 +5937,7 @@ $(document).on('pageshow','#reviews', function () {
 		}else{
 			page++;
 			$('#notshared').html(t);
-		}	
+		}		
 	}
 	
 	reviewQuestion = [];
@@ -5732,8 +5963,12 @@ $(document).on('pageshow','#reviews', function () {
 				$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getFeedback&case=1&placeId='+placeId[0]+'&start='+start+'&offset='+offset,success:function(result){
 					feedbackArray = $.parseJSON(result);
 					hideLoader();
-					if(result != 0)
-						showHTMLNotShared();
+					if(result != 0){
+						if(isselfie == 1)
+							showHTMLNOTSharedselfie();
+						else
+							showHTMLNotShared();
+					}		
 				}});
 			}else if(curClick == 2){
 				$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getFeedback&case=2&placeId='+placeId[0]+'&start='+start+'&offset='+offset,success:function(result){
@@ -5754,7 +5989,7 @@ $(document).on('pageshow','#reviews', function () {
 			$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getFeedback&case=0&placeId='+placeId[0]+'&start='+start+'&offset='+offset,success:function(result){
 				feedbackArray = $.parseJSON(result);
 				if(result == 0)
-					alertBox('note',"No reviews available.");
+					alertBox('note',"No review / selfie available.");
 				else{
 					if(reviewQuestion.length < 1){
 						$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getQuestion&case=0&placeId='+placeId[0],success:function(result){
@@ -5773,15 +6008,22 @@ $(document).on('pageshow','#reviews', function () {
 			$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getFeedback&case=1&placeId='+placeId[0]+'&start='+start+'&offset='+offset,success:function(result){
 				feedbackArray = $.parseJSON(result);
 				if(result == 0)
-					alertBox('note',"No reviews available.");
+					alertBox('note',"No review / selfie available.");
 				else{
 					if(reviewQuestion.length < 1){
 						$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getQuestion&case=0&placeId='+placeId[0],success:function(result){
 							reviewQuestion = $.parseJSON(result);
-							showHTMLNotShared();
+							if(isselfie == 1)
+								showHTMLNOTSharedselfie();
+							else
+								showHTMLNotShared();
 						}});
-					}else
-						showHTMLNotShared();
+					}else{
+						if(isselfie == 1)
+							showHTMLNOTSharedselfie();
+						else
+							showHTMLNotShared();
+					}	
 				}
 				hideLoader();
 			}});
@@ -5794,7 +6036,7 @@ $(document).on('pageshow','#reviews', function () {
 			$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getFeedback&case=2&placeId='+placeId[0]+'&start='+start+'&offset='+offset,success:function(result){
 				feedbackArray = $.parseJSON(result);
 				if(result == 0)
-					alertBox('note',"No reviews available.");
+					alertBox('note',"No review / selfie available.");
 				else{
 					if(reviewQuestion.length < 1){
 						$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getQuestion&case=0&placeId='+placeId[0],success:function(result){
@@ -5817,7 +6059,7 @@ $(document).on('pageshow','#reviews', function () {
 	});
 	
 	function reviewActiveMenu(){
-		$( "#reviews .left-header" ).html('Manage Feedback / Reviews');
+		$( "#reviews .left-header" ).html('Manage Feedback / Selfie');
 	    $( "#reviews .right-header" ).html( placename );
 		if($( window ).width() > 600){
 			$('#reviews .reviews-left-menu li').each(function (index) {
@@ -5910,7 +6152,7 @@ $(document).on('pageshow','#widget', function () {
 	widgetActiveMenu();
 	$('.star').show();
 	$( '.ui-content,.left-content,.right-content').css( {"min-height":height.toFixed() + 'em'} );
-	 $( "#widget .left-header" ).html('Review Widget');
+	 $( "#widget .left-header" ).html('Review / Selfie Widget');
 	  $( "#widget .right-header" ).html( placename );
 	
     function getWidgetReview(){
@@ -5919,7 +6161,7 @@ $(document).on('pageshow','#widget', function () {
 		$.ajax({type: "POST",url:"getData.php",cache: false,data:'opt=getWedgetFeedback&placeId='+placeId[0]+'&start='+start+'&offset='+offset,success:function(result){
 			reviewWidget = $.parseJSON(result);
 			if(reviewWidget.length < 1){
-				alertBox('note',"You don't have any reviews that are shared on Facebook yet.");
+				alertBox('note',"You don't have any review or selfie that are shared on the social media yet.");
 				hideLoader();
 			}else{
 				if(reviewAvg.length < 1){
@@ -5998,8 +6240,9 @@ $(document).on('pageshow','#widget', function () {
 				+'<p class="fblink">'
 					+'<a href="https://www.facebook.com/'+arrayreviews[i].fbId+'" target="_blank">'+arrayreviews[i].name+'</a>'
 				+'</p>'
-				+'<div class="text-center"><img alt="fb profile" src="'+(parseInt(arrayreviews[i].hideimg) < 1 ? 'https://graph.facebook.com/'+arrayreviews[i].fbId+'/picture?type=large' : 'images/fbDefault.png')+'" class="pinImage"></div>'
-				+'<div class="wrap-iconstar">'
+				+'<div class="text-center"><img alt="fb profile" src="'+(parseInt(arrayreviews[i].hideimg) < 1 ? 'https://graph.facebook.com/'+arrayreviews[i].fbId+'/picture?type=large' : 'images/fbDefault.png')+'" class="pinImage"></div>';
+				if(isselfie == 0){
+				div = div +'<div class="wrap-iconstar">'
 					+'<div class="my-rating">'
 						+'My rating: '+arrayreviews[i].aveRate+'/5'
 					+'</div>'
@@ -6029,8 +6272,10 @@ $(document).on('pageshow','#widget', function () {
 						div = div  +'<span>'+arrayquestion[j]+': '+rated+'/5'+comma+'</span> ';
 					}	
 					div = div +'</p>'
-					+'<p class="comment">'+arrayreviews[i].comment+'</p>'
-				+'</div>';
+					+'<p class="comment">'+arrayreviews[i].comment+'</p>';
+				}else
+					div = div +'<div style="padding-bottom:10px;"></div>';
+				div = div +'</div>';
 			}
 			$('.comment-container').append(div);
 	}
@@ -6091,12 +6336,16 @@ $(document).on('pageshow','#widget', function () {
 			+'<div class="wrap-rate-logo">'
 				+'<div class="rate-logo"><img src="images/template/logo_home.png" /></div>'
 			+'</div>'
-			+'<div class="rate-reviews">'
+			+'<div class="rate-reviews">';
 				//+'<div class="staricon">'
 					//+'<span class="stargrey2"><span class="staryellow2" style="'+reviewAvg.style+'"></span></span>'
 				//+'</div><div style="clear:both;"></div>'
-				+'<p style="color:#777">'+reviewAvg.totalavg+' out of 5</p>'
-				+'<p><span><a href="baseshared.php?id='+placeId[0]+'" class="fancybox fancybox.iframe sharedlink" style="#00AEEF">'+reviewAvg.totalrev+' selfie reviews</a></span></p>'
+				if(isselfie == 0){
+					div = div + '<p style="color:#777">'+reviewAvg.totalavg+' out of 5</p>';
+					div = div +'<p><span><a href="baseshared.php?id='+placeId[0]+'" class="fancybox fancybox.iframe sharedlink" style="#00AEEF">'+reviewAvg.totalrev+(isselfie == 0 ? ' reviews' : ' selfies')+'</a></span></p>'
+				}else{
+					div = div +'<p><span style="#00AEEF">'+reviewAvg.totalrev+(isselfie == 0 ? ' selfies' : ' selfies')+'</span></p>'
+				}
 			+'</div>'
 			+'</div>'
 		+'</div>'
@@ -6189,12 +6438,43 @@ $(document).on('pageinit','#fbpost', function () {
 	});	
 	$('#fbpost .star').click(function(){goHome();});
 	$('#fbpost #btnsocialpost').click(function(){
-		showLoader();
 		var placeId = locId.split('|');
-		$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=optsocialpost&placeId='+places[0]+'&val='+$("#optPost :radio:checked").val(),success:function(result){
-			hideLoader();
-			alertBox('update','successfully updated');
-		}});
+		if($("#optPost :radio:checked").val() == 2){
+			if($("#txtoccation").val() == '')
+				uicAlertBox('incomplete information','Please input occasion','#txtoccation');
+			else if($("#txtcamp1").val() == '')
+				uicAlertBox('incomplete information','Please input tagline row 1','#txtcamp1');
+			else if($("#txtcamp2").val() == '')
+				uicAlertBox('incomplete information','Please input tagline row 2','#txtcamp2');
+			else{	
+				showLoader();
+				$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=optsocialpost&placeId='+places[0]+'&val='+$("#optPost :radio:checked").val()+'&'+$('#frmselfies').serialize(),success:function(result){
+					hideLoader();
+					customArray.taglineselfie = {"txtoccation":$("#txtoccation").val(),"txtinfodate":$("#txtinfodate").val(),"tagline1":$("#txtcamp1").val(),"tagline2":$("#txtcamp2").val()}
+					$.box_Dialog('successfully updated', {
+					'type': 'information',
+					'title': '<span class="color-white">update</span>',
+					'center_buttons': true,
+					'show_close_button':false,
+					'overlay_close':false,
+					'buttons': [{caption:'okay', callback:function(){ setTimeout(function(){wizardsetup();}, 300); }}]
+					});
+				}});
+			}			
+		}else{
+			showLoader();
+			$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=optsocialpost&placeId='+places[0]+'&val='+$("#optPost :radio:checked").val(),success:function(result){
+				hideLoader();
+				$.box_Dialog('successfully updated', {
+					'type': 'information',
+					'title': '<span class="color-white">update</span>',
+					'center_buttons': true,
+					'show_close_button':false,
+					'overlay_close':false,
+					'buttons': [{caption:'okay', callback:function(){ setTimeout(function(){wizardsetup();}, 300); }}]
+					});
+			}});
+		}
 	});
 	/*
 	$('#optPost').click(function(){
@@ -6207,11 +6487,18 @@ $(document).on('pageinit','#fbpost', function () {
 		}	
 	}) */
 	$("input[type='radio']").bind( "click", function(event, ui) {
-	  if($("#optPost :radio:checked").val() > 0){
-			$('.ownimg').hide();
-		}else{
-			$('.ownimg').show();
-		}	
+		   if($("#optPost :radio:checked").val() == 1){
+				$('.ownimg').hide();
+				$('.selfie-2').hide();
+			}else if($("#optPost :radio:checked").val() == 0){
+				$('.ownimg').show();
+				$('.selfie-2').hide();
+			}else if($("#optPost :radio:checked").val() == 2){
+				$('.selfie-2').show();
+				$('.ownimg').hide();
+				var arraytagline =  $.parseJSON(customArray.taglineselfie);
+				$("#txtoccation").val(arraytagline.txtoccation);$("#txtinfodate").val(arraytagline.txtinfodate);$("#txtcamp1").val(arraytagline.tagline1);$("#txtcamp2").val(arraytagline.tagline2);
+			}
 	});
 	
 });
@@ -6223,7 +6510,17 @@ $(document).on('pageshow','#fbpost', function () {
 	$( '.ui-content,.left-content,.right-content').css( {"min-height":height.toFixed() + 'em'} );
 	$('#fbpost .ui-content').css({"background-color":'#E6E7E8'});
 	showFbpostMenu(curClick);
-	//fbpostActiveMenu();	
+	var clas = 'ui-state-disabled';
+	if(postwizard == 1){
+		diabledTab('.fbpost-left-menu',[1,2]);
+	}else{
+		//$('.fbpost-left-menu li').each(function (index) {
+		//	$(this).removeClass(clas);
+		//});	
+        if(customArray.isselfie == 1)
+			diabledTab('.fbpost-left-menu',[1,2]);		
+	}
+	
 	function showFbpostMenu(row){
 		$(".panel-fbpost").hide();$(".panel-post").hide();$(".setup-cust-post").hide();
 		if(row == 0){
@@ -6235,11 +6532,25 @@ $(document).on('pageshow','#fbpost', function () {
 				}
 				$('.panel-fbpost').show(); 
 			}});
+			var clas = 'ui-state-disabled';
+			$('#optPost .ui-controlgroup-controls div').each(function (index) {
+				if(customArray.isselfie == 1 && (index == 0 || index == 2))
+					$(this).addClass(clas);
+				else if(customArray.isselfie == 0 && index == 1)
+					$(this).addClass(clas);
+			});	
 			$('#optPost input[value="'+customArray.optsocialpost+'"]').attr('checked',true).checkboxradio('refresh');
-			if(customArray.optsocialpost > 0){
+			if(customArray.optsocialpost == 1){
 				$('.ownimg').hide();
-			}else{
+				$('.selfie-2').hide();
+			}else if(customArray.optsocialpost == 0){
 				$('.ownimg').show();
+				$('.selfie-2').hide();
+			}else if(customArray.optsocialpost == 2){
+				$('.selfie-2').show();
+				$('.ownimg').hide();
+				var arraytagline =  $.parseJSON(customArray.taglineselfie);
+				$("#txtoccation").val(arraytagline.txtoccation);$("#txtinfodate").val(arraytagline.txtinfodate);$("#txtcamp1").val(arraytagline.tagline1);$("#txtcamp2").val(arraytagline.tagline2);
 			}
 		}else if(row == 1){
 			$(".panel-post").show();
@@ -6568,7 +6879,15 @@ $(document).on('pageinit','#social', function () {
 			$( '.main-wrap .right-content' ).css( {"max-width":'100%'} );
 		}	
 	}
-	
+function diabledTab(classes,tabs){
+	clas = 'ui-state-disabled';
+	$(classes + ' li').each(function (index) {
+		if($.inArray(index,tabs) == -1)
+			$(this).removeClass(clas);
+		else
+			$(this).addClass(clas);
+	});
+}	
 $(document).on('pageshow','#social', function () { 
 	var height = ($( window ).height() / 16) - 5;
 	var placeId = locId.split('|');

@@ -3,8 +3,8 @@ var customArray = [],item2Rate=[],ratedObj= [],nicename,isTakeSelfie='',alertave
 var count=0,sharedphoto=0,isphototakedone=0,takeaphoto=0,urlphotoshared,businessname='',txtname='',txtphone='',txtemail='',sharedlinkphoto='',sharedurl='',userCurEmail='';
 var defaultPostReview = {posted:1,percent:3.0},ratecomment='',timeInverval='',closeselfie=0,username='',hadlabel='',istakephoto = 0;
 var defaultrating = {vpoor:'Very poor',poor:'Poor',fair:'Average',good:'Good',excellent:'Excellent'};
-var defaultButtonText2 = {logout:['okay'],btncapture:['okay'],follow:['no','yes'],badEmail:['no','yes'],allow:['cancel','submit'],btntake:['okay'],btnfeedback:['no','yes'],cambtnoption:['cancel','snap','discard','use']};
-var defaultButtonText = {logout:['okay'],follow:['no','yes'],comment:['skip','proceed'],share:['don\'t share','share'],nxt:['okay'],photo:['no','yes'],option:['cancel','login','reset'],pass:['cancel','submit'],badEmail:['no','yes'],allow:['cancel','submit'],cambtnoption:['cancel','snap','discard','use']};
+var defaultButtonText2 = {logout:['okay'],btncampaign:['Your Selfie Now!'],btncapture:['okay'],follow:['no','yes'],badEmail:['no','yes'],allow:['cancel','submit'],btntake:['okay'],btnfeedback:['no','yes'],cambtnoption:['cancel','snap','discard','use']};
+var defaultButtonText = {logout:['okay'],btncampaign:['Your Selfie Now!'],follow:['no','yes'],comment:['skip','proceed'],share:['don\'t share','share'],nxt:['okay'],photo:['no','yes'],option:['cancel','login','reset'],pass:['cancel','submit'],badEmail:['no','yes'],allow:['cancel','submit'],cambtnoption:['cancel','snap','discard','use']};
 var defaultTextMessage2 = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Be a fan of <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'This won\'t work unless you snap a photo. You can either do your awesome selfie pose or take a photo of interesting things around you.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Please use the "share" button to recommend <brand>. By sharing you agree with Tabluu\'s <privacy_policy_link>',commentB:'What do you like the most? Is there any area that needs improvement?',captureT:'Your photo is captured',captureB:'This photo will be used to create your review page of the merchant later.'};
 var defaultTextMessage = {logoutT:'Auto logout',logoutB:"You'll be logged out of Facebook after sharing.",followT:'Be a fan of <brand>?',followB:'Press the <double>yes<double> button to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to send you promotions & updates.',takePhoto:'Take a new photo?',average:'Your average rating:',thank:'Thank you!',nxt:'Next reviewer, please.',option:'Choose an option…',pass:'Enter the password…',comment:'Please share your experience...',share:'Share this page?',badEmailT:'We\'re sorry for your poor experience!',badEmailB:'Do you wish to leave your contact details so that we may get in touch with you?',detailsEmailT:'Please enter your contact details...',detailsEmailB:'addtional info such as room/table number or location of bad experience.',allow:'Press "submit" to agree with Tabluu\'s <privacy_policy_link> & allow <brand> to contact you.',takeselfieB:'This won\'t work unless you snap a photo. You can either do your awesome selfie pose or take a photo of interesting things around you.',takeselfieT:'Take a selfie (self photo)!',surveyselfieT:'Take a photo?',surveyselfieB:'Ask your customers to say "yeahhh!" for the camera!',shareB:'Please use the "share" button to recommend <brand>. By sharing you agree with Tabluu\'s <privacy_policy_link>',commentB:'What do you like the most? Is there any area that needs improvement?',captureT:'Your photo is captured',captureB:'This photo will be used to create your review page of the merchant later.'},resizeTimeout;
 var counter1 = 0,counter2 = 0,counter3 = 0,counter4 = 0,counter5 = 0,counter6 = 0,counter7 = 0,countertake=0,countershare=0;
@@ -457,7 +457,11 @@ $(document).on('pageshow','#sharephoto', function() {
 
 function createTempSharedPage(){
 	//loginFb();
-	$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId+'&photo_url='+sharedlinkphoto+'&comment='+ratecomment+'&ave='+alertaverate,success:function(link){
+	if(customArray.isselfie == 1)
+		$('.top-button-selfie').hide(); //
+		//
+	//$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId+'&photo_url='+sharedlinkphoto+'&comment='+ratecomment+'&ave='+alertaverate,success:function(link){
+	$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId+'&photo_url=images/profile/1448/877462291.jpg&comment='+ratecomment+'&ave='+alertaverate,success:function(link){
 		hideLoader();
 		sharedurl = link;
 		setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "framelinkshared.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 500);
@@ -800,7 +804,7 @@ function postFb()
 	{
 		FB.api('/me', function(response) {
 			//FB.api('/me/friends',  function(friendlist) {
-				var rate_1 =ratedObj[0];
+				var rate_1 =(typeof(ratedObj[0]) != 'undefined' ? ratedObj[0] : 0);;
 				var rate_2 =(typeof(ratedObj[1]) != 'undefined' ? ratedObj[1] : 0);
 				var rate_3 =(typeof(ratedObj[2]) != 'undefined' ? ratedObj[2] : 0);
 				var rate_4 =(typeof(ratedObj[3]) != 'undefined' ? ratedObj[3] : 0);
@@ -808,7 +812,9 @@ function postFb()
 				var rate_6 =(typeof(ratedObj[5]) !== 'undefined' ? ratedObj[5] : 0);
 				var rate_7 =(typeof(ratedObj[6]) !== 'undefined' ? ratedObj[6] : 0);
 				var totalRated = rate_1 + rate_2 + rate_3 + rate_4 + rate_5 + rate_6 + rate_7;
-				var aveRated = totalRated / item2Rate.length ;
+				var aveRated = 0.0;
+				if(customArray.isselfie == 0)
+					aveRated = totalRated / item2Rate.length ;
 				/*
 				var address = customArray.address +', '+ customArray.city +', '+customArray.country;
 				var nicename = customArray.nicename;
@@ -862,7 +868,7 @@ function postFb()
 								  } else {
 									  $.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatedurlremove&placeId='+placeId+'&sharedId='+niceid[1],success:function(lastId){}});
 									}
-								   FB.logout(function(response) {});	
+								 //  FB.logout(function(response) {});	
 									setTimeout(function(){pressyes2();},300);
 								});
 							}
@@ -902,7 +908,7 @@ function postFb()
 								 } else {
 									  $.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatedurlremove&placeId='+placeId+'&sharedId='+niceid[1],success:function(lastId){}});
 									}
-								   FB.logout(function(response) {});	
+								  // FB.logout(function(response) {});	
 									setTimeout(function(){pressyes2();},300);
 								});
 						}
@@ -961,11 +967,12 @@ $(document).ready(function(){
    $('.fancybox').fancybox();
    
    if(istest == true){
-		domainpath = 'https://www.tabluu.com/staging/';
+		domainpath = 'https://tabluu.com/staging/';
+		//domainpath = '';
 		everFree = 3602345,basicID=3361656,basic12 = 3602785,basic24 = 3602788,proID=3361672,pro12 = 3602786,pro24 = 3602789,enterprise=3602346,enterprise12 =3602787,enterprise24 = 3602790; fbPhotoPathShare= 'https://www.tabluu.com/staging/';
 	}else{
-		domainpath = 'https://www.tabluu.com/';
-		fbPhotoPathShare= 'https://www.tabluu.com/app/';
+		domainpath = 'https://tabluu.com/';
+		fbPhotoPathShare= 'https://tabluu.com/app/';
 	}
 
 });
@@ -1015,18 +1022,24 @@ function clearconsole() {
   }
 }
 function messageaftertakeselfie(){
-	setTimeout(function(){
-		$.box_Dialog(decodequote((typeof(defaultTextMessage.captureB) != 'undefined' ? defaultTextMessage.captureB : defaultTextMessage2.captureB)), {
-			'type':     'question',
-			'title':    '<span class="color-white">'+decodequote((typeof(defaultTextMessage.captureT) != 'undefined' ? defaultTextMessage.captureT : defaultTextMessage2.captureT))+'<span>',
-			'center_buttons': true,
-			'show_close_button':false,
-			'overlay_close':false,
-			'buttons':  [{caption: (typeof(defaultButtonText.btncapture) != 'undefined' ? decodequote(defaultButtonText.btncapture[0]) : decodequote(defaultButtonText2.btncapture[0])),callback:function(){
-				setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 100);
-			}}]
-		});
-	},300);
+   if(customArray.isselfie == 1)
+		//setTimeout(function() {setRating();},2000);
+		setRating();
+	else{	
+		setTimeout(function(){
+			$.box_Dialog(decodequote((typeof(defaultTextMessage.captureB) != 'undefined' ? defaultTextMessage.captureB : defaultTextMessage2.captureB)), {
+				'type':     'question',
+				'title':    '<span class="color-white">'+decodequote((typeof(defaultTextMessage.captureT) != 'undefined' ? defaultTextMessage.captureT : defaultTextMessage2.captureT))+'<span>',
+				'center_buttons': true,
+				'show_close_button':false,
+				'overlay_close':false,
+				'buttons':  [{caption: (typeof(defaultButtonText.btncapture) != 'undefined' ? decodequote(defaultButtonText.btncapture[0]) : decodequote(defaultButtonText2.btncapture[0])),callback:function(){
+					setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "rateone.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 100);
+					
+				}}]
+			});
+		},300);
+	}
 }
 function getSelfie(){
 		$('#selfieId').val(customArray.placeId);
@@ -1155,7 +1168,7 @@ function showCamera(IDparam){
 	$('.snapshot').show(); // Show snapshot buttons
 
 	var shootEnabled = false;
-	$.fancybox({'scrolling':'no','closeEffect':'fade','closeClick':false,'closeBtn':false,'overlayColor': '#000','href' :'#data','overlayOpacity': 0.5}); 
+	$.fancybox({'scrolling':'no','closeEffect':'fade','closeClick':false,'closeBtn':false,'overlayColor': '#000','href' :'#data','overlayOpacity': 0.5,'hideOnOverlayClick':false}); 
 	$('.snapshot .takesnap').click(function(){
 		var snd = new Audio("shutter.mp3"); // buffers automatically when created
 		snd.play();
@@ -1240,7 +1253,7 @@ $(document).on('pageinit','#rateone', function() {
 
 		var ispageok = false;nicename = $('#nicename').val();
 		var ios_ver = iOSversion();
-
+         
 		showLoader();
 		$.ajax({type: "POST",url:"getData.php",cache: false,data:'nice='+nicename+'&opt=getrate',success:function(result){
 			if(typeof(result) == 'false')
@@ -1248,6 +1261,7 @@ $(document).on('pageinit','#rateone', function() {
 			else{
 			customArray =  $.parseJSON(result);
 			hideLoader();
+			
 			if(customArray.suspend == 0){ //check if the account is suspended
 			 var toberate=[],selectedItems=[];
 			 if(customArray.item2Rate != '')
@@ -1302,7 +1316,7 @@ $(document).on('pageinit','#rateone', function() {
 			else if($.trim(customArray.fbImg) == '' && customArray.optsocialpost < 1)
 				alertErrorPage('setup incomplete','Go to Setup > Customers\' Social Media Posts > What to Post to Social Media? ');
 			else if(customArray.subscribe < 1)
-				alertErrorPage('this location is offline','Please change the status to online');
+				alertErrorPage('this campaign is offline','Please change the status to online');
 			else if(customArray.settingsItem < 1)
 				alertErrorPage('settings not locked','To lock, flick the switch "on". Setup > What Questions to Ask');
 			else{
@@ -1310,10 +1324,11 @@ $(document).on('pageinit','#rateone', function() {
 					var ratetxt = item2Rate[0].split('_');
 					$('.ratetxt').html(ratetxt[0]);
 					placeId = customArray.placeId;
-					rate_initialize();
 					if($.inArray(getUrlVar('s'),['0','1','2','3','4','5','e','','6','8'] ) == -1){
 						alertErrorPage('Unauthorized',"Please contact Tabluu support");
-					}else{
+					}else if(customArray.isselfie == 0){
+						rate_initialize();
+						$('.isselfie').show();
 						if(ios_ver[0] == 6)
 						{
 							$.box_Dialog(('iOS 6 is not supported by Tabluu. Please use a device running on iOS 7 and above.'), {
@@ -1395,6 +1410,31 @@ $(document).on('pageinit','#rateone', function() {
 							};
 							img.src = customArray.webImg;
 						}
+					}else{
+						rate_initialize();
+						$('.top-button-selfie').show();
+						$('.btn-take-isselfie').html(typeof(defaultButtonText.btncampaign) != 'undefined' ? defaultButtonText.btncampaign[0] : defaultButtonText2.btncampaign[0]);
+						$('.btn-take-isselfie').click(function(){
+								if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()))
+									setTimeout(function(){getSelfie();},200);
+								else
+									showCamera('#camera-modal');
+							//	$('.top-button-selfie').hide();	
+						})
+						/*
+						$.box_Dialog((typeof(defaultTextMessage.takeselfieB) != 'undefined' ? decodequote(defaultTextMessage.takeselfieB) : decodequote(defaultTextMessage2.takeselfieB)), {
+							'type':     'question',
+							'title':    '<span class="color-white">'+(typeof(defaultTextMessage.takeselfieT) != 'undefined' ? decodequote(defaultTextMessage.takeselfieT) : decodequote(defaultTextMessage2.takeselfieT))+' <img src="emoticons/smile.png" width="20" height="20" /><span>',
+							'center_buttons': true,
+							'show_close_button':false,
+							'overlay_close':false,
+							'buttons':  [{caption: (typeof(defaultButtonText.btntake) != 'undefined' ? decodequote((defaultButtonText.btntake[0] == 'no' ? 'okay' : defaultButtonText2.btntake[0])) : decodequote(defaultButtonText2.btntake[0])),callback:function(){
+									if(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase()))
+										setTimeout(function(){getSelfie();},200);
+									else
+										showCamera('#camera-modal');
+								}}]
+						});	*/
 					}
 					/*
 					$.magnificPopup.open({
@@ -1854,7 +1894,6 @@ function setCanvas(img_type)
 			brandName = imgData.businessName;
 			address = imgData.address + ", " + imgData.city + " " + imgData.country + " " + imgData.zip;
 			number = imgData.contactNo;
-
 			width = get_img.width;
 			height = get_img.height;
 
@@ -1936,7 +1975,6 @@ function setCanvas(img_type)
 			context.lineTo(brandNameWidth+widthOffset, dashLineHeight);
 			context.strokeStyle = "#FFFFFF";
 			context.stroke();
-
 			imgAdd.onload = function() {
 
 				addImageHeight = brandNameHeight+(imgAddHeight*1.3);
@@ -1991,7 +2029,6 @@ function setCanvas(img_type)
 							context.font = detailsFont + "pt Lato-Light";
 							context.fillText(date,imgDateWidth+imgNumWidth+numWidth+widthOffset+widthOffsetAdd+numDateOffset,dateImageHeight+detailsFont);
 							dateWidth =context.measureText(date).width;
-
 						};
 						imgDate.src = 'images/calendar-o_ffffff_32.png';
 					};
@@ -2014,7 +2051,7 @@ function setCanvas(img_type)
 				}
 			};
 			imgAdd.src = 'images/location-arrow_ffffff_32.png';
-
+          
 			if(width >= 300 && width <= 500)
 			{
 				logourl = "images/tabluu-logo-mono-xsmall.png";
@@ -2023,7 +2060,7 @@ function setCanvas(img_type)
 			{
 				logourl = "images/tabluu-logo-mono-small.png";
 			}
-
+             
 			imgLogo.onload = function() {
 
 				logoTextHeight = height*0.05;
@@ -2037,11 +2074,10 @@ function setCanvas(img_type)
 
 				context.drawImage(imgLogo, width*0.84, logoImageHeight, imgLogoWidth, imgLogoHeight);
 			};
-			imgLogo.src = logourl;
+			imgLogo.src = logourl; 
 		}
   	});
 }
-
 
 function setRating()
 {
@@ -2065,7 +2101,7 @@ function setRating()
 	ratingHeight = (((overlayHeight - ratingFont)/2)+overlayY)+ratingFont;
 	context.font = ratingFont + "pt Lato-Light";
 	context.fillText(rating,widthOffsetRating+widthOffset,ratingHeight);
-
+    
 	saveToServer(canvas);
 }
 	

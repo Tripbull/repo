@@ -5,6 +5,7 @@ $(document).ready(function() {
 	$( window ).resize(function() { // when window resize
 		$( ".resizeme" ).aeImageResize({ height: 176, width: 176 });
 	});
+	$('.sharedpage').fancybox({width:1250,hideOnOverlayClick:false});
 	$('.fancybox').fancybox({});
 	
 	$("#ScrollToTop").click(function()
@@ -19,10 +20,7 @@ $(document).ready(function() {
         timer = setTimeout(function(){
 		 // fix for IE bug on tabluu page
 		$(".vdesktop .header").css('top', '0px');
-		if($(window).scrollTop() == 0)
-		{
-			browserMessage();
-		}
+		if($(window).scrollTop() == 0){browserMessage();}
 		// end of fix for IE bug on tabluu page
 		
 		if ($(window).scrollTop() > 500) $("#ScrollToTop").show();

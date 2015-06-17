@@ -24,10 +24,10 @@ $noPhoto = 'images/template/no-photo.gif';
 				<div role="main" class="ui-content">
 					<div class="main-wrap">
 						<div class="left-content fl">
-							<div class="left-header">Customize Feedback / Review Page</div>			
+							<div class="left-header">Customize Feedback / Selfie Page</div>			
 							<ul class="uic-left-menu" data-role="listview">
 								<li ><a href="#">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="#" >Background Image<span class="listview-arrow-default"></span></a></li><li ><a href="#">Background Color<span class="listview-arrow-default"></span></a></li><li ><a href="#" >Font Color<span class="listview-arrow-default"></span></a></li><li ><a href="#">Text Below Stars<span class="listview-arrow-default"></span></a></li><li ><a href="#">Text in Buttons<span class="listview-arrow-default"></span></a></li><li ><a href="#">Text in Message<span class="listview-arrow-default"></span></a></li>
-								<li ><a href="#" data-prefetch="true" id="seefeedback2">See the Feedback / Review Page<span class="listview-arrow-default"></span></a></li>
+								<li ><a href="#" data-prefetch="true" id="seefeedback2">See the Feedback / Selfie Page<span class="listview-arrow-default"></span></a></li>
 							</ul>							
 						</div>
 						<div class="right-content bgwhite fr">
@@ -93,6 +93,10 @@ $noPhoto = 'images/template/no-photo.gif';
 							</section>
 							<section class="uic-section-tb hide">
 								<form id="frmUIC2" action="#" method="post" enctype="multipart/form-data" >
+									<div class="clear btncampaign" style="padding-top:1em;">								
+											<input type="text" name="btncampaign" id="btncampaign" value="Your Selfie Now!" placeholder="Your Selfie Now!">
+									</div>
+									<div class="clear" style="padding-top:0.5em"></div>
 									<p class="btnTakeSelfie">Take a selfie (self photo)!</p>
 									<div class="clear" style="padding-top:1em;width:15em;">
 										<div class="fl w60">
