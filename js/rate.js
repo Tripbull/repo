@@ -459,9 +459,8 @@ function createTempSharedPage(){
 	//loginFb();
 	if(customArray.isselfie == 1)
 		$('.top-button-selfie').hide(); //
-		//
-	//$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId+'&photo_url='+sharedlinkphoto+'&comment='+ratecomment+'&ave='+alertaverate,success:function(link){
-	$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId+'&photo_url=images/profile/1448/877462291.jpg&comment='+ratecomment+'&ave='+alertaverate,success:function(link){
+	//$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId+'&photo_url=images/profile/1448/877462291.jpg&comment='+ratecomment+'&ave='+alertaverate,success:function(link){
+	$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId+'&photo_url='+sharedlinkphoto+'&comment='+ratecomment+'&ave='+alertaverate,success:function(link){
 		hideLoader();
 		sharedurl = link;
 		setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "framelinkshared.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 500);
@@ -967,8 +966,8 @@ $(document).ready(function(){
    $('.fancybox').fancybox();
    
    if(istest == true){
-		domainpath = 'https://tabluu.com/staging/';
-		//domainpath = '';
+		//domainpath = 'https://tabluu.com/staging/';
+		domainpath = '';
 		everFree = 3602345,basicID=3361656,basic12 = 3602785,basic24 = 3602788,proID=3361672,pro12 = 3602786,pro24 = 3602789,enterprise=3602346,enterprise12 =3602787,enterprise24 = 3602790; fbPhotoPathShare= 'https://www.tabluu.com/staging/';
 	}else{
 		domainpath = 'https://tabluu.com/';
@@ -1023,8 +1022,7 @@ function clearconsole() {
 }
 function messageaftertakeselfie(){
    if(customArray.isselfie == 1)
-		//setTimeout(function() {setRating();},2000);
-		setRating();
+		setTimeout(function() {setRating();},1000);
 	else{	
 		setTimeout(function(){
 			$.box_Dialog(decodequote((typeof(defaultTextMessage.captureB) != 'undefined' ? defaultTextMessage.captureB : defaultTextMessage2.captureB)), {
@@ -1203,7 +1201,10 @@ function showCamera(IDparam){
         sharedphoto=1;istakephoto = 1;
 		Webcam.snap(function() {
 	        get_img = canvas;
-	        setCanvas('shared');
+			if(customArray.isselfie == 0)
+				setCanvas('shared');
+			else
+				setCanvasSelfie('shared');
 			Webcam.reset();
     	}, canvas);
 
@@ -2078,30 +2079,30 @@ function setCanvas(img_type)
 		}
   	});
 }
-
 function setRating()
 {
 	var canvas = document.getElementById('canvas-image');
 	var context = canvas.getContext('2d');
-	var rate_1 =ratedObj[0];
-	var rate_2 =(typeof(ratedObj[1]) != 'undefined' ? ratedObj[1] : 0);
-	var rate_3 =(typeof(ratedObj[2]) != 'undefined' ? ratedObj[2] : 0);
-	var rate_4 =(typeof(ratedObj[3]) != 'undefined' ? ratedObj[3] : 0);
-	var rate_5 =(typeof(ratedObj[4]) != 'undefined' ? ratedObj[4] : 0);
-	var rate_6 =(typeof(ratedObj[5]) !== 'undefined' ? ratedObj[5] : 0);
-	var rate_7 =(typeof(ratedObj[6]) !== 'undefined' ? ratedObj[6] : 0);
-	var totalRated = rate_1 + rate_2 + rate_3 + rate_4 + rate_5 + rate_6 + rate_7;
-	var aveRated = totalRated / item2Rate.length ;
+	if(customArray.isselfie == 0){
+		var rate_1 =ratedObj[0];
+		var rate_2 =(typeof(ratedObj[1]) != 'undefined' ? ratedObj[1] : 0);
+		var rate_3 =(typeof(ratedObj[2]) != 'undefined' ? ratedObj[2] : 0);
+		var rate_4 =(typeof(ratedObj[3]) != 'undefined' ? ratedObj[3] : 0);
+		var rate_5 =(typeof(ratedObj[4]) != 'undefined' ? ratedObj[4] : 0);
+		var rate_6 =(typeof(ratedObj[5]) !== 'undefined' ? ratedObj[5] : 0);
+		var rate_7 =(typeof(ratedObj[6]) !== 'undefined' ? ratedObj[6] : 0);
+		var totalRated = rate_1 + rate_2 + rate_3 + rate_4 + rate_5 + rate_6 + rate_7;
+		var aveRated = totalRated / item2Rate.length ;
 
-	var rating = aveRated.toFixed(1);
-	var ratingFont = 22;
-	var ratingHeight = 0;
-	
-	ratingFont = getSize(canvas, ratingFont);
-	ratingHeight = (((overlayHeight - ratingFont)/2)+overlayY)+ratingFont;
-	context.font = ratingFont + "pt Lato-Light";
-	context.fillText(rating,widthOffsetRating+widthOffset,ratingHeight);
-    
+		var rating = aveRated.toFixed(1);
+		var ratingFont = 22;
+		var ratingHeight = 0;
+		
+		ratingFont = getSize(canvas, ratingFont);
+		ratingHeight = (((overlayHeight - ratingFont)/2)+overlayY)+ratingFont;
+		context.font = ratingFont + "pt Lato-Light";
+		context.fillText(rating,widthOffsetRating+widthOffset,ratingHeight);
+    }
 	saveToServer(canvas);
 }
 	
@@ -2375,7 +2376,11 @@ function rotateImage(canvasResize1, img)
 	contextResize.drawImage(canvasResize1, x, y);
 
     get_img = canvasResize;
-    setCanvas('shared');
+	if(customArray.isselfie == 0)
+		setCanvas('shared');
+	else{
+		setCanvasSelfie('shared');
+	}	
 }
 
 // image processing end
@@ -2429,10 +2434,8 @@ function setCanvasSelfie(img_type)
 	var eventNameNom = 0;
 
 	var getNewFont = [];
-
-	width = canvasR.width;
-	height = canvasR.height;
-
+    width = get_img.width;
+   height = get_img.height;
 	if(width > 450 || height > 450)
 	{
 		rel = height / width;
