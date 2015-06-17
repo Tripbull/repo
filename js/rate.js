@@ -2414,6 +2414,7 @@ function setCanvasSelfie(img_type)
 	var eventNameHeight = 0;
 	var dashLineHeight = 0;
 	var compImageHeight = 0;
+	var taglineHeight = 0;
 	var logoImageHeight = 0;
 	var logoTextHeight = 0;
 
@@ -2536,16 +2537,18 @@ function setCanvasSelfie(img_type)
 
 	// SET TEXT COLOR FOR TAGLINE
 	context.fillStyle = "#FFFFFF";
+	
+	taglineHeight = (((overlayHeight - eventNameNom)/eventNameDenom)+overlayY)+(taglineFont*1.5);
 
 	// FIRST LINE
 	context.font = taglineFont + "pt myriadproit";
-	context.fillText(firstLine,totalTaglineWidth,eventNameHeight);
+	context.fillText(firstLine,totalTaglineWidth,taglineHeight);
 	firstWidth =context.measureText(firstLine).width;
 	// FIRST LINE END
 
 	// SECOND LINE
 	context.font = taglineFont + "pt myriadproit";
-	context.fillText(secondLine,totalTaglineWidth,eventNameHeight+(taglineFont*1.5));
+	context.fillText(secondLine,totalTaglineWidth,taglineHeight+(taglineFont*1.5));
 	secondWidth =context.measureText(secondLine).width;
 	// SECOND LINE END
 
