@@ -2380,6 +2380,356 @@ function rotateImage(canvasResize1, img)
 
 // image processing end
 
+function setCanvasSelfie(img_type)
+{
+	photo_url = img_type;
+
+	var canvas = document.getElementById('canvas-image');
+	var context = canvas.getContext('2d');
+	var imgLogo = new Image();
+	var width = 1000;
+	var height = 0;
+	var rel = 0;
+	var imgLogoWidth = 35;
+	var imgLogoHeight = 12;
+	var overlayHeight = 0;
+	var overlayY = 0;
+
+	var eventName = 'International Selfie Day';
+	var companyName = 'Presented by Tabluu, ' + getDate();
+	var logoText = "Powered by"
+	var firstLine = 'Making the world a better';
+	var secondLine = 'place, one snap at a time';
+	var logourl = "images/tabluu-logo-mono-xxsmall.png";
+	var eventNameFont = 11;
+	var companyNameFont = 4;
+	var taglineFont = 5;
+	var logoTextFont = 3;	
+
+	var eventNameHeight = 0;
+	var dashLineHeight = 0;
+	var compImageHeight = 0;
+	var logoImageHeight = 0;
+	var logoTextHeight = 0;
+
+	var eventNameWidth = 0;
+	var compWidth = 0;
+	var firstWidth = 0;
+	var secondWidth = 0;
+	var logoWidth = 0;
+	
+	var dashWidth = 1;
+	var dashInterval = 3;
+	var dashLineHeightOffset = 2;
+	var widthOffset = 0;
+	var totalTaglineWidth = 0;
+	var widthOffsetRating = 0;
+	var widthTaglineOffset = 10;
+	var eventNameDenom = 2.5;
+	var eventNameNom = 0;
+
+	var getNewFont = [];
+
+	width = canvasR.width;
+	height = canvasR.height;
+
+	if(width > 450 || height > 450)
+	{
+		rel = height / width;
+		width = 450;
+		height = width*rel;
+		if (height > 450) {
+			height = 450;
+			width = height/rel;
+		}
+	}
+
+	// SET CANVAS WIDTH AND HEIGHT
+	canvas.setAttribute('width', width);
+	canvas.setAttribute('height', height);
+
+	// DRAW IMAGE ON CANVAS
+	context.drawImage(get_img, 0, 0, width, height);
+
+	// SET FONT SIZE BASED ON CANVAS WIDTH
+	taglineFont = getSize(canvas, taglineFont);
+	eventNameFont = getSize(canvas, eventNameFont);
+	getNewFont = setCanvasSelfieTest(width, height,"eventNameFont", 0, 0, 0);
+	eventNameFont = getNewFont[0];
+	taglineFont = getNewFont[1];
+
+	companyNameFont = getSize(canvas, companyNameFont);
+	getNewFont = setCanvasSelfieTest(width, height,"companyNameFont", 0, 0, 0);
+	companyNameFont = getNewFont[0];
+	if(taglineFont > getNewFont[1])
+	{
+		taglineFont = getNewFont[1];
+	}
+
+	imgLogoWidth = getSize(canvas, imgLogoWidth);
+	imgLogoHeight = getSize(canvas, imgLogoHeight);
+	logoTextFont = getSize(canvas, logoTextFont);
+
+	// SET OFFSET BASED ON CANVAS WIDTH
+	widthOffset = setCanvasSelfieTest(width, height, "offset", eventNameFont, companyNameFont, taglineFont);
+	widthTaglineOffset = getSize(canvas, widthTaglineOffset);
+	dashLineHeightOffset = getSize(canvas, dashLineHeightOffset);
+	dashWidth = getSize(canvas, dashWidth);
+	dashInterval = getSize(canvas, dashInterval);
+
+	// SET Y AXIS OF TEXT BASED ON FONTSIZE
+	eventNameNom = eventNameFont+dashWidth+dashLineHeightOffset+(companyNameFont*1.5);
+
+	// OVERLAY Y AXIS AND OVERLAY HEIGHT
+	overlayHeight = eventNameNom + (eventNameNom/2) * rel;
+	overlayY = height - overlayHeight;
+
+	// DRAW OVERLAY ON CANVAS
+	context.fillStyle = "rgba(0, 0 , 0, 0.5)";
+	context.fillRect(0, overlayY, width, overlayHeight);
+
+	// SET Y AXIS OF TEXT BASED ON FONTSIZE
+	eventNameHeight = (((overlayHeight - eventNameNom)/eventNameDenom)+overlayY)+eventNameFont;
+	dashLineHeight = eventNameHeight+dashLineHeightOffset;
+
+	// SET TEXT COLOR
+	context.fillStyle = "#FFFFFF";
+
+	// EVENT NAME
+	context.font = eventNameFont + "pt myriadpro";
+	context.fillText(eventName,widthOffset,eventNameHeight);
+	eventNameWidth =context.measureText(eventName).width;
+	// EVENT NAME END
+
+	// DASH LINE
+	context.setLineDash([dashWidth, dashInterval]);
+	context.beginPath();
+	context.moveTo(widthOffset,dashLineHeight);
+	context.lineTo(eventNameWidth+widthOffset, dashLineHeight);
+	context.strokeStyle = "#FFFFFF";
+	context.stroke();
+	// DASH LINE END
+
+	// COMPANY NAME
+	compImageHeight = eventNameHeight+(companyNameFont*2);
+
+	context.font = companyNameFont + "pt Lato-Light";
+	context.fillText(companyName,widthOffset,compImageHeight);
+	compWidth =context.measureText(companyName).width;
+	// COMPANY NAME END
+
+	if(eventNameWidth > compWidth)
+	{
+		totalTaglineWidth = eventNameWidth+widthTaglineOffset;
+	}
+	else
+	{
+		totalTaglineWidth = compWidth+widthTaglineOffset;
+	}
+
+	// DRAW DARKER OVERLAY ON CANVAS
+	context.fillStyle = "rgba(0, 0 , 0, 0.3)";
+	context.fillRect(totalTaglineWidth-5, overlayY, width, overlayHeight);
+
+	// SET TEXT COLOR FOR TAGLINE
+	context.fillStyle = "#FFFFFF";
+
+	// FIRST LINE
+	context.font = taglineFont + "pt myriadproit";
+	context.fillText(firstLine,totalTaglineWidth,eventNameHeight);
+	firstWidth =context.measureText(firstLine).width;
+	// FIRST LINE END
+
+	// SECOND LINE
+	context.font = taglineFont + "pt myriadproit";
+	context.fillText(secondLine,totalTaglineWidth,eventNameHeight+(taglineFont*1.5));
+	secondWidth =context.measureText(secondLine).width;
+	// SECOND LINE END
+
+
+	if(width >= 300 && width <= 500)
+	{
+		logourl = "images/tabluu-logo-mono-xsmall.png";
+	}
+	else if(width > 500)
+	{
+		logourl = "images/tabluu-logo-mono-small.png";
+	}
+
+	imgLogo.onload = function() {
+
+		logoTextHeight = height*0.05;
+		
+		// POWERED BY
+		context.font = logoTextFont + "pt Lato-Light";
+		context.fillText(logoText,width*0.88,logoTextHeight);
+		logoWidth =context.measureText(logoText).width;
+
+		logoImageHeight = (height*0.04)+logoTextFont;
+
+		context.drawImage(imgLogo, width*0.84, logoImageHeight, imgLogoWidth, imgLogoHeight);
+	};
+	imgLogo.src = logourl;
+}
+
+function setCanvasSelfieTest(widthTest, heightTest, type, bfont, afont, tfont)
+{
+	var canvasTest = document.getElementById('canvas-image-test');
+	var contextTest = canvasTest.getContext('2d');
+
+	var eventNameTest = 'International Selfie Day';
+	var companyNameTest = 'Presented by Tabluu, ' +  getDate();
+	var firstLineTest = 'Making the world a better';
+	var secondLineTest = 'place, one snap at a time';
+
+	var eventNameFontTest = 11;
+	var companyNameFontTest = 4;
+	var taglineFontTest = 6;
+           
+	var eventNameWidthTest = 0;
+	var compWidthTest = 0;
+	var firstWidthTest = 0;
+	var secondWidthTest = 0;
+	
+	var widthOffsetTest = 0;
+	var widthTaglineOffsetTest = 10;
+	var totalCompWidthTest = 0;
+	var totalEventNameWidthTest = 0;
+	var getLineWidth = 0;
+	var getLineText = '';
+
+	// SET CANVAS WIDTH AND HEIGHT
+	canvasTest.setAttribute('width', widthTest);
+	canvasTest.setAttribute('height', heightTest);
+
+	widthTaglineOffsetTest = getSize(canvasTest, widthTaglineOffsetTest);
+
+	// SET FONT SIZE BASED ON CANVAS WIDTH
+	if(bfont > 0)
+	{
+		eventNameFontTest = bfont;
+	}
+	else
+	{
+		eventNameFontTest = getSize(canvasTest, eventNameFontTest);
+	}
+
+	if(afont > 0)
+	{
+		companyNameFontTest = afont;
+	}
+	else
+	{
+		companyNameFontTest = getSize(canvasTest, companyNameFontTest);
+	}
+
+	if(tfont > 0)
+	{
+		taglineFontTest = tfont;
+	}
+	else
+	{
+		taglineFontTest = getSize(canvasTest, taglineFontTest);
+	}
+
+
+	// BRAND NAME
+	contextTest.font = eventNameFontTest + "pt myriadpro";
+	contextTest.fillText(eventNameTest,0,0);
+	eventNameWidthTest = contextTest.measureText(eventNameTest).width;
+
+	// ADDRESS
+	contextTest.font = companyNameFontTest + "pt Lato-Hairline";
+	contextTest.fillText(companyNameTest,0,0);
+	compWidthTest =contextTest.measureText(companyNameTest).width;
+
+	// FIRST LINE
+	contextTest.font = taglineFontTest + "pt myriadproit";
+	contextTest.fillText(firstLineTest,0,0);
+	firstWidthTest =contextTest.measureText(firstLineTest).width;
+
+	// SECOND LINE
+	contextTest.font = taglineFontTest + "pt myriadproit";
+	contextTest.fillText(secondLineTest,0,0);
+	secondWidthTest =contextTest.measureText(secondLineTest).width;
+
+	if(firstWidthTest > secondWidthTest)
+	{
+		getLineWidth = firstWidthTest;
+		getLineText = firstLineTest;
+	}
+	else
+	{
+		getLineWidth = secondWidthTest;
+		getLineText = secondLineTest;
+	}
+
+	switch(type)
+	{
+		case "offset": 
+
+			totalEventNameWidthTest = eventNameWidthTest + getLineWidth + widthTaglineOffsetTest;
+			totalCompWidthTest = compWidthTest + getLineWidth + widthTaglineOffsetTest;
+
+			if(totalCompWidthTest >= totalEventNameWidthTest)
+			{
+				// SET X AXIS OF TEXT BASED ON FONTSIZE
+				widthOffsetTest = ((widthTest - (totalCompWidthTest))/30);
+			}
+			else
+			{
+				// SET X AXIS OF TEXT BASED ON FONTSIZE
+				widthOffsetTest = ((widthTest - (eventNameWidthTest))/30);
+			}
+			console.log(widthTest, eventNameWidthTest)
+			return widthOffsetTest;
+		break;
+		case "eventNameFont":
+			totalEventNameWidthTest = eventNameWidthTest + getLineWidth + widthTaglineOffsetTest;
+
+			while(totalEventNameWidthTest > widthTest)
+			{
+				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
+				eventNameFontTest = eventNameFontTest - 2;
+				contextTest.font = eventNameFontTest + "pt myriadpro";
+				contextTest.fillText(eventNameTest,0,0);
+				eventNameWidthTest = contextTest.measureText(eventNameTest).width;
+
+				taglineFontTest = taglineFontTest - 1;
+				contextTest.font = taglineFontTest + "pt myriadproit";
+				contextTest.fillText(getLineText,0,0);
+				getLineWidth = contextTest.measureText(getLineText).width;
+
+				totalEventNameWidthTest = eventNameWidthTest + getLineWidth + widthTaglineOffsetTest;
+			}
+			return [eventNameFontTest, taglineFontTest];
+		break;
+		case "companyNameFont":
+			totalCompWidthTest = compWidthTest + getLineWidth + widthTaglineOffsetTest;
+
+			while(totalCompWidthTest > widthTest)
+			{
+				contextTest.clearRect(0, 0, canvasTest.width, canvasTest.height);
+				companyNameFontTest = companyNameFontTest - 2;
+				contextTest.font = companyNameFontTest + "pt  Lato-Hairline";
+				contextTest.fillText(companyNameTest,0,0);
+				compWidthTest = contextTest.measureText(companyNameTest).width;
+
+				taglineFontTest = taglineFontTest - 1;
+				contextTest.font = taglineFontTest + "pt myriadproit";
+				contextTest.fillText(getLineText,0,0);
+				getLineWidth = contextTest.measureText(getLineText).width;
+
+				totalCompWidthTest = compWidthTest + getLineWidth + widthTaglineOffsetTest;
+			}
+			return [companyNameFontTest, taglineFontTest];
+		break;
+
+	}
+}
+
+// image processing (SELFIE ONLY) end
+
 // DETECT IF IOS VERSION == 6
 function iOSversion() {
   if (/iP(hone|od|ad)/.test(navigator.platform)) {
