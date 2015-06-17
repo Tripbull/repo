@@ -45,22 +45,22 @@
 									<div class="clear" style="padding-top:1em"></div>
 									<span class="font-17 fl">Event / Cause / Promotion:</span>
 									<div class="clear" style="padding-top:0.5em"></div>
-									<input type="text" data-clear-btn="true" name="txtoccation" id="txtoccation" value="" placeholder="Text (max 100 chars)">
+									<input type="text" data-clear-btn="true" name="txtoccation" id="txtoccation" value="" placeholder="Text (max 40 chars)">
 									<div class="clear" style="padding-top:1em"></div>
 									<span class="font-17 fl">"Presented by" brand, date:</span>
 									<div class="clear" style="padding-top:0.5em"></div>
-									<input type="text" data-clear-btn="true" name="txtinfodate" id="txtinfodate" value="" placeholder="Text (max 100 chars)">
+									<input type="text" data-clear-btn="true" name="txtinfodate" id="txtinfodate" value="" placeholder="Text (max 40 chars)">
 									<div class="clear" style="padding-top:1em"></div>
 									<span class="font-17 fl">Add your slogan: </span>
 									<div class="clear" style="padding-top:0.5em"></div>
-									<input type="text" data-clear-btn="true" name="txtcamp1" id="txtcamp1" value="" placeholder="Text for row 1 (max 100 chars)">
+									<input type="text" data-clear-btn="true" name="txtcamp1" id="txtcamp1" value="" placeholder="Text for row 1 (max 40 chars)">
 									<div class="clear" style="padding-top:0.5em"></div>
-									<input type="text" data-clear-btn="true" name="txtcamp2" id="txtcamp2" value="" placeholder="Text for row 2 (max 100 chars)">
+									<input type="text" data-clear-btn="true" name="txtcamp2" id="txtcamp2" value="" placeholder="Text for row 2 (max 40 chars)">
 									<div class="clear" style="padding-top:1em"></div>
 									<span class="font-17 fl">Sample: </span>
 									<div class="clear" style="padding-top:0.5em"></div>
 									<div style="width:500px;">
-										<img src="images/campaign-sample.png" style="width:100%;height:auto;" />
+										<img src="images/campaign-sample.jpg" style="width:100%;height:auto;" />
 									</div>
 									</form>
 								</div>

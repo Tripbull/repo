@@ -2401,7 +2401,7 @@ function setCanvasSelfie(img_type)
 	var overlayHeight = 0;
 	var overlayY = 0;
 	var eventName = arraytagline.txtoccation;
-	var companyName = 'Presented by Tabluu, ' +arraytagline.txtinfodate;
+	var companyName = arraytagline.txtinfodate;
 	var logoText = "Powered by"
 	var firstLine = arraytagline.tagline1;
 	var secondLine = arraytagline.tagline2;
@@ -2579,11 +2579,11 @@ function setCanvasSelfieTest(widthTest, heightTest, type, bfont, afont, tfont)
 {
 	var canvasTest = document.getElementById('canvas-image-test');
 	var contextTest = canvasTest.getContext('2d');
-
-	var eventName = arraytagline.txtoccation;
-	var companyName = 'Presented by Tabluu, ' +arraytagline.txtinfodate;
-	var firstLine = arraytagline.tagline1;
-	var secondLine = arraytagline.tagline2;
+	
+	var eventNameTest = arraytagline.txtoccation;
+	var companyNameTest = arraytagline.txtinfodate;
+	var firstLineTest = arraytagline.tagline1;
+	var secondLineTest = arraytagline.tagline2;
 	
 	var eventNameFontTest = 11;
 	var companyNameFontTest = 4;

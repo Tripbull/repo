@@ -6409,7 +6409,11 @@ $(document).on('pageshow','#widget', function () {
 });
 //==================================================== newly created tab from setup Customers Facebook Posts  =============================================== 
 //	Date created: November, 22 2014
-
+function limitText(limitField, limitNum) {
+	if (limitField.value.length > limitNum) {
+		limitField.value = limitField.value.substring(0, limitNum);
+	}
+}
 $(document).on('pageinit','#fbpost', function () {
 	$('.iconfbpost').click(function(e){
 		clearTimeout(resizeTimeout);
@@ -6436,6 +6440,10 @@ $(document).on('pageinit','#fbpost', function () {
 		}
 		e.preventDefault();
 	});	
+	
+	$('#txtoccation,#txtcamp1,#txtcamp2,#txtinfodate').keyup(function(e){     
+		limitText(this,40);
+    });
 	$('#fbpost .star').click(function(){goHome();});
 	$('#fbpost #btnsocialpost').click(function(){
 		var placeId = locId.split('|');
