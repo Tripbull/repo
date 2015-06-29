@@ -43,7 +43,7 @@ $(document).ready(function(){
 			var redirect = "settings.html";	
         }else if(whatsetup == 2){
 			var title = 'Setup Wizard - Step 2 / '+ steps;
-			var body = '<p>Please add a new location / business.</p>';
+			var body = '<p>Please add a new campaign / business.</p>';
 			var redirect = "index.html";
 			$('.addnew-loc').hide();
 			$('.text-loc').show();
@@ -462,7 +462,7 @@ $(document).ready(function(){
 					if( parseInt(curActive) >= parseInt(activeLocLength) ){
 						defaulAlertBox('confirm','please confirm','Make this campaign online?',2);
 					}else
-						defaulAlertBox('confirm','insufficent campaign subscriptions','Please subscribe to more locations...',4);
+						defaulAlertBox('confirm','insufficent campaign subscriptions','Please subscribe to more campaigns...',4);
 				}
 			}else
 				defaulAlertBox('alert','invalid request','Please contact your administrator(s) for this request.',1);
@@ -6235,6 +6235,7 @@ $(document).on('pageshow','#widget', function () {
 	}
 	function contenloop(arrayreviews,arrayquestion){
 		var div = '';
+		
 		for (var i in arrayreviews){
 			div = div + '<div class="pin">'
 				+'<p class="fblink">'
@@ -6242,41 +6243,42 @@ $(document).on('pageshow','#widget', function () {
 				+'</p>'
 				+'<div class="text-center"><img alt="fb profile" src="'+(parseInt(arrayreviews[i].hideimg) < 1 ? 'https://graph.facebook.com/'+arrayreviews[i].fbId+'/picture?type=large' : 'images/fbDefault.png')+'" class="pinImage"></div>';
 				if(isselfie == 0){
-				div = div +'<div class="wrap-iconstar">'
-					+'<div class="my-rating">'
-						+'My rating: '+arrayreviews[i].aveRate+'/5'
+					div = div +'<div class="wrap-iconstar">'
+						+'<div class="my-rating">'
+							+'My rating: '+arrayreviews[i].aveRate+'/5'
+						+'</div>'
+						+'<div class="staricon">'
+							+'<span class="stargrey2"><span class="staryellow2" style="'+arrayreviews[i].style+'"></span></span>'
+						+'</div>'
 					+'</div>'
-					+'<div class="staricon">'
-						+'<span class="stargrey2"><span class="staryellow2" style="'+arrayreviews[i].style+'"></span></span>'
-					+'</div>'
-				+'</div>'
-					+'<p class="p-rating">';
-					for(var j in arrayquestion){
-						var rated=0,comma='.';
-						if(j < (arrayquestion.length - 1))
-							comma = ',';
-						if(j == 0)
-							rated = arrayreviews[i].rated1;
-						else if(j == 1)
-							rated = arrayreviews[i].rated2;
-						else if(j == 2)
-							rated = arrayreviews[i].rated3;
-						else if(j == 3)
-							rated = arrayreviews[i].rated4;
-						else if(j == 4)
-							rated = arrayreviews[i].rated5;
-						else if(j == 5)
-							rated = arrayreviews[i].rated6;
-						else if(j == 6)
-							rated = arrayreviews[i].rated7;
-						div = div  +'<span>'+arrayquestion[j]+': '+rated+'/5'+comma+'</span> ';
-					}	
-					div = div +'</p>'
-					+'<p class="comment">'+arrayreviews[i].comment+'</p>';
+						+'<p class="p-rating">';
+						for(var j in arrayquestion){
+							var rated=0,comma='.';
+							if(j < (arrayquestion.length - 1))
+								comma = ',';
+							if(j == 0)
+								rated = arrayreviews[i].rated1;
+							else if(j == 1)
+								rated = arrayreviews[i].rated2;
+							else if(j == 2)
+								rated = arrayreviews[i].rated3;
+							else if(j == 3)
+								rated = arrayreviews[i].rated4;
+							else if(j == 4)
+								rated = arrayreviews[i].rated5;
+							else if(j == 5)
+								rated = arrayreviews[i].rated6;
+							else if(j == 6)
+								rated = arrayreviews[i].rated7;
+							div = div  +'<span>'+arrayquestion[j]+': '+rated+'/5'+comma+'</span> ';
+						}	
+						div = div +'</p>'
+						+'<p class="comment">'+arrayreviews[i].comment+'</p>';
 				}else
 					div = div +'<div style="padding-bottom:10px;"></div>';
 				div = div +'</div>';
 			}
+			
 			$('.comment-container').append(div);
 	}
 	/*
@@ -6332,6 +6334,7 @@ $(document).on('pageshow','#widget', function () {
 		$('.comment-container').append(div);
 	} */
 	function createReview(){
+	/*
 		var div = '<div class="wrap-rate-header">'
 			+'<div class="wrap-rate-logo">'
 				+'<div class="rate-logo"><img src="images/template/logo_home.png" /></div>'
@@ -6352,11 +6355,24 @@ $(document).on('pageshow','#widget', function () {
 		+'<div class="comment-container">'
 		
 		+ '</div>';
+		$('.wrap-widget').html(div);  */
+		var div = '<div class="wrap-rate-header">'
+			+'<div class="wrap-rate-logo">'
+				+'<div class="rate-logo"><img src="images/template/logo_home.png" /></div>'
+			+'</div>'
+			+'<div class="rate-reviews">';
+                if(isselfie == 0){
+				div = div +'<p style="color:#777">'+reviewAvg.totalavg+' out of 5</p>'
+				+'<p><span><a href="baseshared.php?id='+placeId[0]+'" class="fancybox fancybox.iframe sharedlink">'+reviewAvg.totalrev+' reviews</a></span></p>';
+				}else
+					div = div +'<p><span style="color: #38c;">'+reviewAvg.totalrev+' selfies'+'</span></p>';
+			div = div +'</div>'
+			+'</div>'
+		+'</div>'
+		+'<div class="comment-container">'
+		
+		+ '</div>';
 		$('.wrap-widget').html(div);
-		//if(widgetArray.featured.length > 0)
-		//	contenloop(widgetArray.featured,widgetArray.ratequestion);
-		//if(widgetArray.notfeatured.length > 0)
-		//	contenloop(widgetArray.notfeatured,widgetArray.ratequestion);	
 	}
 	
 	$(window).scroll(function() {
@@ -6687,11 +6703,11 @@ $(document).on('pageshow','#fbpost', function () {
 	var address = customArray.address +', '+ customArray.city +', '+customArray.country;
 	var preview = String(arrayfbpost.fbpost).replace(/<brand>/g,customArray.businessName).replace(/<rating>/,'4.3').replace(/<max_rating>/,'5').replace(/<tabluu_url>/,'<span style="text-decoration:underline;color:blue;">http://tabluu.com/'+customArray.nicename+'.html</span>').replace(/<address>/,address).replace(/<tel>/,customArray.contactNo).replace(/<comment>/,'Awesome!');
 	$('.preview').html(preview);
-	$('#txtFBPost').val(arrayfbpost.fbpost);
+	$('#txtFBPost').val(decodequote(arrayfbpost.fbpost));
 
 	var preview = String(arrayfbpost.postdesc).replace(/<brand>/g,customArray.businessName);
 	$('.preview2').html(preview);
-	$('#postdesc').val(arrayfbpost.postdesc);
+	$('#postdesc').val(decodequote(arrayfbpost.postdesc));
 	
 	$("#fblinkupdate").click(function (e){ 
 		e.preventDefault();
@@ -6742,8 +6758,8 @@ $(document).on('pageshow','#fbpost', function () {
 	});
 	/* end of code for setup-cust-post */
 	$('.fbpost-left-menu').on('click', ' > li', function () {
-	   curClick = $(this).index();  
-		showFbpostMenu(curClick);		
+		curClick = $(this).index();  
+		showFbpostMenu(curClick);
 		fbpostActiveMenu();
 		if($( window ).width() > 600){
 			$(this).find( "a" ).addClass('ui-btn-active'); 

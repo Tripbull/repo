@@ -124,7 +124,7 @@ echo date_default_timezone_get();*/
 								<ul class="right-menu" data-role="listview"><li><a href="settings.html" data-prefetch="true">Time Zone<span class="listview-arrow-default"></span></a></li></ul>
 							</section>
 							<section class="right-menu-send hide">
-								<ul class="right-menu" data-role="listview"><li ><a href="sendemail.html" data-prefetch="true">Send Emails<span class="listview-arrow-default"></span></a></li></ul>
+								<!--<ul class="right-menu" data-role="listview"><li ><a href="sendemail.html" data-prefetch="true">Send Emails<span class="listview-arrow-default"></span></a></li></ul>-->
 							</section>	
 							<section class="right-menu-plan hide">
 								<ul class="plan-page" data-role="listview"><li ><a href="#" data-prefetch="true">Plan &amp; Campaign<span class="listview-arrow-default"></span></a></li><li ><a href="#" data-prefetch="true">Transactions<span class="listview-arrow-default"></span></a></li><li ><a href="#" data-prefetch="true">Activity<span class="listview-arrow-default"></span></a></li></ul>

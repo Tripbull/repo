@@ -5,9 +5,9 @@ $(document).ready(function() {
 	$( window ).resize(function() { // when window resize
 		$( ".resizeme" ).aeImageResize({ height: 176, width: 176 });
 	});
-	$('.sharedpage').fancybox({width:1250,hideOnOverlayClick:false});
+	$('.sharedpage').fancybox({width:'90%'});
 	$('.fancybox').fancybox({});
-	
+	$(".showproductsimg").fancybox({helpers : {title : {type : 'inside'}}});
 	$("#ScrollToTop").click(function()
 	{
 		$(window).scrollTop(0);

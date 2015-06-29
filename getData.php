@@ -669,7 +669,8 @@ switch($opt){
 		LIMIT 1";
 		$result1 = mysql_query($sql);
 		$a1 = mysql_fetch_array($result1);
-		$result = mysql_query("SELECT path FROM businessImages AS ps WHERE placeId = ".$a1['placeId']." AND name = 'fbImg' LIMIT 1") or die(mysql_error());
+		//echo "SELECT path FROM businessImages AS ps WHERE placeId = ".$a1['placeId']." AND name = 'fbImg' LIMIT 1";
+		$result = mysql_query("SELECT path FROM businessImages AS ps WHERE placeId = ".$a1['placeId']." AND name = 'fbImg' LIMIT 1"); //or die(mysql_error());
 		$imagesArray = array();
 		if(mysql_num_rows($result)){
 			$row = mysql_fetch_object($result);

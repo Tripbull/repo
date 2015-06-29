@@ -330,7 +330,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 		<div id="topmenu">
 			<ul>
 				<li class="borderright" id="showcase"><a href="#">Showcase</a></li>
-				<li class="activeMenu" id="top-reviews"><a href="#">Reviews</a></li>
+				<li class="activeMenu" id="top-reviews"><a href="#"><?php echo ($row->isselfie == 1 ? 'Selfies' : 'Reviews')?></a></li>
 			</ul>
 		</div>    
 			<div class="MerchantWrapper">
@@ -390,7 +390,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 					  <div class="MerchantLinks" style="width:<?php echo $n ?>px">
 					  <?php
 					if($row->booknow && $row->showmap && $row->contactNo)
-						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$booksite.'"  class="FRight" target="_blank">' . ($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
+						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$booksite.'"  class="FRight" target="_blank"><div style="border:1px solid red;overflow: hidden;text-overflow: ellipsis;width: 20px;">' . ($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</div></a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
 					else if($row->showmap && $row->contactNo)
 						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
 					else if($row->booknow && $row->contactNo)
@@ -400,7 +400,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 					else if($row->showmap)
 						echo '<p class="FRight"><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a></p>';
 					else if($row->booknow)
-						echo '<p class="FRight"><a href="'.$booksite.'"  class="FRight" target="_blank">' .($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</a></p>'; 
+						echo '<p class="FRight"><a href="'.$booksite.'"  class="FRight" target="_blank"><span>' .($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</span></a></p>'; 
 					else if($row->contactNo)
 						echo '<p class="FRight"><a href="tel:'.$row->contactNo.'"  class="FRight" target="_blank">Call Us</a></p>'; 	
 					?>

@@ -32,9 +32,9 @@ if($row->state == 'canceled' || $row->state == 'unpaid' || $row->ave == null){
 	exit;
 }
 if($row->isselfie == 0){
-$fbpost = json_decode($row->fbpost);
-	$str = (!empty($fbpost->fbpost) ? $fbpost->fbpost : '<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.');
-	$rev = (!empty($fbpost->postdesc) ? $fbpost->postdesc : 'My review of <brand>');
+	$fbpost = json_decode($row->fbpost);
+	$str = (!empty($fbpost->fbpost) ? encodequote($fbpost->fbpost) : '<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.');
+	$rev = (!empty($fbpost->postdesc) ? encodequote($fbpost->postdesc) : 'My review of <brand>');
 	if($row->fbpost){
 		if(empty($fbpost->fbpost) && empty($fbpost->postdesc))
 			$str =  $row->fbpost;
@@ -60,9 +60,9 @@ $fbpost = json_decode($row->fbpost);
 }else{
 	$tagline = json_decode($row->taglineselfie);
 	//echo ($tagline->txtoccation); //tagline1,tagline2
-	$rev = $tagline->tagline1;
-	$desc_meta = 'https://tabluu.com/'.$row->nicename.'.html';
-	$description = '<a href="https://tabluu.com/'.$row->nicename.'.html" target="_blank">https://tabluu.com/'.$row->nicename.'.html</a>';
+	$rev = $tagline->txtoccation;
+	$desc_meta =  $tagline->tagline1.' '.$tagline->tagline2 .' '.$tagline->txtinfodate;  //'https://tabluu.com/'.$row->nicename.'.html';
+	$description = '<p class="tag-occation">'.$tagline->txtoccation.'</p><p class="tag-row">'.$tagline->tagline1 .' '.$tagline->tagline2.'</p><p class="tag-date">'.$tagline->txtinfodate.'</p>'; //.'<p><a href="https://tabluu.com/'.$row->nicename.'.html" target="_blank" class="tag-date">https://tabluu.com/'.$row->nicename.'.html</a></p>';
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -80,6 +80,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 $istest = true;
 if($istest){
    $curDomain = 'https://tabluu.com/staging/';
+   $cur = 'https://tabluu.com/';
 }else
 	$curDomain = '../';	
 ?>
@@ -88,7 +89,7 @@ if($istest){
 <meta property="og:description" content="<?php echo $desc_meta?>" />
 <meta property="og:title" content="<?php echo $rev?>" />
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="tabluu.com" />
+<meta property="og:site_name" content="www.tabluu.com" />
 <meta property="og:url" content="<?=$curDomain.'user/'.$nice?>" />
 <meta property="og:image" content="<?=$curDomain.$srcimg;?>" />
 <meta property="og:image:url" content="<?=$curDomain.$srcimg;?>" />
@@ -119,7 +120,7 @@ if($width > 820)
 <div id="vmobile">
 	<div class="header">
 		<div class="logo"><a href="/"><img src="<?=$path?>images/white-logo-tabluu-page.png" > </a></div>
-		<a href="https://tabluu.com/<?=$row->nicename?>.html" rel="follow"><div class="topleftmenu"> <span class="mobile_search"></span></div></a>
+		<a href="<?=$cur.$row->nicename?>.html" rel="follow"><div class="topleftmenu"> <span class="mobile_search"></span></div></a>
 	</div>	 
 	<div id="topmenu">
 		<ul>
@@ -133,11 +134,11 @@ if($width > 820)
 <div class="ColumnContainer">
 	<div class="wrapheader">
 	    <div class="MerchantHead" style="min-height:<?=$height+45?>px;max-width:<?=$width+380?>px;">
-			<a href="https://tabluu.com/<?=$row->nicename?>.html" rel="follow"><div class="xclose"></div></a>
+			<a href="<?=$cur.$row->nicename?>.html" rel="follow"><div class="xclose"></div></a>
 			<div class="clear"></div>
 			<div style="margin:0 auto;width:100%;max-width:<?=$width+390?>px;">
 			  <div class="left text-center" style="max-width:<?=$width?>px;">
-				<a href="https://tabluu.com/<?=$row->nicename?>.html"><img src="<?=$path.$srcimg;?>" width="<?=$width?>" height="<?=$height?>"  alt="selfie photo" /></a>
+				<a href="<?=$cur.$row->nicename?>.html"><img src="<?=$path.$srcimg;?>" width="<?=$width?>" height="<?=$height?>"  alt="selfie photo" /></a>
 			  </div>
 			 <div class="right">
 				<?php

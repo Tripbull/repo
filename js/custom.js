@@ -30,7 +30,7 @@ $(document).ready(function () {
 	$( window ).resize(function() { // when window resize
 		if($( window ).width() > 600){
 			$( '.main-wrap .left-content' ).css( {"display":'inline'} );
-			$( '.main-wrap .right-content' ).css( {"display":'inline'} );		
+			$( '.main-wrap .right-content' ).css( {"display":'inline'} );
 			$( '.main-wrap .left-content' ).css( {"max-width":'40%'} );
 			$( '.main-wrap .right-content' ).css( {"max-width":'60%'} );
 		}else{

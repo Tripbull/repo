@@ -30,9 +30,9 @@
 		</div>-->
 		<p class="description sysPinDescr fblink"><a href="https://www.facebook.com/<?php echo $rowrate->userId ?>" target="_blank"><?php echo $fbname; ?></a></p>
 		<div style="text-align:center;">
-			<?php
+			<?php //$curDomain.'user/'.$nice;
 			if($rowrate->source == 'fb' && $rowrate->link != '' && $rowrate->isshared == 1)
-				echo '<a href="'.$path.'showupSharedFb.php?link='.$rowrate->link.'" class="sharedpage fancybox.iframe"><img class="pinImage" src="'.$fbsrc.'" alt="Selfie"/></a>';
+				echo '<a href="'.$path.'user/'.$rowrate->link.'"><img class="pinImage" src="'.$fbsrc.'" alt="Selfie"/></a>';
 			else
 				echo '<img class="pinImage" src="'.$fbsrc.'" alt="Selfie"/>';
 			?>

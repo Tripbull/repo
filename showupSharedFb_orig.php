@@ -1,5 +1,4 @@
 <?php
-if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ob_start("ob_gzhandler"); else ob_start();//page compressed
 include_once('class/class.main.php');
 $connect = new db();
 $connect->db_connect();
@@ -23,7 +22,7 @@ $result1 = mysql_query($sql) or die(mysql_error());
 $row = mysql_fetch_object($result1);
 $placeId = $row->profilePlaceId;
 $photoDomain = '';//'http://www.tabluu.com/';
-$path = '../'.$connect->path;
+$path = $connect->path;
 $businessTitle = $row->businessName .', '.$row->address.' '.$row->city.', '.$row->zip.' '.$row->country. ' @ Tabluu';
 $domainpath = '';
 if($row->state == 'canceled' || $row->state == 'unpaid' || $row->ave == null){
@@ -60,10 +59,11 @@ $fbpost = json_decode($row->fbpost);
 }else{
 	$tagline = json_decode($row->taglineselfie);
 	//echo ($tagline->txtoccation); //tagline1,tagline2
-	$rev = $tagline->txtoccation;
-	$desc_meta =  $tagline->tagline1.' '.$tagline->tagline2 .' '.$tagline->txtinfodate;  //'https://tabluu.com/'.$row->nicename.'.html';
-	$description = '<p class="tag-occation">'.$tagline->txtoccation.'</p><p class="tag-row">'.$tagline->tagline1 .' '.$tagline->tagline2.'</p><p class="tag-date">'.$tagline->txtinfodate.'</p>'; //.'<p><a href="https://tabluu.com/'.$row->nicename.'.html" target="_blank" class="tag-date">https://tabluu.com/'.$row->nicename.'.html</a></p>';
+	$rev = '<p class="tag-occation">'.$tagline->txtoccation.'</p><p class="tag-row">'.$tagline->tagline1 .' '.$tagline->tagline2.'</p><p class="tag-date">'.$tagline->txtinfodate.'</p>';
+	$desc_meta = 'https://tabluu.com/'.$row->nicename.'.html';
+	$description = $rev; //.'<p><a href="https://tabluu.com/'.$row->nicename.'.html" target="_blank" class="tag-date">https://tabluu.com/'.$row->nicename.'.html</a></p>';
 }
+$curDomain = 'https://tabluu.com/staging/';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" xmlns:og="http://opengraphprotocol.org/schema/">
@@ -72,31 +72,17 @@ $fbpost = json_decode($row->fbpost);
 <?php
 echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row->zip.' '.$row->country. ' @ Tabluu</title>';
 	if($row->state == 'active' && $row->subscribe > 0)
-		echo '<meta name="robots" content="index, follow" />';
+		echo '<meta name="robots" content="noindex, nofollow" />';
 	else 
 		echo '<meta name="robots" content="noindex, nofollow" />';	
 	$srcimg = $row->pathimg;
 	list($width, $height) = getimagesize($srcimg);	
 $istest = true;
-if($istest){
-   $curDomain = 'https://tabluu.com/staging/';
-   $cur = 'https://tabluu.com/staging/';
-}else
-	$curDomain = '../';	
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<meta property="og:description" content="<?php echo $desc_meta?>" />
-<meta property="og:title" content="<?php echo $rev?>" />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="www.tabluu.com" />
-<meta property="og:url" content="<?=$curDomain.'user/'.$nice?>" />
-<meta property="og:image" content="<?=$curDomain.$srcimg;?>" />
-<meta property="og:image:url" content="<?=$curDomain.$srcimg;?>" />
-<meta property="og:image:width" content="<?=$width?>" />
-<meta property="og:image:height" content="<?=$height?>" />
 <meta property="fb:app_id" content="682746285089153" />
-<link href="<?=$path?>css/fbshared.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="<?=$path?>css/fbshowup.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="<?=$path?>js/source/jquery.fancybox.css?v=2.1.5" media="screen" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?=$path?>js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript" src="<?=$path?>js/fbshared.js"></script>
@@ -108,53 +94,35 @@ if($istest){
 <?php
 if($width > 820)
 	$width = 820;
+if($height > 750)
+	$height = 750;	
 ?>
-<input type="hidden" value="<?=$row->nicename?>" id="nice" name="nice" />
-<div id="vdesktop">
-	<div class="header">
-		<div class="HeaderContainer">
-			<div class="d-logo"><a href="/" rel="follow" class="Pinme"><img alt="www.tabluu.com" src="<?=$path?>images/white-logo-tabluu-page.png" /></a></div>
-		</div>
-	</div>
-</div>
-<div id="vmobile">
-	<div class="header">
-		<div class="logo"><a href="/"><img src="<?=$path?>images/white-logo-tabluu-page.png" > </a></div>
-		<a href="https://tabluu.com/<?=$row->nicename?>.html" rel="follow"><div class="topleftmenu"> <span class="mobile_search"></span></div></a>
-	</div>	 
-	<div id="topmenu">
-		<ul>
-			<li class="borderright" id="showcase"><a href="https://tabluu.com/<?=$row->nicename?>.html" rel="follow">Showcase</a></li>
-			<li class="activeMenu" id="top-reviews"><a href="https://tabluu.com/<?=$row->nicename?>.html" rel="follow">Reviews</a></li>
-		</ul>
-	</div>
-</div>
 <!--<div style="position:fixed;top:0;left:0;background-color:#000;height:100%;width:100%"> </div>-->
-<div class="overlay"> </div>
-<div class="ColumnContainer">
-	<div class="wrapheader">
-	    <div class="MerchantHead" style="min-height:<?=$height+45?>px;max-width:<?=$width+380?>px;">
-			<a href="<?=$cur.$row->nicename?>.html" rel="follow"><div class="xclose"></div></a>
+<div style="min-height: 500px;background-color:#fff">
+	<div class="wrapheader" style="border:none">
+	    <div class="MerchantHead" style="min-height:<?=$height?>px;">
 			<div class="clear"></div>
-			<div style="margin:0 auto;width:100%;max-width:<?=$width+390?>px;">
+			<div style="margin:0 auto;width:100%;max-width:<?=$width+390?>px;padding-top:20px;">
 			  <div class="left text-center" style="max-width:<?=$width?>px;">
-				<a href="<?=$cur.$row->nicename?>.html"><img src="<?=$path.$srcimg;?>" width="<?=$width?>" height="<?=$height?>"  alt="selfie photo" /></a>
+				<img src="<?=$path.$srcimg;?>" width="<?=$width?>" height="<?=$height?>"  alt="selfie photo" />
 			  </div>
-			 <div class="right">
-				<?php
-				echo "<p>{$description}</p>";
-				?>
-				<div class="fb-comments" data-href="<?=$curDomain.'user/'.$nice;?>" mobile="true" data-numposts="5" data-colorscheme="light"></div>
-			  </div> 
+				<div class="right">
+					<?php
+					echo "<p>{$description}</p>";
+					?>
+					<div class="fb-comments" data-href="<?=$curDomain.'user/'.$nice;?>" mobile="true" data-numposts="5" data-colorscheme="light"></div>
+				</div> 
+			</div>
 		</div>
-		</div>
+		<div class="clear" style="height:40px;background-color:#fff"></div>
 	</div>
+	<div class="clear"></div>
 </div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=682746285089153";
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=104158746362545";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script> 
 </body>

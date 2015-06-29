@@ -31,7 +31,7 @@ for($j=0; $j< count($imagesArray); $j++){
 	</div>
 
 	<div class="PinImg" style="text-align:center;">
-		<img class="pinImage" src="<?php echo $src; ?>" alt="<?php echo $imagesArray[$j]['title'] ?>" />
+		<a class="showproductsimg" href="<?php echo $src; ?>" title=""><img class="pinImage" src="<?php echo $src; ?>" alt="<?php echo $imagesArray[$j]['title'] ?>" /></a>
 	</div>
 	<p class="RateCount" style="padding-top:5px;"><?php echo $imagesArray[$j]['desc']; ?></p>
 	</div>
