@@ -25,7 +25,7 @@ body{background-color:#e9e9e9;color:#211922}
 .text-right{text-align:right}
 .clear{clear:both}
 .wrap-content{margin:0 auto;}
-.left{float:left;width:100%;overflow:hidden;padding:0 20px;}
+.left{float:left;overflow:hidden;padding:0 20px;}
 .left img{width:100%;height:auto;}
 .right{float:none;width:auto;overflow:hidden;}
 .right{padding:0 20px !important}

@@ -43,7 +43,7 @@
 							</section>
 							<section class="panel-postFB hide">
 								<ul class="right-menu" data-role="listview">
-								<li><a href="fbpost.html" data-prefetch="true">What to Post to Social Media?<span class="listview-arrow-default"></span></a></li>
+								<li><a href="fbpost.html" data-prefetch="true">Content & Message for the Social Media Posts<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="fbpost.html" data-prefetch="true">Post Reviews to Social Media &amp; Tabluu?<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="fbpost.html" data-prefetch="true">Customize Message<span class="listview-arrow-default"></span></a></li>
 								</ul>

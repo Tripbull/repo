@@ -19,9 +19,9 @@
 				<div role="main" class="ui-content">
 					<div class="main-wrap">
 						<div class="left-content fl">
-							<div class="left-header">Customers’ Facebook Posts</div>			
+							<div class="left-header">Social Media Posts</div>			
 							<ul class="fbpost-left-menu" data-role="listview">
-								<li><a href="#">What to Post to Social Media?<span class="listview-arrow-default"></span></a></li>
+								<li><a href="#">Content & Message for the Social Media Posts<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Post Reviews to Social Media &amp; Tabluu?<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Customize Message<span class="listview-arrow-default"></span></a></li>
 							</ul>								
@@ -29,7 +29,7 @@
 						<div class="right-content bgwhite fr">
 							<div class="right-header">Customers Facebook Posts</div>
 							<section class="panel-fbpost hide">
-								<span class="font-17 fl">What to post to social media?</span>
+								<!--<span class="font-17 fl">What to post to social media?</span>-->
 								<div class="clear" style="padding-top:0.5em"></div>	
 								<fieldset data-role="controlgroup" data-corners="false" id="optPost">
 									<input type="radio" name="optPost" id="optPost-b" value="1">
@@ -47,7 +47,7 @@
 									<div class="clear" style="padding-top:0.5em"></div>
 									<input type="text" data-clear-btn="true" name="txtoccation" id="txtoccation" value="" placeholder="Text (max 40 chars)">
 									<div class="clear" style="padding-top:1em"></div>
-									<span class="font-17 fl">"Presented by" brand, date:</span>
+									<span class="font-17 fl">Presented by brand, date:</span>
 									<div class="clear" style="padding-top:0.5em"></div>
 									<input type="text" data-clear-btn="true" name="txtinfodate" id="txtinfodate" value="" placeholder="Text (max 40 chars)">
 									<div class="clear" style="padding-top:1em"></div>

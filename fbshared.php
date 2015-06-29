@@ -132,11 +132,11 @@ if($width > 820)
 <div class="overlay"> </div>
 <div class="ColumnContainer">
 	<div class="wrapheader">
-	    <div class="MerchantHead" style="min-height:<?=$height+45?>px;max-width:<?=$width+380?>px;">
+	    <div class="MerchantHead" style="min-height:<?=$height+75?>px;max-width:<?=$width+380?>px;">
 			<a href="https://tabluu.com/<?=$row->nicename?>.html" rel="follow"><div class="xclose"></div></a>
 			<div class="clear"></div>
 			<div style="margin:0 auto;width:100%;max-width:<?=$width+390?>px;">
-			  <div class="left text-center" style="max-width:<?=$width?>px;">
+			  <div class="left text-center" style="max-width:<?=$width+50?>px;">
 				<a href="https://tabluu.com/<?=$row->nicename?>.html"><img src="<?=$path.$srcimg;?>" width="<?=$width?>" height="<?=$height?>"  alt="selfie photo" /></a>
 			  </div>
 			 <div class="right">

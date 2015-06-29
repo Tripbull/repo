@@ -41,11 +41,8 @@ $_SESSION['session']=$ur_session;
 		<div class="hide">
 				<div id="data">
 					<div class="cam-frame">
-					<div style="height:480px;">
-						<canvas id="canvas" style="position:absolute;width:100%" width="640" height="480"></canvas>
-						<video id="video" stlye="position:absolute;width:100%" width="640" height="480" autoplay></video>
-					</div>
-					<!-- <div id="screen"></div> -->
+						<div id="screen"></div>
+						<canvas id="canvas" style="position:absolute;z-index:-1;" width="640" height="480"></canvas>
 					<div class="snapshotbutton">
 						<div class="snapshot hide">
 							<a href="#" data-rel="back" class="cancelsnap">cancel</a>
