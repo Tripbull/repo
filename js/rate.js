@@ -373,52 +373,64 @@ function ratevalue(rate,page){
 		var totalRated = rate_1 + rate_2 + rate_3 + rate_4 + rate_5 + rate_6 + rate_7;
 		var aveRated = totalRated / item2Rate.length ;
 		alertaverate = aveRated;
-		$.box_Dialog('<p style="padding:5px 0px;text-align:left;font-size:14px;">'+defaultTextMessage.average+' '+ aveRated.toFixed(1) + '/5 </p>'+'<textarea class="comment-txt" placeholder="'+decodequote((typeof(defaultTextMessage.commentB) != 'undefined' ? defaultTextMessage.commentB : defaultTextMessage2.commentB))+'" style="width:100% !important;height:7em !important;margin:0 auto !important;font-size:0.8em;resize: none;overflow:hidden"></textarea>', { 
-			'type':     'question',
-			'title':    '<span class="color-white">'+defaultTextMessage.comment+'<span>',
-			'center_buttons': true,
-			'show_close_button':false,
-			'overlay_close':false,
-			'buttons':  [{caption: defaultButtonText.comment[1],callback:function(){
-				ratecomment = $('.comment-txt').val();
-				if(defaultPostReview.posted > 0 && aveRated >= percent){
-					if(customArray.optsocialpost < 1){
-						if(istakephoto > 0){
-							istakephoto = 0;
+		if(item2Rate.length > 1){
+			$.box_Dialog('<p style="padding:5px 0px;text-align:left;font-size:14px;">'+defaultTextMessage.average+' '+ aveRated.toFixed(1) + '/5 </p>'+'<textarea class="comment-txt" placeholder="'+decodequote((typeof(defaultTextMessage.commentB) != 'undefined' ? defaultTextMessage.commentB : defaultTextMessage2.commentB))+'" style="width:100% !important;height:7em !important;margin:0 auto !important;font-size:0.8em;resize: none;overflow:hidden"></textarea>', { 
+				'type':     'question',
+				'title':    '<span class="color-white">'+defaultTextMessage.comment+'<span>',
+				'center_buttons': true,
+				'show_close_button':false,
+				'overlay_close':false,
+				'buttons':  [{caption: defaultButtonText.comment[1],callback:function(){
+					ratecomment = $('.comment-txt').val();
+					if(defaultPostReview.posted > 0 && aveRated >= percent){
+						if(customArray.optsocialpost < 1){
+							if(istakephoto > 0){
+								istakephoto = 0;
+								setRating();
+							}else{
+								sharedlinkphoto = customArray.fbImg;
+								urlphotoshared = customArray.fbImg;
+								createTempSharedPage();
+							}	
+						}else
 							setRating();
-						}else{
-							sharedlinkphoto = customArray.fbImg;
-							urlphotoshared = customArray.fbImg;
-							createTempSharedPage();
-						}	
-					}else
-						setRating();
-				}else{
-					setTimeout(function(){pressyes();},300);
-				}
-				/*
-				showLoader();
-				$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatesharedurl&placeId='+placeId,success:function(link){
-					hideLoader();
-					$.fancybox({'type': 'iframe','scrolling':'no','closeEffect':'fade','closeClick':false,'overlayColor': '#000','href' :'user/ukw0cjn','overlayOpacity': 0.5});
-				}});
-				
-				if(defaultPostReview.posted > 0 && aveRated >= percent){
-					setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "share.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 500);
-				}else{
-					//alert(String(defaultTextMessage.followT))
-					pressyes();
-				} */ 
-			}}/*,{caption: defaultButtonText.comment[0],callback:function(){
-				ratecomment = '';
-				if(defaultPostReview.posted > 0 && aveRated >= percent){
-					setTimeout(function() {$( ":mobile-pagecontainer" ).pagecontainer( "change", "share.html",{ transition: "flip",data: 'p='+nicename+(isTakeSelfie != '' ? '&s='+isTakeSelfie : '')+(hadlabel != '' ? '&label='+hadlabel : '') });}, 500);
-				}else{
-					pressyes();
-				}
-			}} */]
-		});
-        setTimeout(function(){$('.comment-txt').focus()},400);		
+					}else{
+						setTimeout(function(){pressyes();},300);
+					}
+				}}]
+			});
+			setTimeout(function(){$('.comment-txt').focus()},400);
+		}else{
+			showLoader();
+			setTimeout(function(){
+			$.box_Dialog('<p style="padding:5px 0px;text-align:left;font-size:14px;">'+defaultTextMessage.average+' '+ aveRated.toFixed(1) + '/5 </p>'+'<textarea class="comment-txt" placeholder="'+decodequote((typeof(defaultTextMessage.commentB) != 'undefined' ? defaultTextMessage.commentB : defaultTextMessage2.commentB))+'" style="width:100% !important;height:7em !important;margin:0 auto !important;font-size:0.8em;resize: none;overflow:hidden"></textarea>', { 
+				'type':     'question',
+				'title':    '<span class="color-white">'+defaultTextMessage.comment+'<span>',
+				'center_buttons': true,
+				'show_close_button':false,
+				'overlay_close':false,
+				'buttons':  [{caption: defaultButtonText.comment[1],callback:function(){
+					ratecomment = $('.comment-txt').val();
+					if(defaultPostReview.posted > 0 && aveRated >= percent){
+						if(customArray.optsocialpost < 1){
+							if(istakephoto > 0){
+								istakephoto = 0;
+								setRating();
+							}else{
+								sharedlinkphoto = customArray.fbImg;
+								urlphotoshared = customArray.fbImg;
+								createTempSharedPage();
+							}	
+						}else
+							setRating();
+					}else{
+						setTimeout(function(){pressyes();},300);
+					}
+				}}]
+			});
+			},5000);
+			setTimeout(function(){$('.comment-txt').focus()},2000);
+		}		
 	}	
 }
 function setdefault(){
