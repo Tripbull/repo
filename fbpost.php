@@ -21,7 +21,7 @@
 						<div class="left-content fl">
 							<div class="left-header">Social Media Posts</div>			
 							<ul class="fbpost-left-menu" data-role="listview">
-								<li><a href="#">Content Message for the Social Media<span class="listview-arrow-default"></span></a></li>
+								<li><a href="#">Content & Message for the Social Media Posts<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Post Reviews to Social Media &amp; Tabluu?<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Customize Message<span class="listview-arrow-default"></span></a></li>
 							</ul>								
@@ -60,7 +60,7 @@
 									<span class="font-17 fl">Sample: </span>
 									<div class="clear" style="padding-top:0.5em"></div>
 									<div style="width:500px;">
-										<img src="images/campaign-sample.png" style="width:100%;height:auto;" />
+										<img src="images/campaign-sample.jpg" style="width:100%;height:auto;" />
 									</div>
 									</form>
 								</div>

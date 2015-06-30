@@ -154,6 +154,13 @@ $noPhoto = 'images/template/no-photo.gif';
 										</div>
 									</div>
 									<div class="clear" style="padding-top:0.5em"></div>
+									<p class="logged">You're logged in to &lt;social media&gt;</p>
+									<div class="clear" style="padding-top:1em;width:8.1em;">
+										<div class="fl w60">
+											<input type="text" name="txt-share" id="txt-share" value="okay" placeholder="okay">
+										</div>
+									</div>
+									<div class="clear" style="padding-top:0.5em"></div>
 									<p class="leave">Do you wish to leave your contact details so that we may get in touch with you?</p>
 									<div class="clear" style="padding-top:1em;width:15em;">
 										<div class="fl w60">
@@ -252,6 +259,8 @@ $noPhoto = 'images/template/no-photo.gif';
 									<input type="text" data-clear-btn="true" name="txtbox2" id="txtbox2" value="Your average rating:" placeholder="Your average rating:">
 									<input type="text" data-clear-btn="true" name="txtbox9" id="txtbox9" value="Auto logout" placeholder="Auto logout">
 									<input type="text" data-clear-btn="true" name="txtbox10" id="txtbox10" value="You'll be logged out of Facebook after sharing." placeholder="You'll be logged out of Facebook after sharing.">
+									<input type="text" data-clear-btn="true" name="txtbox26" id="txtbox26" value="You're logged in to" placeholder="You're logged in to">
+									<input type="text" data-clear-btn="true" name="txtbox27" id="txtbox27" value="Click &quot;okay&quot; to start sharing!" placeholder="Click &quot;okay&quot; to start sharing!">
 									<input type="text" data-clear-btn="true" name="txtbox3" id="txtbox3" value="Share this page?" placeholder="Share this page?">
 									<input type="text" data-clear-btn="true" name="txtbox22" id="txtbox22" value="Please use the &quot;share&quot; button to recommend <brand>. By sharing you agree with Tabluu's <privacy_policy_link>." placeholder="Please use the &quot;share&quot; button to recommend <brand>. By sharing you agree with Tabluu's <privacy_policy_link>.">
 									<input type="text" data-clear-btn="true" name="txtbox11" id="txtbox11" value="Be a fan of <brand>?" placeholder="Be a fan of <brand>?">
