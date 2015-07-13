@@ -218,10 +218,8 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 					$fbsrc =  "https://graph.facebook.com/$rev->userId/picture?type=small";
 				?>
 				<div class="Pinmesnips">
-					<a href="#">
 					  <span><img src="<?php echo $fbsrc ?>" width="30" height="30" alt="fb profile" /></span>
 					  <span class="pinmesnipsuser"><?php echo $rev->userName; ?></span>
-					</a>
 				</div>
 				<?php
 				} ?>
@@ -259,24 +257,28 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 		}
 		if($row->showmap)
 			$w++;
-		if($w == 1)	
+		//$w++; //count for showcase or review tab	
+		if($w == 1)
 			$widthmenu = "width:50%";
-        else if($w == 2)	
+        else if($w == 2)
 			$widthmenu = "width:33.3%";
-		else if($w == 3)	
+		else if($w == 3)
 			$widthmenu = "width:25%";	
-		else if($w == 4)	
+		else if($w == 4)
 			$widthmenu = "width:20%";
-		else if($w == 5)	
-			$widthmenu = "width:16.6%";	
-		else if($w == 6)	
-			$widthmenu = "width:14.25%";		
+		else if($w == 5)
+			$widthmenu = "width:16.66%";	
+		else if($w == 6)
+			$widthmenu = "width:14.25%";
+		else if($w == 7)
+			$widthmenu = "width:12.5%";		
 	?>
 
 	<div id="nav">
 		<ul>
 			<?php
 				echo '<li style="'.$widthmenu.'"><a href="#" target="_blank" class="mailto"><div class="menupadding">Contact Us</div></a></li>';
+				//echo '<li style="'.$widthmenu.'"><a href="#" target="_blank" ><div class="menupadding">Showcase</div></a></li>';
 				if($row->websiteURL)	
 					echo '<li style="'.$widthmenu.'"><a href="'.$website.'" target="_blank"><div class="menupadding">Website</div></a></li>';	
 				if($row->facebookURL)
@@ -387,8 +389,20 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 								$n = $n + 93;	
 						?>
 						</div>
-					  <div class="MerchantLinks" style="width:<?php echo $n ?>px">
+					  <div class="" style="">
 					  <?php
+					  echo '<div class="clear" style="padding:5px 0"></div>';	
+					if($row->booknow){
+						echo '<a href="'.$booksite.'"  class="color-button" target="_blank"><span>' .($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</span></a>'; 
+						echo '<div class="clear" style="padding:5px 0"></div>';
+					}if($row->contactNo){
+						echo '<a href="tel:'.$row->contactNo.'"  class="color-button" target="_blank">Call Us</a>'; 
+						echo '<div class="clear" style="padding:5px 0"></div>';
+					}if($row->showmap){
+						echo '<a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="color-button fancybox fancybox.iframe">Map</a>';
+					echo '<div class="clear" style="padding:5px 0"></div>';
+                    }					
+					  /*
 					if($row->booknow && $row->showmap && $row->contactNo)
 						echo '<a href="tel:'.$row->contactNo.'" rel="nofollow" class="MRight">Call Us</a><a href="'.$booksite.'"  class="FRight" target="_blank"><div style="border:1px solid red;overflow: hidden;text-overflow: ellipsis;width: 20px;">' . ($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</div></a><a href="'.$path.'showmap.php?id='.$placeId.'" rel="nofollow" class="MRight fancybox fancybox.iframe">Map</a>';
 					else if($row->showmap && $row->contactNo)
@@ -403,6 +417,7 @@ echo '<title>'. $row->businessName .', '.$row->address.' '.$row->city.', '.$row-
 						echo '<p class="FRight"><a href="'.$booksite.'"  class="FRight" target="_blank"><span>' .($row->booknowlabel == '' ? 'Book Now' : $row->booknowlabel) . '</span></a></p>'; 
 					else if($row->contactNo)
 						echo '<p class="FRight"><a href="tel:'.$row->contactNo.'"  class="FRight" target="_blank">Call Us</a></p>'; 	
+						*/
 					?>
 					  </div>    
 				</div>

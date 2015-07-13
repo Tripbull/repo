@@ -20,9 +20,9 @@
 				<div role="main" class="ui-content">
 					<div class="main-wrap">
 						<div class="left-content fl">
-							<div class="left-header">Collect Feedback / Selfie</div>			
+							<div class="left-header">Collect Response</div>			
 							<ul class="feedback-left-menu" data-role="listview">
-								<li ><a href="#">On the Spot<span class="listview-arrow-default"></span></a></li>
+								<li ><a href="#">Spot Response<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="#" class="qrcode">Messages, QR Codes &amp; Mini Links<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Send Email Invitations<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="#">Photo Booth (Tablet or Notebook)<span class="listview-arrow-default"></span></a></li>
@@ -77,7 +77,7 @@
 							<section class="survey hide">
 								<ul class="feedback-right-weblink" data-role="listview">
 									<li><a href="onspot.html">Handheld Tablet<span class="listview-arrow-default"></span></a></li>
-									<li><a href="onspot.html">Check Out Counters<span class="listview-arrow-default"></span></a></li>
+									<li><a href="onspot.html">Response Station<span class="listview-arrow-default"></span></a></li>
 								</ul>	
 							</section>
 							<section class="feedback-widget hide">	

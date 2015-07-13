@@ -2208,7 +2208,7 @@ span.staryellow2 {background:url(../../images/small-rate-yellow.png) 0 0 !import
 #nav li a:hover {color: #444;background-color: #f3f3f3; }
 #nav li:first-child a:hover {border-radius:0 0 0 6px;}
 #nav li:last-child a:hover {border-radius:0 0 6px 0;}
-.menupadding{margin-top:9px;}
+.menupadding{margin-top:9px;overflow: hidden;padding: 0 5px;text-overflow: ellipsis;white-space: nowrap;width: auto;}
 #masoncontainer{width:100%;margin:0 auto;max-width:1250px;}
 .pin{max-width: 218px;float:left;margin-top: 6px;margin-bottom:7px;}
 .masonryImage{background-color:#fff;width:100%;border-radius:6px;max-width:20%;min-width:222px;padding:10px;margin-top:10px;}
@@ -2224,6 +2224,8 @@ span.staryellow2 {background:url(../../images/small-rate-yellow.png) 0 0 !import
 .hide{display:none;}
 .vmobile{display:none;}
 .vdesktop{display:block;}
+.color-button {color: #fff;display: block;background:#31aee3;font-size: 12px;height: auto;padding:7px 0;width:90%;text-decoration:none;margin:0 auto;}
+.color-button:hover {text-decoration:none;color: #fff;}
 /* mobile css */
 @media screen and (max-width: 600px){ 
 	.vdesktop{display:none;}

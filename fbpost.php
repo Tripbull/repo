@@ -21,7 +21,7 @@
 						<div class="left-content fl">
 							<div class="left-header">Social Media Posts</div>			
 							<ul class="fbpost-left-menu" data-role="listview">
-								<li><a href="#">Content & Message for the Social Media Posts<span class="listview-arrow-default"></span></a></li>
+								<li><a href="#">Type of Image<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Post Reviews to Social Media &amp; Tabluu?<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Customize Message<span class="listview-arrow-default"></span></a></li>
 							</ul>								

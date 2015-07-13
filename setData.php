@@ -210,7 +210,7 @@ switch($opt){
 	//txtname=&txtphone=&txtemail=&txtaddition=
 	case 'poorRating': // poor rating message in feedback
 	   //ALTER TABLE  `businessplace_1000` ADD  `poorrate` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER  `photo_url` ;
-	    $questionDefault = array('How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again');
+	    $questionDefault = array('How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again','How valuable is our web service to you?_Value Proposition','For the value provided, how attractive is our pricing?_Price Attractiveness','How likely are you to recommend this website to your friends?_Recommended');
 	    $placeId = $_REQUEST['placeId'];$lastId = $_REQUEST['lastId'];
 		$poor = array2json(array('email'=>$_REQUEST['txtemail'],'name'=>$_REQUEST['txtname'],'contact'=>$_REQUEST['txtphone'],'additional'=>$_REQUEST['txtaddition']));
 		$result = mysql_query("SHOW COLUMNS FROM `businessplace_$placeId` LIKE 'poorrate'") or die(mysql_error());
@@ -663,7 +663,15 @@ switch($opt){
 			mysql_query("UPDATE businessCustom SET taglineselfie= '".$json."' WHERE customPlaceId = {$placeId}") or die(mysql_error());	
 		}
 		mysql_query("UPDATE businessCustom SET optsocialpost= $val WHERE customPlaceId = $placeId") or die(mysql_error());		
-	break;		
+	break;	
+	case 'redirectpage':
+		$placeId = $_REQUEST['placeId'];$selected = $_REQUEST['selected'];
+		mysql_query("UPDATE businessCustom SET redirect= {$selected} WHERE customPlaceId = {$placeId}") or die(mysql_error());
+		if($_REQUEST['case'] == 0){
+			$txtwebsite = mysql_real_escape_string($_REQUEST['txtwebsite']);	
+			mysql_query("UPDATE businessProfile SET websiteURL='{$txtwebsite}' WHERE profilePlaceId = $placeId");	
+		}
+	break;	
 	case 'setcustom':
 		$placeId = $_REQUEST['placeId'];$case = $_REQUEST['case'];$sql='';
 		if($case ==1)
@@ -683,11 +691,11 @@ switch($opt){
 			echo $json = array2json($obj);
 			$sql = "UPDATE businessCustom SET ratingText= '".$json."' WHERE customPlaceId = $placeId";
 		}else if($case ==6){
-		   $obj =  array('btntake' => array(encodequote($_REQUEST['btnTakeSelfie'])),'btnshare' => array(encodequote($_REQUEST['txt-share'])),'btncampaign' => array(encodequote($_REQUEST['btncampaign'])),'btncapture' => array(encodequote($_REQUEST['btncapture'])),'btnfeedback' => array(encodequote($_REQUEST['btnfeedbackSelfie']),encodequote($_REQUEST['btnfeedbackSelfie2'])),'share' => array(encodequote($_REQUEST['txtshare1']),encodequote($_REQUEST['txtshare2'])), 'comment' => array(encodequote($_REQUEST['txtrecommend1']),encodequote($_REQUEST['txtrecommend2'])),'badEmail' => array(encodequote($_REQUEST['txtleave1']),encodequote($_REQUEST['txtleave2'])),'allow' => array(encodequote($_REQUEST['txtallow1']),encodequote($_REQUEST['txtallow2'])),'logout' => array(encodequote($_REQUEST['txt-logout'])),'follow' => array(encodequote($_REQUEST['follow-no']),encodequote($_REQUEST['follow-yes'])), 'nxt' => array(encodequote($_REQUEST['txtnxt'])), 'photo' => array(encodequote($_REQUEST['txtphoto1']),encodequote($_REQUEST['txtphoto2'])), 'option' => array(encodequote($_REQUEST['txtoption1']),encodequote($_REQUEST['txtoption2']),encodequote($_REQUEST['txtoption3'])), 'pass' => array(encodequote($_REQUEST['txtpass1']),encodequote($_REQUEST['txtpass2'])),'cambtnoption' => array(encodequote($_REQUEST['btncam1']),encodequote($_REQUEST['btncam2']),encodequote($_REQUEST['btncam3']),encodequote($_REQUEST['btncam4'])));
+		   $obj =  array('btntake' => array(encodequote($_REQUEST['btnTakeSelfie'])),'btnshare' => array(encodequote($_REQUEST['txt-share'])),'btncampaign' => array(encodequote($_REQUEST['btncampaign'])),'btncapture' => array(encodequote($_REQUEST['btncapture'])),'btnfeedback' => array(encodequote($_REQUEST['btnfeedbackSelfie']),encodequote($_REQUEST['btnfeedbackSelfie2'])),'share' => array(encodequote($_REQUEST['txtshare1']),encodequote($_REQUEST['txtshare2'])), 'comment' => array(encodequote($_REQUEST['txtrecommend1'])),'badEmail' => array(encodequote($_REQUEST['txtleave1']),encodequote($_REQUEST['txtleave2'])),'allow' => array(encodequote($_REQUEST['txtallow1']),encodequote($_REQUEST['txtallow2'])),'logout' => array(encodequote($_REQUEST['txt-logout'])),'follow' => array(encodequote($_REQUEST['follow-no']),encodequote($_REQUEST['follow-yes'])), 'photo' => array(encodequote($_REQUEST['txtphoto1']),encodequote($_REQUEST['txtphoto2'])), 'option' => array(encodequote($_REQUEST['txtoption1']),encodequote($_REQUEST['txtoption2']),encodequote($_REQUEST['txtoption3'])),'cambtnoption' => array(encodequote($_REQUEST['btncam1']),encodequote($_REQUEST['btncam2']),encodequote($_REQUEST['btncam3']),encodequote($_REQUEST['btncam4'])));
 			echo $json = array2json($obj);
 			$sql = "UPDATE businessCustom SET button= '".$json."' WHERE customPlaceId = $placeId";
 		}else if($case ==7){
-		   $obj = array('comment' => encodequote($_REQUEST['txtbox1']),'logoutT' => encodequote($_REQUEST['txtbox9']),'logoutB' => encodequote($_REQUEST['txtbox10']), 'average' => encodequote($_REQUEST['txtbox2']),'followT' => encodequote($_REQUEST['txtbox11']),'followB' => encodequote($_REQUEST['txtbox12']),'badEmailT' => encodequote($_REQUEST['txtbox13']),'badEmailB' => encodequote($_REQUEST['txtbox14']),'detailsEmailT' => encodequote($_REQUEST['txtbox15']),'detailsEmailB' => encodequote($_REQUEST['txtbox16']),'allow' => encodequote($_REQUEST['txtbox17']), 'share' => encodequote($_REQUEST['txtbox3']), 'thank' => encodequote($_REQUEST['txtbox4']), 'nxt' => encodequote($_REQUEST['txtbox5']), 'option' => encodequote($_REQUEST['txtbox6']), 'pass' => encodequote($_REQUEST['txtbox7']), 'takePhoto' => encodequote($_REQUEST['txtbox8']), 'takeselfieB' => encodequote($_REQUEST['txtbox18']), 'takeselfieT' => encodequote($_REQUEST['txtbox19']), 'surveyselfieT' => encodequote($_REQUEST['txtbox20']), 'surveyselfieB' => encodequote($_REQUEST['txtbox21']), 'shareB' => encodequote($_REQUEST['txtbox22']), 'commentB' => encodequote($_REQUEST['txtbox23']), 'captureT' => encodequote($_REQUEST['txtbox24']), 'captureB' => encodequote($_REQUEST['txtbox25']), 'sharedT' => encodequote($_REQUEST['txtbox26']), 'sharedB' => encodequote($_REQUEST['txtbox27']));
+		   $obj = array('comment' => encodequote($_REQUEST['txtbox1']),'logoutT' => encodequote($_REQUEST['txtbox9']),'logoutB' => encodequote($_REQUEST['txtbox10']), 'average' => encodequote($_REQUEST['txtbox2']),'followT' => encodequote($_REQUEST['txtbox11']),'followB' => encodequote($_REQUEST['txtbox12']),'badEmailT' => encodequote($_REQUEST['txtbox13']),'badEmailB' => encodequote($_REQUEST['txtbox14']),'detailsEmailT' => encodequote($_REQUEST['txtbox15']),'detailsEmailB' => encodequote($_REQUEST['txtbox16']),'allow' => encodequote($_REQUEST['txtbox17']), 'share' => encodequote($_REQUEST['txtbox3']), 'thank' => encodequote($_REQUEST['txtbox4']), 'option' => encodequote($_REQUEST['txtbox6']), 'optionT' => encodequote($_REQUEST['txtbox28']), 'takePhoto' => encodequote($_REQUEST['txtbox8']), 'takeselfieB' => encodequote($_REQUEST['txtbox18']), 'takeselfieT' => encodequote($_REQUEST['txtbox19']), 'surveyselfieT' => encodequote($_REQUEST['txtbox20']), 'surveyselfieB' => encodequote($_REQUEST['txtbox21']), 'shareB' => encodequote($_REQUEST['txtbox22']), 'commentB' => encodequote($_REQUEST['txtbox23']), 'captureT' => encodequote($_REQUEST['txtbox24']), 'captureB' => encodequote($_REQUEST['txtbox25']), 'sharedT' => encodequote($_REQUEST['txtbox26']), 'sharedB' => encodequote($_REQUEST['txtbox27']));
 			$json = array2json($obj);
 			$sql = "UPDATE businessCustom SET messageBox= '".$json."' WHERE customPlaceId = $placeId";
 		}else if($case ==8){
@@ -748,7 +756,7 @@ switch($opt){
 		$id = $_REQUEST['placeId'];$case = $_REQUEST['case'];
 		if($case > 0){
 			$sql = "CREATE TABLE IF NOT EXISTS `businessplace_$id` (
-			  `id` int(10) NOT NULL AUTO_INCREMENT,
+			`id` int(10) NOT NULL AUTO_INCREMENT,
 			  `rated1` tinyint(1) NOT NULL,
 			  `rated2` tinyint(1) NOT NULL,
 			  `rated3` tinyint(1) NOT NULL,
@@ -761,9 +769,13 @@ switch($opt){
 			  `userName` varchar(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
 			  `userId` varchar(50) NOT NULL,
 			  `source` varchar(5) NOT NULL,
+			  `labelId` int(11) NOT NULL,
+			  `feedsource` varchar(2) NOT NULL,
 			  `photo_url` varchar(200) NOT NULL,
 			  `poorrate` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
 			  `date` datetime NOT NULL,
+			  `hideimg` tinyint(4) NOT NULL,
+			  `feature` tinyint(4) NOT NULL,
 			  PRIMARY KEY (`id`)
 			) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;";
 			$sql2 = "CREATE TABLE IF NOT EXISTS `businessCustomer_$id` (

@@ -24,7 +24,7 @@
 							<div class="left-header">Tablet "On the Spot" Feedback</div>			
 							<ul class="onspot-left-menu" data-role="listview">
 								<li><a href="onspot.html">Hand held tablet<span class="listview-arrow-default"></span></a></li>
-								<li><a href="onspot.html">Check Out Counters<span class="listview-arrow-default"></span></a></li>
+								<li><a href="onspot.html">Response Station<span class="listview-arrow-default"></span></a></li>
 							</ul>	
 						</div>
 						<div class="right-content bgwhite fr">	

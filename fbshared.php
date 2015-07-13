@@ -12,7 +12,7 @@ if(mysql_num_rows($addnewfield) < 1)
 $addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'taglineselfie'") or die(mysql_error());
 if(mysql_num_rows($addnewfield) < 1)
 	mysql_query("ALTER TABLE `businessCustom` ADD `taglineselfie` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `fbpost`");		
-$sql = "SELECT s.pathimg,s.ave,s.comment, p.profilePlaceId, p.businessName, p.nicename, p.category, p.longitude, p.latitude, p.address, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.showmap, p.booknow,p.email as pemail, l.subscribe, u.productId,u.state,c.fbpost,c.isselfie,c.taglineselfie FROM businessProfile AS p
+$sql = "SELECT s.pathimg,s.ave,s.comment, p.profilePlaceId, p.businessName, p.nicename, p.category, p.longitude, p.latitude, p.address, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.showmap, p.booknow,p.email as pemail, l.subscribe, u.productId,u.state,c.fbpost,c.isselfie,c.taglineselfie,c.redirect FROM businessProfile AS p
 LEFT JOIN businessList AS l ON l.id = p.profilePlaceId
 LEFT JOIN businessUserGroup AS u ON u.gId = l.userGroupId
 LEFT JOIN businessCustom AS c ON c.customPlaceId = p.profilePlaceId
@@ -30,6 +30,10 @@ if($row->state == 'canceled' || $row->state == 'unpaid' || $row->ave == null){
 	header("HTTP/1.0 404 Not Found");
 	header('Location: http://www.tabluu.com');
 	exit;
+}
+$redirectpage = 'http://tabluu.com';
+if($row->redirect == 1){
+	$redirectpage = (strstr($row->websiteURL,'http') ? $row->websiteURL : 'http://'.$row->websiteURL);
 }
 if($row->isselfie == 0){
 	$fbpost = json_decode($row->fbpost);
@@ -134,7 +138,7 @@ if($width > 820)
 <div class="ColumnContainer">
 	<div class="wrapheader">
 	    <div class="MerchantHead" style="min-height:<?=$height+45?>px;max-width:<?=$width+380?>px;">
-			<a href="<?=$cur.$row->nicename?>.html" rel="follow"><div class="xclose"></div></a>
+			<a href="<?=$redirectpage?>" rel="follow"><div class="xclose"></div></a>
 			<div class="clear"></div>
 			<div style="margin:0 auto;width:100%;max-width:<?=$width+390?>px;">
 			  <div class="left text-center" style="max-width:<?=$width?>px;">

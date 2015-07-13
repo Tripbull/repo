@@ -24,10 +24,10 @@ $noPhoto = 'images/template/no-photo.gif';
 				<div role="main" class="ui-content">
 					<div class="main-wrap">
 						<div class="left-content fl">
-							<div class="left-header">Customize Feedback / Selfie Page</div>			
+							<div class="left-header">Customize the Response Page</div>			
 							<ul class="uic-left-menu" data-role="listview">
 								<li ><a href="#">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="#" >Background Image<span class="listview-arrow-default"></span></a></li><li ><a href="#">Background Color<span class="listview-arrow-default"></span></a></li><li ><a href="#" >Font Color<span class="listview-arrow-default"></span></a></li><li ><a href="#">Text Below Stars<span class="listview-arrow-default"></span></a></li><li ><a href="#">Text in Buttons<span class="listview-arrow-default"></span></a></li><li ><a href="#">Text in Message<span class="listview-arrow-default"></span></a></li>
-								<li ><a href="#" data-prefetch="true" id="seefeedback2">See the Feedback / Selfie Page<span class="listview-arrow-default"></span></a></li>
+								<li ><a href="#" data-prefetch="true" id="seefeedback2">See the Response Page<span class="listview-arrow-default"></span></a></li>
 							</ul>							
 						</div>
 						<div class="right-content bgwhite fr">
@@ -97,7 +97,7 @@ $noPhoto = 'images/template/no-photo.gif';
 											<input type="text" name="btncampaign" id="btncampaign" value="Your Selfie Now!" placeholder="Your Selfie Now!">
 									</div>
 									<div class="clear" style="padding-top:0.5em"></div>
-									<p class="btnTakeSelfie">Take a selfie (self photo)!</p>
+									<p class="btnTakeSelfie">Take a selfie!</p>
 									<div class="clear" style="padding-top:1em;width:15em;">
 										<div class="fl w60">
 											<input type="text" name="btnTakeSelfie" id="btnTakeSelfie" value="okay" placeholder="okay">
@@ -137,7 +137,7 @@ $noPhoto = 'images/template/no-photo.gif';
 										</div>
 									</div>
 									<div class="clear" style="padding-top:0.5em"></div>
-									<p class="share">Please share your experience...</p>
+									<p class="share">Share this page?</p>
 									<div class="clear" style="padding-top:1em;width:15em;">
 										<div class="fl w60">
 											<input type="text" name="txtshare1" id="txtshare1" value="no" placeholder="no">
@@ -171,23 +171,20 @@ $noPhoto = 'images/template/no-photo.gif';
 										</div>
 									</div>
 									<div class="clear" style="padding-top:0.5em"></div>
-									<p class="allow">Press &quot;submit&quot; to agree with Tabluu's <privacy_policy_link> & allow <brand> to contact you.</p>
+									<p class="allow">Press &quot;yes&quot; to agree with Tabluu's <privacy_policy_link> & allow <brand> to contact you.</p>
 									<div class="clear" style="padding-top:1em;width:15em;">
 										<div class="fl w60">
-											<input type="text" name="txtallow1" id="txtallow1" value="no" placeholder="cancel">
+											<input type="text" name="txtallow1" id="txtallow1" value="no" placeholder="no">
 										</div>
 										<div class="fr w60">
-											<input type="text" name="txtallow2" id="txtallow2" value="yes" placeholder="submit">
+											<input type="text" name="txtallow2" id="txtallow2" value="yes" placeholder="yes">
 										</div>
 									</div>
 									<div class="clear" style="padding-top:0.5em"></div>
-									<p class="recommend">Share this page?</p>
+									<p class="recommend">Please comment...</p>
 									<div class="clear" style="padding-top:1em;width:15em;">
 										<div class="fl w60">
-											<input type="text" name="txtrecommend1" id="txtrecommend1" value="don't share" placeholder="don't share">
-										</div>
-										<div class="fr w60">
-											<input type="text" name="txtrecommend2" id="txtrecommend2" value="share" placeholder="share">
+											<input type="text" name="txtrecommend1" id="txtrecommend1" value="proceed" placeholder="proceed">
 										</div>
 									</div>
 									<div class="clear" style="padding-top:0.5em"></div>
@@ -198,13 +195,6 @@ $noPhoto = 'images/template/no-photo.gif';
 										</div>
 										<div class="fr w60">
 											<input type="text" name="follow-yes" id="follow-yes" value="yes" placeholder="yes">
-										</div>
-									</div>
-									<div class="clear" style="padding-top:0.5em"></div>
-									<p class="next">Next reviewer, please.</p>
-									<div class="clear" style="padding-top:1em;width:8.1em;">
-										<div class="fl w60">
-											<input type="text" name="txtnxt" id="txtnxt" value="okay" placeholder="okay">
 										</div>
 									</div>		
 									<div class="clear" style="padding-top:0.5em"></div>
@@ -229,16 +219,6 @@ $noPhoto = 'images/template/no-photo.gif';
 										<div class="fr w60">
 											<input type="text" name="txtoption3" id="txtoption3" value="reset" placeholder="reset">
 										</div>
-									</div>	
-									<div class="clear" style="padding-top:0.5em"></div>
-									<p class="pass">Enter the password…</p>
-									<div class="clear" style="padding-top:1em;width:15em;">
-										<div class="fl w60">
-											<input type="text" name="txtpass1" id="txtpass1" value="cancel" placeholder="cancel">
-										</div>
-										<div class="fr w60">
-											<input type="text" name="txtpass2" id="txtpass2" value="submit" placeholder="submit">
-										</div>
 									</div>								
 									<div class="clear" style="padding-top:0.5em"></div>
 									<div class="btn-submit">
@@ -248,13 +228,13 @@ $noPhoto = 'images/template/no-photo.gif';
 							</section>	
 							<section class="uic-section-box hide">
 								<form id="frmUIC3" action="#" method="post" enctype="multipart/form-data" >
-									<input type="text" data-clear-btn="true" name="txtbox19" id="txtbox19" value="Take a selfie (self photo)!" placeholder="Take a selfie (self photo)!">
+									<input type="text" data-clear-btn="true" name="txtbox19" id="txtbox19" value="Take a selfie!" placeholder="Take a selfie!">
 									<input type="text" data-clear-btn="true" name="txtbox18" id="txtbox18" value="If you are shy... at least take a photo of something interesting around you! This won't work unless you take a photo!" placeholder="This won't work unless you snap a photo. You can either do your awesome selfie pose or take a photo of interesting things around you.">
 									<input type="text" data-clear-btn="true" name="txtbox20" id="txtbox20" value="Take a photo?" placeholder="Take a photo?">
 									<input type="text" data-clear-btn="true" name="txtbox21" id="txtbox21" value="Ask your customers to say &quot;yeahhh!&quot; for the camera!" placeholder="Ask your customers to say &quot;yeahhh!&quot; for the camera!">
 									<input type="text" data-clear-btn="true" name="txtbox24" id="txtbox24" value="Your photo is captured" placeholder="Your photo is captured">
 									<input type="text" data-clear-btn="true" name="txtbox25" id="txtbox25" value="This photo will be used to create your review page of the merchant later." placeholder="This photo will be used to create your review page of the merchant later.">
-									<input type="text" data-clear-btn="true" name="txtbox1" id="txtbox1" value="Please share your experience..." placeholder="Please share your experience...">
+									<input type="text" data-clear-btn="true" name="txtbox1" id="txtbox1" value="Please comment..." placeholder="Please comment...">
 									<input type="text" data-clear-btn="true" name="txtbox23" id="txtbox23" value="What do you like the most? Is there any area that needs improvement?" placeholder="What do you like the most? Is there any area that needs improvement?">
 									<input type="text" data-clear-btn="true" name="txtbox2" id="txtbox2" value="Your average rating:" placeholder="Your average rating:">
 									<input type="text" data-clear-btn="true" name="txtbox9" id="txtbox9" value="Auto logout" placeholder="Auto logout">
@@ -264,16 +244,15 @@ $noPhoto = 'images/template/no-photo.gif';
 									<input type="text" data-clear-btn="true" name="txtbox3" id="txtbox3" value="Share this page?" placeholder="Share this page?">
 									<input type="text" data-clear-btn="true" name="txtbox22" id="txtbox22" value="Please use the &quot;share&quot; button to recommend <brand>. By sharing you agree with Tabluu's <privacy_policy_link>." placeholder="Please use the &quot;share&quot; button to recommend <brand>. By sharing you agree with Tabluu's <privacy_policy_link>.">
 									<input type="text" data-clear-btn="true" name="txtbox11" id="txtbox11" value="Be a fan of <brand>?" placeholder="Be a fan of <brand>?">
-									<input type="text" data-clear-btn="true" name="txtbox12" id="txtbox12" value="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to send you promotions & updates." placeholder="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to send you promotions & updates">
+									<input type="text" data-clear-btn="true" name="txtbox12" id="txtbox12" value="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to contact you." placeholder="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to contact you.">
 									<input type="text" data-clear-btn="true" name="txtbox13" id="txtbox13" value="We're sorry for your poor experience!" placeholder="We're sorry for your poor experience!">
 									<input type="text" data-clear-btn="true" name="txtbox14" id="txtbox14" value="Do you wish to leave your contact details so that we may get in touch with you?" placeholder="Do you wish to leave your contact details so that we may get in touch with you?">
 									<input type="text" data-clear-btn="true" name="txtbox15" id="txtbox15" value="Please enter your contact details..." placeholder="Please enter your contact details...">
-									<input type="text" data-clear-btn="true" name="txtbox16" id="txtbox16" value="addtional info such as room/table number or location of bad experience." placeholder="addtional info such as room/table number or location of bad experience.">
-									<input type="text" data-clear-btn="true" name="txtbox17" id="txtbox17" value="Press &quot;submit&quot; to agree with Tabluu's <privacy_policy_link> & allow <brand> to contact you." placeholder="Press &quot;submit&quot; to agree with Tabluu's <privacy_policy_link> & allow <brand> to contact you.">
+									<input type="text" data-clear-btn="true" name="txtbox16" id="txtbox16" value="Additional info such as room or table number." placeholder="Additional info such as room or table number.">
+									<input type="text" data-clear-btn="true" name="txtbox17" id="txtbox17" value="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to contact you." placeholder="Press the &quot;yes&quot; button to agree with Tabluu's <privacy_policy_link> & allow <brand> to contact you.">
 									<input type="text" data-clear-btn="true" name="txtbox4" id="txtbox4" value="Thank you!" placeholder="Thank you!">
-									<input type="text" data-clear-btn="true" name="txtbox5" id="txtbox5" value="Next reviewer, please." placeholder="Next reviewer, please.">
 									<input type="text" data-clear-btn="true" name="txtbox6" id="txtbox6" value="Choose an option…" placeholder="Choose an option…">
-									<input type="text" data-clear-btn="true" name="txtbox7" id="txtbox7" value="Enter the password…" placeholder="Enter the password…">
+									<input type="text" data-clear-btn="true" name="txtbox28" id="txtbox28" value="Login OR select &quot;reset&quot; to take a new photo" placeholder="Login OR select &quot;reset&quot; to take a new photo">
 									<input type="text" data-clear-btn="true" name="txtbox8" id="txtbox8" value="Take a new photo?" placeholder="Take a new photo?">
 									<div class="clear" style="padding-top:0.5em"></div>
 									<div class="btn-submit">

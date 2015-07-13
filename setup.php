@@ -26,11 +26,11 @@
 							<div class="left-header">Setup</div>			
 							<ul class="setup-left-menu" data-role="listview">
 								<li><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r ui-btn-active">Your Tabluu Page<span class="listview-arrow-default listview-arrow-active"></span></a></li>
-								<li><a href="#">Customize Feedback / Selfie Page<span class="listview-arrow-default"></span></a></li>
+								<li><a href="#">Customize the Response Page<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">What Question(s) to Ask?<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Social Media Posts<span class="listview-arrow-default"></span></a></li>
 								<li><a href="#">Poor Feedback Alerts<span class="listview-arrow-default"></span></a></li>
-								<!--<li><a href="#">Post to Social Networks<span class="listview-arrow-default"></span></a></li>-->
+								<li><a href="#">Redirect Social Media Visitors<span class="listview-arrow-default"></span></a></li>
 							</ul>							
 						</div>
 						<div class="right-content fr">
@@ -39,39 +39,63 @@
 								<ul class="profile-left-menu1" data-role="listview"><li ><a href="profile.html" data-prefetch="true">Profile<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Description<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Opening Hours<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html" data-prefetch="true">Photos<span class="listview-arrow-default"></span></a></li><li ><a href="profile.html"  data-prefetch="true">Map Display<span class="listview-arrow-default"></span></a></li></ul>										
 							</section>
 							<section class="panel-UIC hide">
-								<ul class="right-menu" data-role="listview"><li ><a href="uic.html" data-prefetch="true">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Background Image<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Background Color<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Font Color<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Text Below Stars<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Text in Buttons<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Text in Messages<span class="listview-arrow-default"></span></a></li><li ><a href="#" data-prefetch="true" id="seefeedback">See the Feedback / Selfie Page<span class="listview-arrow-default"></span></a></li></ul>
+								<ul class="right-menu" data-role="listview"><li ><a href="uic.html" data-prefetch="true">Logo<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Background Image<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Background Color<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Font Color<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Text Below Stars<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Text in Buttons<span class="listview-arrow-default"></span></a></li><li ><a href="uic.html" data-prefetch="true">Text in Messages<span class="listview-arrow-default"></span></a></li><li ><a href="#" data-prefetch="true" id="seefeedback">See the Response Page<span class="listview-arrow-default"></span></a></li></ul>
 							</section>
 							<section class="panel-postFB hide">
 								<ul class="right-menu" data-role="listview">
-								<li><a href="fbpost.html" data-prefetch="true">Content & Message for the Social Media Posts<span class="listview-arrow-default"></span></a></li>
+								<li><a href="fbpost.html" data-prefetch="true">Type of Image<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="fbpost.html" data-prefetch="true">Post Reviews to Social Media &amp; Tabluu?<span class="listview-arrow-default"></span></a></li>
 								<li ><a href="fbpost.html" data-prefetch="true">Customize Message<span class="listview-arrow-default"></span></a></li>
 								</ul>
 							</section>
-							<section class="panel-socialmedia hide">
-								<ul class="right-menu" data-role="listview">
-								<li><a href="socialmedia.html" data-prefetch="true">Add Social Media Networks<span class="listview-arrow-default"></span></a></li>
-								<li ><a href="socialmedia.html" data-prefetch="true">Select Social Media Networks for Auto Posting<span class="listview-arrow-default"></span></a></li>
-								<li ><a href="socialmedia.html" data-prefetch="true">Manual Posting to Social Media Networks<span class="listview-arrow-default"></span></a></li>
-								</ul>
+							<section class="panel-redirect hide">
+								<div class="btn-submit">
+									<button class="ui-btn visittabluupage">See Your Tabluu Page</button>
+								</div>
+								<div class="clear" style="padding-top:0.5em"></div>
+								<fieldset data-role="controlgroup" data-corners="false" id="optionredirect">
+									<input type="radio" name="redirect" id="redirect-a" value="0">
+									<label for="redirect-a">Your Tabluu Page (default)</label>
+									<input type="radio" name="redirect" id="redirect-b" value="1">
+									<label for="redirect-b">Your desired landing page...</label>
+								</fieldset>	
+								<div class="clear" style="padding-top:0.5em"></div>
+								<div class="hide txtdesirepage">
+									<input type="text" name="txtwebdesired" id="txtwebdesired" value="" placeholder="website url">
+								</div>
+								<div class="clear" style="padding-top:2em"></div>
+								<div class="btn-submit">
+									<button class="ui-btn" id="submit-redirect">Update</button>
+								</div>
 							</section>
 							<section class="panel-question hide">
 								<div class="btn-submit">
-									<button class="ui-btn" id="seefeedback3">See the Feedback / Review Page</button>
+									<button class="ui-btn" id="seefeedback3">See the Response Page</button>
 								</div>
 								<div class="clear" style="padding-top:0.5em"></div>
 								<p>Flick the switch "On" to start getting feedback / reviews</p>
 								<div class="clear" style="padding-top:0.5em"></div>
-							<select name="flipsetting" id="flipsetting" data-role="flipswitch" data-corners="false">
-								<option value="1">Off</option>
-								<option value="0">On</option>
-							</select>	
-							<div class="clear" style="padding-top:0.5em"></div>
-							<ul class="addnew-rate" data-role="listview">
-							    <li><a href="#"><img src="images/template/plus.png" alt="" class="ui-li-icon ui-corner-none">Add a new question &amp; press enter...</a></li>
-							</ul>
-                            <span class="text-rate hide"><input type="text" name="txtrate" id="txtrate" value="" placeholder="Add a new question &amp; press enter..."></span>
-							<div class="clear" style="padding-top:0.5em"></div>	
+								<select name="flipsetting" id="flipsetting" data-role="flipswitch" data-corners="false">
+									<option value="1">Off</option>
+									<option value="0">On</option>
+								</select>	
+								<div class="clear" style="padding-top:0.5em"></div>
+								<ul class="addnew-rate" data-role="listview">
+									<li><a href="#"><img src="images/template/plus.png" alt="" class="ui-li-icon ui-corner-none">Add a new question &amp; press enter...</a></li>
+								</ul>
+								<span class="text-rate hide"><input type="text" name="txtrate" id="txtrate" value="" placeholder="Add a new question &amp; press enter..."></span>
+								<div class="clear hide createdquest" style="padding-top:1em">	
+								<fieldset id="ratetextcreated" data-role="controlgroup" data-iconpos="left" data-corners="false">
+								</fieldset>
+								</div>
+								<div class="clear" style="padding-top:1em"></div>	
+								<p>Questions for web services:</p>
+								<div class="clear" style="padding-top:0.5em"></div>	
+								<fieldset id="ratetextweb" data-role="controlgroup" data-iconpos="left" data-corners="false">
+								</fieldset>	
+								<div class="clear" style="padding-top:0.5em"></div>	
+								<p>Questions for accommodations & restaurants:</p>
+								<div class="clear" style="padding-top:0.5em"></div>	
 								<fieldset id="ratetext" data-role="controlgroup" data-iconpos="left" data-corners="false">
 								</fieldset>	
 								<div class="clear" style="padding-top:0.5em"></div>									
