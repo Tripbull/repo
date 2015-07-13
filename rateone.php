@@ -45,10 +45,11 @@ $connect->db_disconnect();
 	<link rel="Shortcut Icon" href="http://www.tabluu.com/blog/wp-content/themes/Tabluu%20Theme%20V1/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
-	<div class="hide top-button-selfie"><div style="text-align:center;"><div style="display: inline-block;vertical-align: middle;height: 50px;margin:8px 0px 0px auto;"><p style="margin:0px !important;font-size:12px !important;">Powered by</p><img src="images/tabluu-logo-mono-xsmall.png"></div><span style="display: inline-block;margin-left: auto;margin-right: 20px;" class="btn-take-isselfie">Your Selfie Now!</span></div></div>
+	<div class="hide top-button-selfie"><div style="text-align:center;"><div style="display: inline-block;vertical-align: middle;height: 50px;margin:10px 0px 0px auto;"><p style="margin:0px !important;font-size:12px !important;">powered by</p><img src="images/tabluu-logo-mono-small.png" height="63%" style="margin-top:-2px;"></div><span style="display: inline-block;margin-left: auto;margin-right: 20px;" class="btn-take-isselfie">Your Selfie Now!</span></div></div>
 	<div style="position:absolute;opacity:0;overflow:hidden;">
 		<div style="position:absolute;font-family:myriadpro;">.</div>
 		<div style="position:absolute;font-family:Lato-Light;">.</div>
+		<div style="position:absolute;font-family:myriadproit;">.</div>
 		<canvas id="canvas-image" style="position:absolute;"></canvas>
 		<canvas id="canvas-image-test" style="position:absolute;"></canvas>
 		<canvas id="canvas-resize" style="position:absolute;"></canvas>
@@ -91,7 +92,7 @@ $connect->db_disconnect();
 						</div>
 					</div>
 					<div class="loc-address"><p class="addressname"></p></div>
-					<div class="loc-login"><img src="images/template/logoBelowUI.png" class="ratelogo" alt="" width="103" height="30" /></div>
+					<div class="loc-login"><img src="images/template/tabluu-std-logo.png" class="ratelogo" alt="" style="width:85px !important;height:auto !important;"/></div>
 					<div>
 				</div>	
 				<input type="hidden" id="nicename" name="nicename" value="<?php echo $_REQUEST['p']?>" />
