@@ -50,7 +50,7 @@ $address = $_SESSION['address'];
 					</div>
 				</div>
 				<div class="loc-address"><p class="addressname">Tabluu, 51 West 52nd Street, New York, USA</p></div>
-				<div class="loc-login"><img src="images/template/logoBelowUI.png" class="ratelogo" alt="" width="103" height="30" /></div>
+					<div class="loc-login"><img src="images/template/tabluu-std-logo.png" class="ratelogo" alt="" style="width:85px !important;height:auto !important;"/></div>
 			</div>	
 			<input type="hidden" id="placeId" name="placeId" value="<?php echo $_REQUEST['p']?>" />
 		</div><!-- /content -->

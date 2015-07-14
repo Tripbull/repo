@@ -34,8 +34,6 @@
 								<fieldset data-role="controlgroup" data-corners="false" id="optPost">
 									<input type="radio" name="optPost" id="optPost-b" value="1">
 									<label for="optPost-b">Selfie / photo (with rating score)</label>
-									<input type="radio" name="optPost" id="optPost-c" value="2">
-									<label for="optPost-c">Selfie / photo (without rating score)</label>
 									<input type="radio" name="optPost" id="optPost-a" value="0">
 									<label for="optPost-a">Your own banner / image (recommended for slow internet connections)</label>
 								</fieldset>	

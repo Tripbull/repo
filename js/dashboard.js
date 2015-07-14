@@ -1953,8 +1953,11 @@ $(document).on("pagebeforechange", function (e, data) {
 				}});*/
 				$( '#setup .right-content' ).addClass("right-bgblue");
 				$('.panel-UIC').show();
-				if(customArray.isselfie == 1)	
-					diabledTab('.panel-UIC .right-menu',[2,3,4]);
+				if(customArray.isselfie == 1)
+					diabledTab('.panel-UIC .right-menu',[3,4]);
+				
+				changeLabel('.panel-UIC .right-menu');
+
 			}else if(row == 2){
 				if(customArray.isselfie == 1){
 					alertBox('section disabled','You are running a "selfie only" campaign and it is not required to setup up this section.');
@@ -3227,6 +3230,7 @@ $(document).on("pagebeforechange", function (e, data) {
 		$( "input" ).focus(function() {
 			isfocus = 1;
 		});
+
 		$('.iconuic').click(function(e){
 			clearTimeout(resizeTimeout);
 			resizeTimeout = setTimeout(function(){ 
@@ -3272,7 +3276,7 @@ $(document).on("pagebeforechange", function (e, data) {
 					}
 				}else{
 					if(customArray.isselfie == 1)
-						diabledTab('#uic .uic-left-menu',[2,3,4]);				
+						diabledTab('#uic .uic-left-menu',[3,4]);
 				}
 			}
 			function defaultMenuUIC(){
@@ -3331,6 +3335,31 @@ $(document).on("pagebeforechange", function (e, data) {
 				$('.uic-section-box').show();
 			}
 		}		
+
+		function changeLabel(getClass)
+		{
+			if(customArray.isselfie == 1)
+			{
+				$(getClass + ' li').each(function (index) {
+					if(index == 1)
+					{
+						var getHtml = $(this).html().replace('Background Image', 'Campaign Poster');
+						$(this).html(getHtml);
+					}
+				});
+			}
+			else
+			{
+				$(getClass + ' li').each(function (index) {
+					if(index == 1)
+					{
+						var getHtml = $(this).html().replace('Campaign Poster', 'Background Image');
+						$(this).html(getHtml);
+					}
+				});
+			}
+		}
+
 	$(document).on('pageshow','#uic', function () { // UIC script start here
 		googleAnalytic();
 	   $('input[type="text"]').textinput({ preventFocusZoom: true });
@@ -3342,6 +3371,9 @@ $(document).on("pagebeforechange", function (e, data) {
 		$('#placeIdLogo').val(places[0]);
 		$('#placeIdbackground').val(places[0]);
 		$( ".right-header" ).html( placename );	
+
+		changeLabel('#uic .uic-left-menu');
+
 		defaultMenuUIC();
 		showHideMenuUIC(curClick);
 		diabledUICMenu(uicwizardsetup);
@@ -6538,10 +6570,8 @@ $(document).on('pageinit','#fbpost', function () {
 		if($("#optPost :radio:checked").val() == 2){
 			if($("#txtoccation").val() == '')
 				uicAlertBox('incomplete information','Please input occasion','#txtoccation');
-			else if($("#txtcamp1").val() == '')
-				uicAlertBox('incomplete information','Please input tagline row 1','#txtcamp1');
-			else if($("#txtcamp2").val() == '')
-				uicAlertBox('incomplete information','Please input tagline row 2','#txtcamp2');
+			else if($("#txtcamp1").val() == '' && $("#txtcamp2").val() == '')
+				uicAlertBox('incomplete information','Please add your slogan','#txtcamp1');
 			else{	
 				var arraytagline =  $.parseJSON(customArray.taglineselfie);
 				if(arraytagline.txtoccation != ''){
@@ -6620,13 +6650,14 @@ $(document).on('pageshow','#fbpost', function () {
 				}
 				$('.panel-fbpost').show(); 
 			}});
+			/*
 			var clas = 'ui-state-disabled';
 			$('#optPost .ui-controlgroup-controls div').each(function (index) {
 				if(customArray.isselfie == 1 && (index == 0 || index == 2))
 					$(this).addClass(clas);
 				else if(customArray.isselfie == 0 && index == 1)
 					$(this).addClass(clas);
-			});	
+			});	*/
 			$('#optPost input[value="'+customArray.optsocialpost+'"]').attr('checked',true).checkboxradio('refresh');
 			if(customArray.optsocialpost == 1){
 				$('.ownimg').hide();

@@ -11,7 +11,7 @@ var counter1 = 0,counter2 = 0,counter3 = 0,counter4 = 0,counter5 = 0,counter6 = 
 var questionDefault = ['How would you rate our staff based on how welcoming and friendly they were towards you?_Service Friendliness','Do you feel that you were provided service in a timely manner?_Service Timeliness','How would you rate the attentiveness of our service?_Service Attentiveness','How would you rate our overall service?_Overall Service','Was this experience worth the amount you paid?_Value for Money','Please rate our location._Location','Please rate our facilities._Facilities','How comfortable was your stay?_Comfort','How would you rate our property in terms of cleanliness?_Cleanliness','How would you rate the overall quality of your meal?_Quality of Meal','How would you rate the overall taste of your meal?_Taste of Meal','Do you feel that there were enough options for you to choose?_Variety','How likely are you to recommend us to your friends and loved ones?_Likelihood to Recommend','How likely are you to visit us again?_Likelihood to Visit Again','How valuable is our web service to you?_Value Proposition','For the value provided, how attractive is our pricing?_Price Attractiveness','How likely are you to recommend this website to your friends?_Recommended'];
 //live mode chargify ids
 var everFree = 3356308,basicID=3356305,proID=3356306,enterprise=3356316,basic12 = 3405343,basic24 = 3405344,pro12 = 3405345,pro24 = 3405346,enterprise12 =3410620,enterprise24 =3410619;
-var istest = true,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
+var istest = false,domainpath='',fbPhotoPathShare='',state_Array = ['unpaid','canceled'];
 
 function alertBox(title,message){ // testing
 	clearTimeout(resizeTimeout);
@@ -271,7 +271,7 @@ function showpolicy(){
 	}); 
 }
 function decodequote(str){
-	return String(str).replace(/<double>/g,'"').replace('<privacy_policy_link>','<a href="privacy_policy.php?name='+customArray.businessName+'" class="fancybox fancybox.iframe">Privacy Policy</a>').replace(/<brand>/,businessname).replace(/<comma>/g,',').replace(/{_}/g,"'").replace(/<quote>/g,"'").replace(/{}/g,'"');
+	return String(str).replace(/<double>/g,'"').replace('<privacy_policy_link>','<a href="privacy_policy.php?name='+customArray.businessName+'" class="fancybox fancybox.iframe">Privacy Policy</a>').replace(/<brand>/,businessname).replace(/<comma>/g,',').replace(/{_}/g,"'").replace(/<quote>/g,"'").replace(/{}/g,'"').replace('<social_media>','Facebook');
 }
 
 function hadpoorexp(){
@@ -412,6 +412,7 @@ function ratevalue(rate,page){
 							setRating();
 					}else{
 						setTimeout(function(){hadpoorexp2();},300);
+
 					}
 				}}]
 			});
@@ -768,15 +769,23 @@ function loginFb(){
 		clearInterval(timeInverval);
 		refresh_handler();
 	}
-	var niceid = sharedurl.split('_')
-	FB.ui({
-	  method: 'share',
-	  href: domainpath+'user/'+niceid[0]
-	}, function(response){
-	  if (response && !response.error_code) {
-	  	postFb();
-	  } else {
-	  		var niceid = sharedurl.split('_');
+	// FB.logout(function(response) {});
+	 FB.login(function(response) {
+	   if (response.authResponse) {
+	   		
+	   		$.box_Dialog((typeof(defaultTextMessage.sharedB) != 'undefined' ? String(decodequote(defaultTextMessage.sharedB)) : String(decodequote(defaultTextMessage2.sharedB))), {
+				'type':     'question',
+				'title':    '<span class="color-white">'+(typeof(defaultTextMessage.sharedT) != 'undefined' ? String(decodequote(defaultTextMessage.sharedT)) : String(decodequote(defaultTextMessage2.sharedT)))+'<span>',
+				'center_buttons': true,
+				'show_close_button':false,
+				'overlay_close':false,
+				'buttons':  [{caption: (typeof(defaultButtonText.btnshare) != 'undefined' ? defaultButtonText.btnshare[0] : defaultButtonText2.btnshare[0] ),callback:function (){
+						shareFb();
+				}}]
+	  		});
+	   }
+	   else {
+			var niceid = sharedurl.split('_');
 			$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=generatedurlremove&placeId='+placeId+'&sharedId='+niceid[1],success:function(lastId){}});
 			$.box_Dialog((typeof(defaultTextMessage.followB) != 'undefined' ? String(decodequote(defaultTextMessage.followB)) : String(decodequote(defaultTextMessage2.followB))), {
 				'type':     'question',
@@ -792,10 +801,9 @@ function loginFb(){
 					saverate();
 					 alertNextUser();
 				}, 300);}}]
-			});	
-	  }
-	});
-	 
+			});		
+	   } 
+	 },{scope: 'email'});
 }
 
 function shareFb()
@@ -832,9 +840,6 @@ function shareFb()
 
 function postFb()
 {
-	  //	alert('saved!!!');
-	//alert(FB.getAuthResponse());
-	//if(FB.getAuthResponse() && photo_saved == 1)
 	if(FB.getAuthResponse())
 	{
 		FB.api('/me', function(response) {
@@ -902,8 +907,6 @@ function postFb()
 					} 
 					var p = 'tempPhoto='+photo_url+'&placeId='+placeId+'&rated1='+rate_1+'&rated2='+rate_2+'&rated3='+rate_3+'&rated4='+rate_4+'&rated5='+rate_5+'&rated6='+rate_6+'&rated7='+rate_7+'&aveRate='+aveRated.toFixed(1)+'&comment='+ratecomment+'&userName='+response.name+'&userId='+response.id+'&email='+userCurEmail+'&totalFriends=0&photo_url='+urlphotoshared+'&case=2&param='+isTakeSelfie+'&label='+hadlabel+'&socialopt='+customArray.optsocialpost+'&source=fb&data=&sharedId='+sharedurl; 
 					$.ajax({type: "POST",url:"setData.php",cache: false,data:'opt=ratesave&'+p,success:function(lastId){
-							
-
 							var ids = lastId.split('_');
 							lastidbusiness = ids[1];
 							//last_Id = ids[0];
@@ -970,8 +973,8 @@ $(document).ready(function(){
    $('.fancybox').fancybox();
    
    if(istest == true){
-		//domainpath = 'https://tabluu.com/staging/';
-		domainpath = 'http://localhost.tabluu.com/repoorig/repo/';
+		domainpath = 'https://tabluu.com/staging/';
+		//domainpath = 'http://localhost.tabluu.com/repoorig/repo/';
 		everFree = 3602345,basicID=3361656,basic12 = 3602785,basic24 = 3602788,proID=3361672,pro12 = 3602786,pro24 = 3602789,enterprise=3602346,enterprise12 =3602787,enterprise24 = 3602790; fbPhotoPathShare= 'https://www.tabluu.com/staging/';
 	}else{
 		domainpath = 'https://tabluu.com/';
@@ -1026,7 +1029,7 @@ function clearconsole() {
 }
 function messageaftertakeselfie(){
    if(customArray.isselfie == 1)
-		setTimeout(function() {setRating();},1000);
+		setTimeout(function() {setRating();},1500);
 	else{	
 		setTimeout(function(){
 			$.box_Dialog(decodequote((typeof(defaultTextMessage.captureB) != 'undefined' ? defaultTextMessage.captureB : defaultTextMessage2.captureB)), {
@@ -1113,7 +1116,6 @@ function getPhoto(){
 					case 'image/bmp':
 					case 'image/pjpeg':
 						sharedphoto=1;istakephoto = 1;
-						messageaftertakeselfie();
 						var reader = new FileReader();	
 						reader.onload = function(){
 							var img = new Image();
@@ -1577,7 +1579,7 @@ $(document).on('pageinit','#rateone', function() {
         getLocationData();
 		$( window ).resize(function() { // when window resize
 			rate_initialize();
-			//topoverlay();
+			//if(customArray.isselfie == 1){topoverlay();}
 		});
 		rate(2);
 	counter1 = 1;
@@ -1829,14 +1831,25 @@ function rate_initialize(){
     var address = decodequote(customArray.businessName) +', '+ decodequote(customArray.address) +', '+ decodequote(customArray.city) +', '+decodequote(customArray.country);
 	$('.addressname').html(address);
 	if(bgback.bckimage != '' || typeof(bgback.bckimage) != 'undefined'){
-		$( '.rate' ).css({'background':(bgback.bckimage != '' ? 'url('+bgback.bckimage+') 0 0 no-repeat' : '')});
-		$('.rate').css({backgroundSize: "cover"});
+		if(customArray.isselfie == 1)
+		{
+			var bgSize = $(window).height()-$('.top-button-selfie').height();
+			$( '.rate' ).css('background-image',(bgback.bckimage != '' ? 'url('+bgback.bckimage+')' : ''));
+			$('.rate').css('background-size', 'auto ' + bgSize + 'px');
+			$('.rate').css('background-repeat', 'no-repeat');
+			$('.rate').css({backgroundPosition: 'center top'});
+		}
+		else
+		{
+			$( '.rate' ).css({'background':(bgback.bckimage != '' ? 'url('+bgback.bckimage+') 0 0 no-repeat' : '')});
+			$('.rate').css({backgroundSize: "cover"});
+		}
 	}	
 	$( '.rate' ).css({'color':(customArray.backgroundFont != '' ? customArray.backgroundFont : '#3b3a26')});
 	//alert(bgback.bckimage)
-	if(bgback.bckimage == '' || typeof(bgback.bckimage) == 'undefined')
+	//if(bgback.bckimage == '' || typeof(bgback.bckimage) == 'undefined')
 		$( '.rate' ).css({'background-color':(customArray.backgroundcolor != '' ? customArray.backgroundcolor : '#DBEBF1')});
-		
+	
     if( window.innerWidth <=325){ //iphone
         logoUrl  = logo.pLogo;
 		img.src = logoUrl;
@@ -1931,7 +1944,6 @@ function rate_initialize(){
           $( ".loc-logo" ).attr('src', logoUrl);
     }
 }
-
 // IMAGE PROCESSING
 var overlayHeight = 0;
 var overlayY = 0;
@@ -2239,6 +2251,50 @@ function saveToServer(canvas)
 		url: "saveimage.php",
 		data: {"placeId" : placeId, "dataUrl" : dataUrl},
 		success: function(data) {
+			sharedlinkphoto = data; 
+			saveThumbnail(canvas);
+			//postFb();
+		}
+	});
+}
+
+function saveThumbnail(canvas)
+{
+	var canvasThumb = document.getElementById('canvas-resize');
+	var contextThumb = canvasThumb.getContext('2d');
+	var width;
+	var height;
+
+	contextThumb.clearRect(0, 0, canvasThumb.width, canvasThumb.height);
+
+	width = canvas.width;
+	height = canvas.height;
+
+	var rel = height / width;
+	if(width > 400 || height > 400)
+	{
+		width = 400;
+		height = width*rel;
+		if (height > 400) {
+			height = 400;
+			width = height/rel;
+		}
+	}
+
+	// SET CANVAS WIDTH AND HEIGHT
+	canvasThumb.setAttribute('width', width);
+	canvasThumb.setAttribute('height', height);
+
+	contextThumb.drawImage(canvas, 0, 0, width, height);
+
+	var dataUrl = canvasThumb.toDataURL('image/jpg');
+
+	$.ajax({
+      	type: "POST",
+     	url: "saveimage.php",
+  		data: {"dataUrl" : dataUrl},
+		success: function(data) {
+
 			if(photo_url == "profile")
 			{
 				photo_url = data;
@@ -2247,12 +2303,10 @@ function saveToServer(canvas)
 			{
 				urlphotoshared = data;
 			}
-			sharedlinkphoto = data; 
 			createTempSharedPage();
 			photo_saved = 1;
-			//postFb();
 		}
-	});
+  	});
 }
 
 function setCanvasTest(imgData, widthTest, heightTest, value, type, bfont, afont)
@@ -2537,7 +2591,10 @@ function setCanvasSelfie(img_type)
 	var eventNameHeight = 0;
 	var dashLineHeight = 0;
 	var compImageHeight = 0;
-	var taglineHeight = 0;
+	var taglineHeightTop = 0;
+	var taglineHeightBot = 0;
+	var taglineWidth = 0;
+	var taglineOverlayWidth = 0;
 	var logoImageHeight = 0;
 	var logoTextHeight = 0;
 
@@ -2554,19 +2611,22 @@ function setCanvasSelfie(img_type)
 	var totalTaglineWidth = 0;
 	var widthOffsetRating = 0;
 	var widthTaglineOffset = 10;
-	var eventNameDenom = 2.5;
+	var eventNameDenom = 2;
 	var eventNameNom = 0;
 
 	var getNewFont = [];
+
+
     width = get_img.width;
-   height = get_img.height;
-	if(width > 450 || height > 450)
+   	height = get_img.height;
+
+	rel = height / width;
+	if(width > 800 || height > 800)
 	{
-		rel = height / width;
-		width = 450;
+		width = 800;
 		height = width*rel;
-		if (height > 450) {
-			height = 450;
+		if (height > 800) {
+			height = 800;
 			width = height/rel;
 		}
 	}
@@ -2584,6 +2644,7 @@ function setCanvasSelfie(img_type)
 	getNewFont = setCanvasSelfieTest(width, height,"eventNameFont", 0, 0, 0);
 	eventNameFont = getNewFont[0];
 	taglineFont = getNewFont[1];
+	taglineWidth = getNewFont[2];
 
 	companyNameFont = getSize(canvas, companyNameFont);
 	getNewFont = setCanvasSelfieTest(width, height,"companyNameFont", 0, 0, 0);
@@ -2591,6 +2652,7 @@ function setCanvasSelfie(img_type)
 	if(taglineFont > getNewFont[1])
 	{
 		taglineFont = getNewFont[1];
+		taglineWidth = getNewFont[2];
 	}
 
 	imgLogoWidth = getSize(canvas, imgLogoWidth);
@@ -2647,34 +2709,41 @@ function setCanvasSelfie(img_type)
 
 	if(eventNameWidth > compWidth)
 	{
-		totalTaglineWidth = eventNameWidth+widthTaglineOffset;
+		totalTaglineWidth = (((width-(widthOffset+eventNameWidth+widthTaglineOffset))-taglineWidth)/2)+(widthOffset+eventNameWidth+widthTaglineOffset);
+		taglineOverlayWidth = widthOffset+eventNameWidth+widthTaglineOffset;
 	}
 	else
 	{
-		totalTaglineWidth = compWidth+widthTaglineOffset;
+		totalTaglineWidth = (((width-(widthOffset+compWidth+widthTaglineOffset))-taglineWidth)/2)+(widthOffset+compWidth+widthTaglineOffset);
+		taglineOverlayWidth = widthOffset+compWidth+widthTaglineOffset;
 	}
 
 	// DRAW DARKER OVERLAY ON CANVAS
 	context.fillStyle = "rgba(0, 0 , 0, 0.3)";
-	context.fillRect(totalTaglineWidth-5, overlayY, width, overlayHeight);
+	context.fillRect(taglineOverlayWidth, overlayY, width, overlayHeight);
 
 	// SET TEXT COLOR FOR TAGLINE
 	context.fillStyle = "#FFFFFF";
-	
-	taglineHeight = (((overlayHeight - eventNameNom)/eventNameDenom)+overlayY)+(taglineFont*1.5);
+
+	taglineHeightTop = (((overlayHeight - eventNameNom)/eventNameDenom)+overlayY)+(taglineFont*1.5);
+	taglineHeightBot = (((overlayHeight - eventNameNom)/eventNameDenom)+overlayY)+(taglineFont*3);
+	if(firstLine == '' || secondLine == '' || firstLine == ' ' || secondLine == ' ')
+	{
+		taglineHeightTop = (((overlayHeight - taglineFont)/2)+overlayY)+taglineFont;
+		taglineHeightBot = (((overlayHeight - taglineFont)/2)+overlayY)+taglineFont;
+	}
 
 	// FIRST LINE
 	context.font = taglineFont + "pt myriadproit";
-	context.fillText(firstLine,totalTaglineWidth,taglineHeight);
+	context.fillText(firstLine,totalTaglineWidth,taglineHeightTop);
 	firstWidth =context.measureText(firstLine).width;
 	// FIRST LINE END
 
 	// SECOND LINE
 	context.font = taglineFont + "pt myriadproit";
-	context.fillText(secondLine,totalTaglineWidth,taglineHeight+(taglineFont*1.5));
+	context.fillText(secondLine,totalTaglineWidth,taglineHeightBot);
 	secondWidth =context.measureText(secondLine).width;
 	// SECOND LINE END
-
 
 	if(width >= 300 && width <= 500)
 	{
@@ -2803,14 +2872,13 @@ function setCanvasSelfieTest(widthTest, heightTest, type, bfont, afont, tfont)
 			if(totalCompWidthTest >= totalEventNameWidthTest)
 			{
 				// SET X AXIS OF TEXT BASED ON FONTSIZE
-				widthOffsetTest = ((widthTest - (totalCompWidthTest))/30);
+				widthOffsetTest = ((widthTest - totalCompWidthTest)/3);
 			}
 			else
 			{
 				// SET X AXIS OF TEXT BASED ON FONTSIZE
-				widthOffsetTest = ((widthTest - (eventNameWidthTest))/30);
+				widthOffsetTest = ((widthTest - totalEventNameWidthTest)/3);
 			}
-			console.log(widthTest, eventNameWidthTest)
 			return widthOffsetTest;
 		break;
 		case "eventNameFont":
@@ -2831,7 +2899,7 @@ function setCanvasSelfieTest(widthTest, heightTest, type, bfont, afont, tfont)
 
 				totalEventNameWidthTest = eventNameWidthTest + getLineWidth + widthTaglineOffsetTest;
 			}
-			return [eventNameFontTest, taglineFontTest];
+			return [eventNameFontTest, taglineFontTest, getLineWidth];
 		break;
 		case "companyNameFont":
 			totalCompWidthTest = compWidthTest + getLineWidth + widthTaglineOffsetTest;
@@ -2851,7 +2919,7 @@ function setCanvasSelfieTest(widthTest, heightTest, type, bfont, afont, tfont)
 
 				totalCompWidthTest = compWidthTest + getLineWidth + widthTaglineOffsetTest;
 			}
-			return [companyNameFontTest, taglineFontTest];
+			return [companyNameFontTest, taglineFontTest, getLineWidth];
 		break;
 
 	}
