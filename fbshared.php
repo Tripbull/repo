@@ -12,9 +12,10 @@ if(mysql_num_rows($addnewfield) < 1)
 $addnewfield = mysql_query("SHOW COLUMNS FROM `businessCustom` LIKE 'taglineselfie'") or die(mysql_error());
 if(mysql_num_rows($addnewfield) < 1)
 	mysql_query("ALTER TABLE `businessCustom` ADD `taglineselfie` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER `fbpost`");		
-$sql = "SELECT s.pathimg,s.ave,s.comment, p.profilePlaceId, p.businessName, p.nicename, p.category, p.longitude, p.latitude, p.address, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.showmap, p.booknow,p.email as pemail, l.subscribe, u.productId,u.state,c.fbpost,c.isselfie,c.taglineselfie,c.redirect FROM businessProfile AS p
+$sql = "SELECT s.pathimg,s.ave,s.comment, p.profilePlaceId, p.businessName, p.nicename, p.category, p.longitude, p.latitude, p.address, p.city, p.country, p.zip, p.contactNo, p.facebookURL, p.websiteURL, p.showmap, p.booknow,p.email as pemail, l.subscribe, u.productId,u.state,c.fbpost,c.isselfie,c.taglineselfie,c.redirect,v.link FROM businessProfile AS p
 LEFT JOIN businessList AS l ON l.id = p.profilePlaceId
 LEFT JOIN businessUserGroup AS u ON u.gId = l.userGroupId
+LEFT JOIN businessvanitylink AS v ON v.placeId = l.id
 LEFT JOIN businessCustom AS c ON c.customPlaceId = p.profilePlaceId
 LEFT JOIN sharedlink_{$splitID[1]} AS s ON s.link = '{$nice}'
 WHERE p.profilePlaceId =  {$splitID[1]}
@@ -31,10 +32,11 @@ if($row->state == 'canceled' || $row->state == 'unpaid' || $row->ave == null){
 	header('Location: http://www.tabluu.com');
 	exit;
 }
-$redirectpage = 'http://tabluu.com';
-if($row->redirect == 1){
-	$redirectpage = (strstr($row->websiteURL,'http') ? $row->websiteURL : 'http://'.$row->websiteURL);
-}
+$redirectpage = 'https://tabluu.com/'.$row->nicename.'.html';
+	//$redirectpage = (strstr($row->websiteURL,'http') ? $row->websiteURL : 'http://'.$row->websiteURL);
+if($row->link != '' || $row->link != null)
+	$redirectpage = 'https://tabluu.com/'.$row->link;
+	
 if($row->isselfie == 0){
 	$fbpost = json_decode($row->fbpost);
 	$str = (!empty($fbpost->fbpost) ? encodequote($fbpost->fbpost) : '<comment> <brand> gets a <rating> out of <max_rating> rating from me. <tabluu_url> <address>, <tel>.');
